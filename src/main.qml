@@ -4,7 +4,7 @@ import QtPositioning 5.8
 import QtQuick.Controls 2.3
 
 Item {
-    id: item
+    //id: item
     property bool onPolygonCreate: false
 
     //
@@ -15,7 +15,7 @@ Item {
 
 
     Map {
-        anchors.topMargin: 40
+//        anchors.topMargin: 40
         anchors.fill: parent
         plugin: mapPlugin
         center: QtPositioning.coordinate(56.388, 85.210) // Bogachevo
@@ -51,29 +51,29 @@ Item {
         }
     }
 
-    ToolBar {
-        id: toolBar
-        x: 0
-        y: 0
-        width: 640
-        height: 40
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.left: parent.left
+//    ToolBar {
+//        id: toolBar
+//        x: 0
+//        y: 0
+//        width: 640
+//        height: 40
+//        anchors.top: parent.top
+//        anchors.right: parent.right
+//        anchors.left: parent.left
 
-        Button {
-            id: button
-            x: 0
-            y: 0
-            text: qsTr("Добавить полигон")
-            focusPolicy: Qt.TabFocus
-            spacing: 0
+//        Button {
+//            id: button
+//            x: 0
+//            y: 0
+//            text: qsTr("Добавить полигон")
+//            focusPolicy: Qt.TabFocus
+//            spacing: 0
 
-            onClicked: {
-                onPolygonCreate = true
-            }
-        }
-    }
+//            onClicked: {
+//                onPolygonCreate = true
+//            }
+//        }
+//    }
 
 
 
