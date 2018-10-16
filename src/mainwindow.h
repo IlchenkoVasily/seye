@@ -15,8 +15,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
-    void on_actionCreatePolygon_triggered();
+//private slots:
+//    void on_actionCreatePolygon_triggered();
 
 private:
     Ui::MainWindow *ui;
