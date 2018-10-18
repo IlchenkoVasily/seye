@@ -4,7 +4,7 @@ import QtPositioning 5.8
 import QtQuick.Controls 2.3
 
 Item {
-    id: item
+    id: superItem
     property bool onPolygonCreate: false
     property MapPolygon newZone
 
@@ -71,13 +71,35 @@ Item {
             id: button
             x: 0
             y: 0
+            width: 40
+            height: 40
             text: qsTr("Добавить зону")
+            rightPadding: 6
+            leftPadding: 6
+            padding: 5
+            font.capitalization: Font.Capitalize
+            display: AbstractButton.IconOnly
+
+            ToolTip.visible: down
+            ToolTip.delay: Qt.styleHints.useHoverEffects
+            ToolTip.text: "Клик - добавить точку \nДвойной клик - закончить зону \nПравый клик - отменить"
+
             focusPolicy: Qt.TabFocus
             spacing: 0
 
             onClicked: {
                 onPolygonCreate = true
-                item.newZone = Qt.createQmlObject('import QtLocation 5.9; MapPolygon { }', item)
+                superItem.newZone = Qt.createQmlObject('import QtLocation 5.9; MapPolygon { }', superItem)
+            }
+
+            Image {
+                id: image
+                x: 5
+                y: 5
+                width: 30
+                height: 30
+                sourceSize.width: 0
+                source: "icons/createZone1.png"
             }
         }
     }
@@ -87,6 +109,6 @@ Item {
 }
 
 /*##^## Designer {
-    D{i:0;autoSize:true;height:480;width:640}
+    D{i:0;autoSize:true;height:480;width:640}D{i:7;anchors_height:30;anchors_width:30;anchors_x:0;anchors_y:0}
 }
  ##^##*/
