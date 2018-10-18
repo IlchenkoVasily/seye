@@ -47,10 +47,17 @@ Item {
 
             onDoubleClicked: {
                 if (onPolygonCreate) {
-                    // end create polygon
-                    // add to polygongroup our new zone
-                    // check for drawing our group
+                    // Изменяем то, как выглядить зона
+                    // цвет
+                    newZone.color = Qt.rgba(64, 255, 64, 0.5)
+                    // цвет границ
+                    newZone.border.color = "green"
+                    // толщина грацниц
+                    newZone.border.width = 2
+
+                    // добавляем к карте эту зону
                     map.addMapItem(newZone)
+                    // зону больше не создаём
                     onPolygonCreate = false
                 }
             }
