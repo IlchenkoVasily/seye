@@ -1,2 +1,5 @@
 *user*
 [Bb]uild*
+*.stash
+Makefile*
+ui_mainwindow.h
