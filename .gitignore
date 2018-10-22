@@ -3,3 +3,6 @@
 *.stash
 Makefile*
 ui_mainwindow.h
+*.o
+qrc_*
+moc_*

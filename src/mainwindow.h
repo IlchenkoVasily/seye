@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class QAbstractItemModel;
+
 namespace Ui {
 class MainWindow;
 }
@@ -15,8 +17,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-//private slots:
-//    void on_actionCreatePolygon_triggered();
+    void addModel(const QString modelName, QAbstractItemModel* model);
 
 private:
     Ui::MainWindow *ui;

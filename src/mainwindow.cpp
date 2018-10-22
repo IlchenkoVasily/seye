@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QAbstractItemModel>
+#include <QQmlContext>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -13,7 +16,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//void MainWindow::on_actionCreatePolygon_triggered()
-//{
-
-//}
+void MainWindow::addModel(const QString name, QAbstractItemModel* model)
+{
+    QQmlContext* context = ui->quickWidget->rootContext();
+    context->setContextProperty(name, model);
+}
