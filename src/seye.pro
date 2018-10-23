@@ -26,19 +26,16 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
    # objectsmodel.cpp
     objectsmodel.cpp \
     object.cpp
 
 HEADERS += \
-        mainwindow.h \
   #  objectsmodel.h
     objectsmodel.h \
     object.h
 
-FORMS += \
-        mainwindow.ui
+FORMS +=
 
 RESOURCES += \
     qml.qrc \
