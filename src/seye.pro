@@ -8,7 +8,7 @@ QT       += core gui qml quick quickwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = untitled2
+TARGET = seye
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -28,10 +28,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
    # objectsmodel.cpp
+    main.cpp \
+    mainwindow.cpp
 
 HEADERS += \
         mainwindow.h \
   #  objectsmodel.h
+    mainwindow.h \
+    ui_mainwindow.h
 
 FORMS += \
         mainwindow.ui
@@ -46,4 +50,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    UseCase.qmodel
+    models/UseCase.qmodel
