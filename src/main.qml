@@ -5,6 +5,10 @@ import QtQuick.Controls 2.3
 
 Item {
     id: superItem
+    width: 640
+    height: 480
+
+
     property bool onPolygonCreate: false
     property MapPolygon newZone
 
@@ -23,14 +27,36 @@ Item {
         center: QtPositioning.coordinate(56.388, 85.210) // Bogachevo
         zoomLevel: 16
 
+        MapItemView {
+            model: objectModel
+            delegate: objectDelegate
+        }
+
+        Component {
+            id: objectDelegate
+
+            MapQuickItem {
+                coordinate: model.coordinate
+                sourceItem: Rectangle {
+                    width: 10
+                    height: 10
+                    radius: 15
+                    color: Qt.rgba(255, 0, 0, 1)
+                }
+                opacity: 1.0
+                anchorPoint: Qt.point(sourceItem.width / 2, sourceItem.height / 2)
+            }
+        }
+
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.RightButton
 
             onClicked: {
+                console.log('latitude = '+ (map.toCoordinate(Qt.point(mouse.x,mouse.y)).latitude),
+                                    'longitude = '+ (map.toCoordinate(Qt.point(mouse.x,mouse.y)).longitude));
                 //
                 if (onPolygonCreate) {
-
                     if (mouse.button & Qt.RightButton) {
                         // cancel create polygon
                         onPolygonCreate = false;

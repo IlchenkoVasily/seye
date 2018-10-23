@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui qml quick quickwidgets
+QT       += core gui qml quick quickwidgets positioning
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,20 +25,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-   # objectsmodel.cpp
     main.cpp \
-    mainwindow.cpp
+    objectsmodel.cpp \
+    object.cpp
 
 HEADERS += \
-        mainwindow.h \
-  #  objectsmodel.h
-    mainwindow.h \
-    ui_mainwindow.h
+    objectsmodel.h \
+    object.h
 
-FORMS += \
-        mainwindow.ui
+FORMS +=
 
 RESOURCES += \
     qml.qrc \
