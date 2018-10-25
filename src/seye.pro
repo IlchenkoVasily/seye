@@ -27,11 +27,13 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     objectsmodel.cpp \
-    object.cpp
+    object.cpp \
+    polygonmodel.cpp
 
 HEADERS += \
     objectsmodel.h \
-    object.h
+    object.h \
+    polygonmodel.h
 
 FORMS +=
 

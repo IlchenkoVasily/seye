@@ -1,44 +1,33 @@
 #include "polygonmodel.h"
 
+using namespace seye;
+
 PolygonModel::PolygonModel(QObject *parent)
     : QAbstractListModel(parent)
 {
 }
 
-QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    // FIXME: Implement me!
-}
-
-bool PolygonModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
-{
-    if (value != headerData(section, orientation, role)) {
-        // FIXME: Implement me!
-        emit headerDataChanged(orientation, section, section);
-        return true;
-    }
-    return false;
-}
-
 int PolygonModel::rowCount(const QModelIndex &parent) const
 {
-    // For list models only the root node (an invalid parent) should return the list's size. For all
-    // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
-    if (parent.isValid())
-        return 0;
+    Q_UNUSED(parent)
 
-    // FIXME: Implement me!
+    return _polygons.count();
 }
 
 QVariant PolygonModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid())
+    if (index.row() < 0 || index.row() >= _polygons.count())
         return QVariant();
 
-    // FIXME: Implement me!
+    QGeoPolygon poly = _polygons[index.row()];
+
+    if (role == PathRole)
+        return QVariant::fromValue(poly.path());
+
     return QVariant();
 }
 
+// пока без реализации всвязи с отсутствием необходимости
 bool PolygonModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (data(index, role) != value) {
@@ -49,10 +38,20 @@ bool PolygonModel::setData(const QModelIndex &index, const QVariant &value, int 
     return false;
 }
 
+// пока без реализации всвязи с отсутствием необходимости
 Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
 
     return Qt::ItemIsEditable; // FIXME: Implement me!
+}
+
+QHash<int, QByteArray> PolygonModel::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+
+    roles[PathRole] = "path";
+
+    return roles;
 }

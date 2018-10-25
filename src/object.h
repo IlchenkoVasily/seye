@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QGeoCoordinate>
+#include <QColor>
 
 namespace seye
 {
@@ -16,9 +17,10 @@ namespace seye
         Object(double latitude, double longitude);
         Object(QGeoCoordinate coord);
 
+        // для свойства id
         int id() const;
         void setId(int newId);
-
+        // для свойства coordinate
         QGeoCoordinate coordinate() const;
         void setCoordinate(QGeoCoordinate newCoord);
 
