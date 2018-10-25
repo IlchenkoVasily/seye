@@ -27,11 +27,13 @@ Item {
         center: QtPositioning.coordinate(56.388, 85.210) // Bogachevo
         zoomLevel: 16
 
+        // this is an Objects view container
         MapItemView {
             model: objectModel
             delegate: objectDelegate
         }
 
+        // this is an Objects delegate
         Component {
             id: objectDelegate
 
@@ -43,6 +45,7 @@ Item {
                     radius: 15
                     color: Qt.rgba(255, 0, 0, 1)
                 }
+                zoomLevel: 16
                 opacity: 1.0
                 anchorPoint: Qt.point(sourceItem.width / 2, sourceItem.height / 2)
             }
@@ -53,8 +56,8 @@ Item {
             acceptedButtons: Qt.LeftButton | Qt.RightButton
 
             onClicked: {
-                console.log('latitude = '+ (map.toCoordinate(Qt.point(mouse.x,mouse.y)).latitude),
-                                    'longitude = '+ (map.toCoordinate(Qt.point(mouse.x,mouse.y)).longitude));
+//                console.log((map.toCoordinate(Qt.point(mouse.x,mouse.y)).latitude)
+//                            + ' ' + (map.toCoordinate(Qt.point(mouse.x,mouse.y)).longitude));
                 //
                 if (onPolygonCreate) {
                     if (mouse.button & Qt.RightButton) {
