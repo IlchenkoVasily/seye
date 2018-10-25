@@ -32,7 +32,7 @@ namespace seye
         Qt::ItemFlags flags(const QModelIndex& index) const override;
 
         // этот метод должке также вызываться из qml
-        void addPolygon(QGeoPolygon* polygon);
+        Q_INVOKABLE void addPolygon(QGeoPolygon polygon);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;

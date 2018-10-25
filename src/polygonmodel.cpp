@@ -47,6 +47,13 @@ Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEditable; // FIXME: Implement me!
 }
 
+void PolygonModel::addPolygon(QGeoPolygon polygon)
+{
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    _polygons << polygon;
+    endInsertRows();
+}
+
 QHash<int, QByteArray> PolygonModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
