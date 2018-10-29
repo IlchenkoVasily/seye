@@ -55,8 +55,8 @@ void ObjectModel::update()
     for(auto obj: _objects)
     {
         QGeoCoordinate coord = obj->coordinate();
-        coord.setLatitude(coord.latitude() + 0.00001 * ((qrand() % 10) - 10));
-        coord.setLongitude(coord.longitude() + 0.00001 * ((qrand() % 10) - 10));
+        coord.setLatitude(coord.latitude() + 0.0001 * ((qrand() % 10) - 5));
+        coord.setLongitude(coord.longitude() + 0.0001 * ((qrand() % 10) - 5));
         obj->setCoordinate(coord);
     }
 

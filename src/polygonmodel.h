@@ -26,12 +26,12 @@ namespace seye
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-        // Editable:
+        // Для изменения уже имеющихся данных:
         bool setData(const QModelIndex &index, const QVariant &value,
                      int role = Qt::EditRole) override;
         Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-        // этот метод должке также вызываться из qml
+        // этот метод должен также вызываться из qml
         Q_INVOKABLE void addPolygon(QGeoPolygon polygon);
 
     protected:

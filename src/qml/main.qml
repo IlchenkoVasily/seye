@@ -8,9 +8,8 @@ Item {
     width: 640
     height: 480
 
-
     property bool onPolygonCreate: false
-    property MapPolygon newZone
+    property variant newZone
 
     //
     Plugin {
@@ -26,6 +25,17 @@ Item {
         plugin: mapPlugin
         center: QtPositioning.coordinate(56.388, 85.210) // Bogachevo
         zoomLevel: 16
+
+        // this is an Polygons view container
+        MapItemView {
+            model: polygonModel
+            delegate: MapPolygon {
+                color: Qt.rgba(64, 255, 64, 0.5)
+                border.color: "red"
+                border.width: 2
+                path: model.path
+            }
+        }
 
         // this is an Objects view container
         MapItemView {
@@ -69,23 +79,30 @@ Item {
                     // add new point to new polygon
                     if (mouse.button & Qt.LeftButton) {
                         // add new point to polygon
-                        newZone.addCoordinate(map.toCoordinate(Qt.point(mouse.x, mouse.y)))
+                        var coord = map.toCoordinate(Qt.point(mouse.x, mouse.y))
+                        newZone.addCoordinate(coord)
+                        console.log(coord + ' added')
                     }
                 }
             }
 
             onDoubleClicked: {
-                if (onPolygonCreate) {
+                if (onPolygonCreate) {/*
                     // Изменяем то, как выглядить зона
                     // цвет
                     newZone.color = Qt.rgba(64, 255, 64, 0.5)
                     // цвет границ
                     newZone.border.color = "green"
                     // толщина грацниц
-                    newZone.border.width = 2
+                    newZone.border.width = 2*/
 
                     // добавляем к карте эту зону
-                    map.addMapItem(newZone)
+//                    map.addMapItem(newZone)
+
+//                    var poly = QtPositioning.polygon(newZone)
+                    console.log(newZone)
+
+                    polygonModel.addPolygon(newZone)
                     // зону больше не создаём
                     onPolygonCreate = false
                 }
@@ -125,7 +142,8 @@ Item {
 
             onClicked: {
                 onPolygonCreate = true
-                superItem.newZone = Qt.createQmlObject('import QtLocation 5.9; MapPolygon { }', superItem)
+//                superItem.newZone = Qt.createQmlObject('import QtLocation 5.9; MapPolygon { }', superItem)
+                newZone = QtPositioning.polygon()
             }
 
             Image {
@@ -135,7 +153,7 @@ Item {
                 width: 30
                 height: 30
                 sourceSize.width: 0
-                source: "icons/createZone1.png"
+                source: "../icons/createZone1.png"
             }
         }
     }

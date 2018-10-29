@@ -1,5 +1,7 @@
 #include "polygonmodel.h"
 
+#include <QtDebug>
+
 using namespace seye;
 
 PolygonModel::PolygonModel(QObject *parent)
@@ -50,6 +52,7 @@ Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
 void PolygonModel::addPolygon(QGeoPolygon polygon)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    qDebug() << polygon.path().count();
     _polygons << polygon;
     endInsertRows();
 }

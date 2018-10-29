@@ -28,12 +28,14 @@ SOURCES += \
     main.cpp \
     objectsmodel.cpp \
     object.cpp \
-    polygonmodel.cpp
+    polygonmodel.cpp \
+    appengine.cpp
 
 HEADERS += \
     objectsmodel.h \
     object.h \
-    polygonmodel.h
+    polygonmodel.h \
+    appengine.h
 
 FORMS +=
 
