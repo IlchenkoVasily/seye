@@ -9,7 +9,6 @@ Item {
     height: 480
 
     property bool onPolygonCreate: false
-    property variant newZone
 
     //
     Plugin {
@@ -29,11 +28,17 @@ Item {
         // this is an Polygons view container
         MapItemView {
             model: polygonModel
-            delegate: MapPolygon {
-                color: Qt.rgba(64, 255, 64, 0.5)
-                border.color: "red"
-                border.width: 2
+            delegate: polygonDelegate
+        }
+
+        Component {
+            id: polygonDelegate
+
+            MapPolygon {
                 path: model.path
+                color: Qt.rgba(64, 255, 64, 0.5)
+                border.color: "green"
+                border.width: 2
             }
         }
 
@@ -72,39 +77,23 @@ Item {
                 if (onPolygonCreate) {
                     if (mouse.button & Qt.RightButton) {
                         // cancel create polygon
-                        onPolygonCreate = false;
-                        newZone.destroy();
+                        onPolygonCreate = false
+                        polygonModel.cancelCreatePolygon()
                     }
 
                     // add new point to new polygon
                     if (mouse.button & Qt.LeftButton) {
                         // add new point to polygon
                         var coord = map.toCoordinate(Qt.point(mouse.x, mouse.y))
-                        newZone.addCoordinate(coord)
-                        console.log(coord + ' added')
+                        polygonModel.addCoordinate(coord)
                     }
                 }
             }
 
             onDoubleClicked: {
-                if (onPolygonCreate) {/*
-                    // Изменяем то, как выглядить зона
-                    // цвет
-                    newZone.color = Qt.rgba(64, 255, 64, 0.5)
-                    // цвет границ
-                    newZone.border.color = "green"
-                    // толщина грацниц
-                    newZone.border.width = 2*/
-
-                    // добавляем к карте эту зону
-//                    map.addMapItem(newZone)
-
-//                    var poly = QtPositioning.polygon(newZone)
-                    console.log(newZone)
-
-                    polygonModel.addPolygon(newZone)
-                    // зону больше не создаём
+                if (onPolygonCreate) {
                     onPolygonCreate = false
+                    polygonModel.endCreatePolygon()
                 }
             }
         }
@@ -142,8 +131,7 @@ Item {
 
             onClicked: {
                 onPolygonCreate = true
-//                superItem.newZone = Qt.createQmlObject('import QtLocation 5.9; MapPolygon { }', superItem)
-                newZone = QtPositioning.polygon()
+                polygonModel.beginCreatePolygon()
             }
 
             Image {

@@ -8,8 +8,8 @@ Object::Object(QGeoCoordinate coord)
 
 }
 
-Object::Object(double alt, double longt)
-    : _id(123), _currentCoordinate(QGeoCoordinate(alt, longt))
+Object::Object(int id, double alt, double longt)
+    : _id(id), _currentCoordinate(QGeoCoordinate(alt, longt))
 {
 }
 

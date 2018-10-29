@@ -21,9 +21,16 @@ namespace seye
         };
 
         explicit PolygonModel(QObject *parent = nullptr);
+        ~PolygonModel() override;
 
-        // Basic functionality:
+        /*
+            Данный метод возвращает количество полигонов в моделе
+        */
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        /*
+            Данный метод возвращает данные полигона по индексу
+            и роли.
+        */
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
         // Для изменения уже имеющихся данных:
@@ -31,14 +38,50 @@ namespace seye
                      int role = Qt::EditRole) override;
         Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-        // этот метод должен также вызываться из qml
-        Q_INVOKABLE void addPolygon(QGeoPolygon polygon);
+        /*
+            Данный метод добавляет в модель созданный
+            в qml новый полигон
+        */
+        Q_INVOKABLE void addPolygon(QGeoPolygon* polygon);
+
+        /*
+            Данный метод, вызываемый из qml, сообщает
+            о начале создания нового полигона. Выделяет
+            место в куче для нового QGeoPolygon.
+        */
+        Q_INVOKABLE void beginCreatePolygon();
+
+        /*
+            Данный метод, вызываемый из qml, передаёт
+            координату для создаваемого полигона.
+        */
+        Q_INVOKABLE void addCoordinate(const QGeoCoordinate& coord);
+
+        /*
+            Данный метод, вызываемый из qml, сообщает
+            о конце создания полигона. Новый полигон
+            добавляется в модель данных.
+        */
+        Q_INVOKABLE void endCreatePolygon();
+
+        /*
+            Данный метод, вызываемый из qml, сообщает
+            об отмене создания нового полигона. Чистит
+            выделенную под новый полигон память
+        */
+        Q_INVOKABLE void cancelCreatePolygon();
 
     protected:
+        /* */
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        QList<QGeoPolygon> _polygons;
+        // Идёт процесс создания полигона.
+        bool _onCreatePolygon;
+        // Временная переменная для полигона.
+        QGeoPolygon* _tempPolygon;
+
+        QList<QGeoPolygon*> _polygons;
     };
 }
 

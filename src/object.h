@@ -14,7 +14,7 @@ namespace seye
         Q_PROPERTY(QGeoCoordinate coordinate READ coordinate WRITE setCoordinate NOTIFY coordinateChanged)
 
     public:
-        Object(double latitude, double longitude);
+        Object(int id, double latitude, double longitude);
         Object(QGeoCoordinate coord);
 
         // для свойства id
