@@ -28,7 +28,7 @@ namespace seye
         ObjectModel(QObject* parent = nullptr);
 
         // form QAbstractListModel
-        void addObject(const Object& newObj);
+        void addObject(Object* newObj);
         int rowCount(const QModelIndex& parent = QModelIndex()) const;
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
@@ -41,7 +41,7 @@ namespace seye
         QHash<int, QByteArray> roleNames() const;
 
     private:
-        QList<Object> _objects;
+        QList<Object*> _objects;
     };
 }
 

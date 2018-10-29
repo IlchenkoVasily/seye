@@ -7,7 +7,7 @@ ObjectModel::ObjectModel(QObject* parent)
 {
 }
 
-void ObjectModel::addObject(const Object& newObj)
+void ObjectModel::addObject(Object* newObj)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _objects << newObj;
@@ -25,11 +25,11 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
     if (index.row() < 0 || index.row() >= _objects.count())
         return QVariant();
 
-    const Object& object = _objects[index.row()];
+    Object* object = _objects[index.row()];
     if (role == IdRole)
-        return object.id();
+        return object->id();
     else if (role == CoordinateRole)
-        return QVariant::fromValue(object.coordinate());
+        return QVariant::fromValue(object->coordinate());
 
     return QVariant();
 }
