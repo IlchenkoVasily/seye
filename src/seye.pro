@@ -49,4 +49,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    models/UseCase.qmodel
+    models/UseCase.qmodel \
+    models/uml.qmodel
