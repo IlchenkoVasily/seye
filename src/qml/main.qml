@@ -39,6 +39,10 @@ Item {
                 color: Qt.rgba(64, 255, 64, 0.5)
                 border.color: "green"
                 border.width: 2
+                Component.onCompleted: {
+                    var q = model.path
+                    console.log(q)
+                }
             }
         }
 

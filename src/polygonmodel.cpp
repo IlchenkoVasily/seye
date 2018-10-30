@@ -34,7 +34,11 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
     QGeoPolygon* poly = _polygons[index.row()];
 
     if (role == PathRole)
+    {
+        auto temp = QVariant::fromValue(poly->path());
         return QVariant::fromValue(poly->path());
+    }
+
 
     return QVariant();
 }

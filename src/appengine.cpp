@@ -29,8 +29,8 @@ void AppEngine::setUp()
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     QQmlContext* context = view.rootContext();
 
-    context->setContextProperty("objectModel", &_objectModel);
     context->setContextProperty("polygonModel", &_polygonModel);
+    context->setContextProperty("objectModel", &_objectModel);
 
     view.setSource(QUrl("qrc:/qml/main.qml"));
     view.show();
