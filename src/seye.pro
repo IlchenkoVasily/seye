@@ -33,7 +33,10 @@ HEADERS += \
     objectsmodel.h \
     object.h
 
-FORMS +=
+FORMS += \
+    DialogAddDevice.ui \
+    Login.ui \
+    adminmainpanel.ui
 
 RESOURCES += \
     qml.qrc \
