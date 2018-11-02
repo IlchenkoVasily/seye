@@ -29,13 +29,16 @@ SOURCES += \
     objectsmodel.cpp \
     object.cpp \
     polygonmodel.cpp \
-    appengine.cpp
+    appengine.cpp \
+    fakeconnector.cpp
 
 HEADERS += \
     objectsmodel.h \
     object.h \
     polygonmodel.h \
-    appengine.h
+    appengine.h \
+    iconnector.h \
+    fakeconnector.h
 
 FORMS +=
 

@@ -105,6 +105,11 @@ void PolygonModel::cancelCreatePolygon()
     _onCreatePolygon = false;
 }
 
+const QList<QGeoPolygon*>& PolygonModel::toList() const
+{
+    return _polygons;
+}
+
 QHash<int, QByteArray> PolygonModel::roleNames() const
 {
     QHash<int, QByteArray> roles;

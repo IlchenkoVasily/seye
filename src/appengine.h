@@ -8,6 +8,7 @@
 #include "object.h"
 #include "objectsmodel.h"
 #include "polygonmodel.h"
+#include "fakeconnector.h"
 
 namespace seye
 {
@@ -17,6 +18,15 @@ namespace seye
 
     public:
         explicit AppEngine(QObject *parent = nullptr);
+        ~AppEngine();
+
+        /*
+            Данный метод устанавливает коннектор
+            для взаимодействия с внешней базовой
+            станции и получения из неё данных о
+            положении объектов.
+         */
+        void setConnector(IConnector* connector);
 
         /*
             Данный метод производит добавление
@@ -28,6 +38,10 @@ namespace seye
     signals:
 
     public slots:
+        /*
+            Слот для принятия пакетов от датчиков.
+         */
+        void onObjectsUpdate();
 
     private:
         /*
@@ -42,7 +56,7 @@ namespace seye
         PolygonModel _polygonModel;
         ObjectModel _objectModel;
         QQuickView view;
-        // here Connector
+        IConnector* _connector;
         // here DatabaseDriver
     };
 }

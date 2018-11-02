@@ -30,6 +30,11 @@ void ObjectModel::addObject(Object* newObj)
     endInsertRows();
 }
 
+const QList<Object*>& ObjectModel::toList() const
+{
+    return _objects;
+}
+
 int ObjectModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);

@@ -35,6 +35,8 @@ namespace seye
         // own
         void addObject(Object* newObj);
 
+        const QList<Object*>& toList() const;
+
     // need for test. delete it after
     public slots:
         void update();
