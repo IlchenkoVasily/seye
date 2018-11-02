@@ -27,16 +27,18 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     objectsmodel.cpp \
-    object.cpp
+    object.cpp \
+    mainwindow.cpp
 
 HEADERS += \
     objectsmodel.h \
-    object.h
+    object.h \
+    mainwindow.h
 
 FORMS += \
     DialogAddDevice.ui \
     Login.ui \
-    adminmainpanel.ui
+    MainWindow.ui
 
 RESOURCES += \
     qml.qrc \

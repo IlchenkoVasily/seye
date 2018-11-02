@@ -1,4 +1,5 @@
 #include "objectsmodel.h"
+#include "mainwindow.h"
 
 #include <QQuickView>
 #include <QQmlContext>
@@ -7,7 +8,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-//    MainWindow w;
+    MainWindow w;
 
     seye::ObjectModel model;
     model.addObject(new seye::Object(56.38943723960041, 85.21442028046647));
@@ -24,7 +25,19 @@ int main(int argc, char *argv[])
     view.show();
 
 //    w.addModel("objectModel", &model);
-//    w.show();
+  w.show();
 
     return a.exec();
 }
+
+
+//#include <QApplication>
+
+//int main(int argc, char *argv[])
+//{
+//    QApplication a(argc, argv);
+//    MainWindow w;
+//    w.show();
+
+//    return a.exec();
+//}
