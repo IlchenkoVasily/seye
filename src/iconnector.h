@@ -8,8 +8,13 @@
 #define ICONNECTOR_H
 
 #include <QList>
+#include <QObject>
 
 namespace seye {
+
+    struct Pak;
+
+    typedef QScopedPointer<QList<Pak>> ObjectsPakPtr;
 
     struct Pak {
         Pak(int id, double x, double y, bool v = true)
@@ -26,10 +31,13 @@ namespace seye {
         bool valid;
     };
 
-    class IConnector
+    class IConnector : public QObject
     {
+        Q_OBJECT
+
     public:
-        virtual ~IConnector();
+        explicit IConnector(QObject* parent = nullptr);
+//        virtual ~IConnector();
 
         /*
             Метод подключения к источнику данных
@@ -58,10 +66,8 @@ namespace seye {
             Сигнал для уведомления, что все данные
             от источника на данный момент получены.
         */
-        virtual void complete(QList<Pak>*) = 0;
+        void complete(QList<Pak>*);
     };
 }
-
-Q_DECLARE_INTERFACE(seye::IConnector, "seye.IConnector/1.0")
 
 #endif // ICONNECTOR_H

@@ -16,6 +16,7 @@ namespace seye
     public:
         Object(int id, double latitude, double longitude);
         Object(QGeoCoordinate coord);
+        Object(const Object&);
 
         // для свойства id
         int id() const;
@@ -23,6 +24,10 @@ namespace seye
         // для свойства coordinate
         QGeoCoordinate coordinate() const;
         void setCoordinate(QGeoCoordinate newCoord);
+
+        //
+        bool operator==(Object);
+        Object &operator=(const Object&);
 
     signals:
         void idChanged();

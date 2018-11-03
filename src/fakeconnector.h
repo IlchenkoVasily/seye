@@ -7,10 +7,9 @@
 
 namespace seye {
 
-    class FakeConnector : public QObject, public IConnector
+    class FakeConnector : public IConnector
     {
         Q_OBJECT
-        Q_INTERFACES(IConnector)
 
     public:
         explicit FakeConnector(QObject* parent = nullptr);
@@ -24,7 +23,7 @@ namespace seye {
         void askDevice() override;
 
     signals:
-        void complete(QList<Pak>*) override;
+        void complete(ObjectsPakPtr&);
 
     private:
         QFile* file;

@@ -41,7 +41,7 @@ namespace seye
         /*
             Слот для принятия пакетов от датчиков.
          */
-        void onObjectsUpdate();
+        void onObjectsUpdate(ObjectsPakPtr&);
 
     private:
         /*

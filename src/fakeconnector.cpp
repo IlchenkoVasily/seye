@@ -1,22 +1,22 @@
 #include "fakeconnector.h"
+#include <QtDebug>
 
 using namespace seye;
 
 FakeConnector::FakeConnector(QObject* parent)
-    : QObject(parent), timer(new QTimer), currentIndex(0)
+    : IConnector(parent), timer(new QTimer(this)), currentIndex(0)
 {
-    connect(timer, SIGNAL(timeout()), this, SLOT(startGetting()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(askDevice()));
 }
 
 FakeConnector::~FakeConnector()
 {
-    delete timer;
     delete file;
 }
 
 void FakeConnector::connectTo(int /* port */) // port -- unusalle
 {
-    file = new QFile("~/dev/track.txt");
+    file = new QFile(":/track.txt");
     if ((file->exists())&&(file->open(QIODevice::ReadOnly)))
     {
         while(!file->atEnd())
@@ -24,6 +24,11 @@ void FakeConnector::connectTo(int /* port */) // port -- unusalle
             list << file->readLine();
         }
     }
+    else
+    {
+        qDebug() << "Can't open track file";
+    }
+
     file->close();
 }
 
@@ -36,20 +41,21 @@ void FakeConnector::askDevice()
 {
     int deviceCount = 3; // !!!
 
-    auto listPak = new QList<Pak>;
+    if (currentIndex >= 90)
+        currentIndex = 0;
+
+    ObjectsPakPtr listPak(new QList<Pak>);
 
     for (int i = 0; i < deviceCount; i++)
     {
         int id = -1;                // device id
         double _lat = 0, _long = 0; // x, y
 
-        id = list.takeAt(currentIndex++).toInt();
-        _lat = list.takeAt(currentIndex++).toDouble();
-        _long = list.takeAt(currentIndex++).toDouble();
+        id = list[currentIndex++].toInt();
+        _lat = list[currentIndex++].toDouble();
+        _long = list[currentIndex++].toDouble();
 
-        Pak temp(id, _lat, _long);
-
-        listPak->append(temp);
+        listPak->append(Pak(id, _lat, _long));
     }
 
     emit complete(listPak);

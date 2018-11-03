@@ -6,31 +6,34 @@ using namespace seye;
 
 ObjectModel::ObjectModel(QObject* parent)
     : QAbstractListModel(parent)
-{
-    timer = new QTimer;
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(5000);
-}
+{}
 
 ObjectModel::~ObjectModel()
 {
-    // Освобождаем все указатели точек
-    for (int i = 0; i < _objects.count(); i++)
-    {
-        delete _objects[i];
-    }
 
-    delete timer;
 }
 
-void ObjectModel::addObject(Object* newObj)
+void ObjectModel::addObject(Object& newObj)
 {
+    int idx = _objects.indexOf(newObj);
+    if (idx != -1)
+    {
+        _objects[idx].setCoordinate(newObj.coordinate());
+
+        emit dataChanged(index(idx), index(rowCount() - 1), QVector<int>() << CoordinateRole);
+
+        qDebug() << "Updated" << newObj.id() << "with" << newObj.coordinate();
+        return;
+    }
+
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _objects << newObj;
     endInsertRows();
+
+    qDebug() << "Added" << newObj.id() << "with" << newObj.coordinate();
 }
 
-const QList<Object*>& ObjectModel::toList() const
+const QList<Object>& ObjectModel::toList() const
 {
     return _objects;
 }
@@ -46,24 +49,18 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
     if (index.row() < 0 || index.row() >= _objects.count())
         return QVariant();
 
-    Object* object = _objects[index.row()];
+    Object object = _objects[index.row()];
     if (role == IdRole)
-        return object->id();
+        return QVariant(object.id());
     else if (role == CoordinateRole)
-        return QVariant::fromValue(object->coordinate());
+        return QVariant::fromValue(object.coordinate());
 
     return QVariant();
 }
 
 void ObjectModel::update()
 {
-    for(auto obj: _objects)
-    {
-        QGeoCoordinate coord = obj->coordinate();
-        coord.setLatitude(coord.latitude() + 0.0001 * ((qrand() % 10) - 5));
-        coord.setLongitude(coord.longitude() + 0.0001 * ((qrand() % 10) - 5));
-        obj->setCoordinate(coord);
-    }
+    // here new implementation
 
     emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << CoordinateRole);
 }

@@ -33,9 +33,9 @@ namespace seye
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
         // own
-        void addObject(Object* newObj);
+        void addObject(Object& newObj);
 
-        const QList<Object*>& toList() const;
+        const QList<Object>& toList() const;
 
     // need for test. delete it after
     public slots:
@@ -45,8 +45,7 @@ namespace seye
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        QList<Object*> _objects;
-        QTimer* timer;  // for test
+        QList<Object> _objects;
     };
 }
 

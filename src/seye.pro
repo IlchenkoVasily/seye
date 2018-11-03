@@ -30,7 +30,8 @@ SOURCES += \
     object.cpp \
     polygonmodel.cpp \
     appengine.cpp \
-    fakeconnector.cpp
+    fakeconnector.cpp \
+    iconnector.cpp
 
 HEADERS += \
     objectsmodel.h \
@@ -44,7 +45,8 @@ FORMS +=
 
 RESOURCES += \
     qml.qrc \
-    icons.qrc
+    icons.qrc \
+    other.qrc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

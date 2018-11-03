@@ -29,7 +29,7 @@ void AppEngine::checkEntries()
     {
         for (auto obj: objects)
         {
-            if (poly->contains(obj->coordinate()))
+            if (poly->contains(obj.coordinate()))
             {
                 // Здесь установка статуса для объектов
             }
@@ -42,14 +42,9 @@ void AppEngine::checkEntries()
 void AppEngine::setUp()
 {
     //--- setup connnector ----//
-//    connect(_connector, SIGNAL(IConnecter::complete(QList<Pak>*)), this, SLOT(onObjectsUpdate()));
+    connect(_connector, SIGNAL(complete(ObjectsPakPtr&)), this, SLOT(onObjectsUpdate(ObjectsPakPtr&)));
     _connector->connectTo(228);
-//    _connector->
-
-//    _objectModel.addObject(new seye::Object(1, 56.38943723960041, 85.21442028046647));
-//    _objectModel.addObject(new seye::Object(2, 56.38866517548572, 85.2159223175081));
-//    _objectModel.addObject(new seye::Object(3, 56.3867765218958, 85.2117595291229));
-//    _objectModel.addObject(new seye::Object(4, 56.38634888921545, 85.21306844710358));
+    _connector->start();
 
     // имитация доставания из бд )00)
     _polygonModel.beginCreatePolygon();
@@ -67,4 +62,13 @@ void AppEngine::setUp()
 
     view.setSource(QUrl("qrc:/qml/main.qml"));
     view.show();
+}
+
+void AppEngine::onObjectsUpdate(ObjectsPakPtr& objPaks)
+{
+    for (auto begin = objPaks->begin(), end = objPaks->end(); begin != end; begin++)
+    {
+        Object obj(begin->devId, begin->latitude, begin->longitude);
+        _objectModel.addObject(obj);
+    }
 }
