@@ -18,17 +18,26 @@ void ObjectModel::addObject(Object& newObj)
     int idx = _objects.indexOf(newObj);
     if (idx != -1)
     {
+        // Обновляем координаты у объекта
         _objects[idx].setCoordinate(newObj.coordinate());
 
-        emit dataChanged(index(idx), index(rowCount() - 1), QVector<int>() << CoordinateRole);
+        // Сигнал о том, что данные в модели изменены.
+        // Индексы наших объектов в моделе, изменённый параметр
+        emit dataChanged(index(idx), index(idx), QVector<int>() << CoordinateRole);
 
         qDebug() << "Updated" << newObj.id() << "with" << newObj.coordinate();
         return;
     }
 
+    // Вставка нового объекта
+    // Модельный индекс, индекс начала вставки и конца вставки
+    //
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _objects << newObj;
     endInsertRows();
+
+    // Объекты не появляются без этой строки.
+    emit dataChanged(index(rowCount() - 1), index(rowCount() - 1), QVector<int>() << CoordinateRole);
 
     qDebug() << "Added" << newObj.id() << "with" << newObj.coordinate();
 }
@@ -62,6 +71,7 @@ void ObjectModel::update()
 {
     // here new implementation
 
+    // Обновление всей модели
     emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << CoordinateRole);
 }
 

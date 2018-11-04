@@ -35,8 +35,17 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
 
     if (role == PathRole)
     {
-        auto temp = QVariant::fromValue(poly->path());
-        return QVariant::fromValue(poly->path());
+        QVariantList path;
+
+        for (auto coord: poly->path())
+        {
+//            QVariant variantCoord(coord);
+            path.append(QVariant::fromValue(coord));
+        }
+
+//        auto temp = QVariant::fromValue(poly->path());
+//        return QVariant::fromValue(poly->path());
+        return path;
     }
 
 
