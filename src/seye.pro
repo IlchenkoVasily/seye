@@ -28,17 +28,19 @@ SOURCES += \
     main.cpp \
     objectsmodel.cpp \
     object.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    dialogadddevice.cpp
 
 HEADERS += \
     objectsmodel.h \
     object.h \
-    mainwindow.h
+    mainwindow.h \
+    dialogadddevice.h
 
 FORMS += \
-    DialogAddDevice.ui \
     Login.ui \
-    MainWindow.ui
+    mainwindow.ui \
+    dialogadddevice.ui
 
 RESOURCES += \
     qml.qrc \

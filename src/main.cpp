@@ -22,10 +22,10 @@ int main(int argc, char *argv[])
     context->setContextProperty("objectModel", &model);
 
     view.setSource(QUrl("qrc:/main.qml"));
-    view.show();
+//    view.show();
 
 //    w.addModel("objectModel", &model);
-  w.show();
+    w.show();
 
     return a.exec();
 }
