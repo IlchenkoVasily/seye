@@ -20,12 +20,14 @@ void ObjectModel::addObject(Object& newObj)
     {
         // Обновляем координаты у объекта
         _objects[idx].setCoordinate(newObj.coordinate());
+        _objects[idx].setState(newObj.state());
 
         // Сигнал о том, что данные в модели изменены.
         // Индексы наших объектов в моделе, изменённый параметр
-        emit dataChanged(index(idx), index(idx), QVector<int>() << CoordinateRole);
+        emit dataChanged(index(idx), index(idx), QVector<int>() << CoordinateRole << StateRole);
 
-        qDebug() << "Updated" << newObj.id() << "with" << newObj.coordinate();
+        qDebug() << "Updated" << newObj.id() << "with" << newObj.coordinate()
+                 << "(" << newObj.state() << ")";
         return;
     }
 
@@ -36,10 +38,8 @@ void ObjectModel::addObject(Object& newObj)
     _objects << newObj;
     endInsertRows();
 
-    // Объекты не появляются без этой строки.
-    emit dataChanged(index(rowCount() - 1), index(rowCount() - 1), QVector<int>() << CoordinateRole);
-
-    qDebug() << "Added" << newObj.id() << "with" << newObj.coordinate();
+    qDebug() << "Added" << newObj.id() << "with" << newObj.coordinate()
+             << "(" << newObj.state() << ")";
 }
 
 const QList<Object>& ObjectModel::toList() const
@@ -59,12 +59,18 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     Object object = _objects[index.row()];
-    if (role == IdRole)
-        return QVariant(object.id());
-    else if (role == CoordinateRole)
-        return QVariant::fromValue(object.coordinate());
 
-    return QVariant();
+    switch (role) {
+    case IdRole:
+        return QVariant(object.id());
+    case CoordinateRole:
+        return QVariant::fromValue(object.coordinate());
+    case StateRole:
+        qDebug() << "model:" << object.state();
+        return QVariant(object.state());
+    default:
+        return QVariant();
+    }
 }
 
 void ObjectModel::update()
@@ -81,6 +87,7 @@ QHash<int, QByteArray> ObjectModel::roleNames() const
 
     roles[IdRole] = "id";
     roles[CoordinateRole] = "coordinate";
+    roles[StateRole] = "state";
 
     return roles;
 }

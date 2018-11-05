@@ -39,7 +39,8 @@ HEADERS += \
     polygonmodel.h \
     appengine.h \
     iconnector.h \
-    fakeconnector.h
+    fakeconnector.h \
+    enums.h
 
 FORMS +=
 

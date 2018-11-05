@@ -2,16 +2,17 @@
 
 using namespace seye;
 
-Object::Object(QGeoCoordinate coord)
-    : _currentCoordinate(coord)
+Object::Object(int id, QGeoCoordinate coord)
+    : _id(id), _currentCoordinate(coord)
 {}
 
 Object::Object(const Object & obj)
     : _id(obj._id), _currentCoordinate(obj._currentCoordinate)
+    , _state(obj._state)
 {}
 
 Object::Object(int id, double alt, double longt)
-    : _id(id), _currentCoordinate(QGeoCoordinate(alt, longt))
+    : Object(id, QGeoCoordinate(alt, longt))
 {}
 
 int Object::id() const
@@ -36,6 +37,17 @@ void Object::setCoordinate(QGeoCoordinate coord)
     _currentCoordinate = coord;
 
     emit coordinateChanged();
+}
+
+State Object::state() const
+{
+    return _state;
+}
+
+void Object::setState(State stat)
+{
+    _state = stat;
+    emit stateChanged(stat);
 }
 
 bool Object::operator==(Object another)

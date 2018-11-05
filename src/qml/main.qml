@@ -3,6 +3,8 @@ import QtLocation 5.9
 import QtPositioning 5.8
 import QtQuick.Controls 2.3
 
+import seye 1.0
+
 Item {
     id: superItem
     width: 640
@@ -39,10 +41,6 @@ Item {
                 color: Qt.rgba(64, 255, 64, 0.5)
                 border.color: "green"
                 border.width: 2
-                Component.onCompleted: {
-                    var q = model.path
-                    console.log(q)
-                }
             }
         }
 
@@ -62,7 +60,15 @@ Item {
                     width: 10
                     height: 10
                     radius: 15
-                    color: Qt.rgba(255, 0, 0, 1)
+                    color: {
+                        if (model.state === States.Allowed) {
+                            return "green"
+                        }
+                        if (model.state === States.Intruder) {
+                            return "red"
+                        }
+                        return "blue"
+                    }
                 }
                 zoomLevel: 16
                 opacity: 1.0
@@ -75,8 +81,6 @@ Item {
             acceptedButtons: Qt.LeftButton | Qt.RightButton
 
             onClicked: {
-//                console.log((map.toCoordinate(Qt.point(mouse.x,mouse.y)).latitude)
-//                            + ' ' + (map.toCoordinate(Qt.point(mouse.x,mouse.y)).longitude));
                 //
                 if (onPolygonCreate) {
                     if (mouse.button & Qt.RightButton) {

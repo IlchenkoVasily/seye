@@ -12,6 +12,7 @@
 
 // other includes
 #include "object.h"
+#include "enums.h"
 
 namespace seye
 {
@@ -22,7 +23,8 @@ namespace seye
     public:
         enum ObjectRoles {
             IdRole = Qt::UserRole + 1,
-            CoordinateRole
+            CoordinateRole,
+            StateRole
         };
 
         explicit ObjectModel(QObject* parent = nullptr);
