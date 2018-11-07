@@ -31,7 +31,9 @@ SOURCES += \
     polygonmodel.cpp \
     appengine.cpp \
     fakeconnector.cpp \
-    iconnector.cpp
+    iconnector.cpp \
+    mainwindow.cpp \
+    dialogadddevice.cpp
 
 HEADERS += \
     objectsmodel.h \
@@ -40,9 +42,14 @@ HEADERS += \
     appengine.h \
     iconnector.h \
     fakeconnector.h \
-    enums.h
+    enums.h \
+    mainwindow.h \
+    dialogadddevice.h
 
-FORMS +=
+FORMS += \
+    Login.ui \
+    mainwindow.ui \
+    dialogadddevice.ui
 
 RESOURCES += \
     qml.qrc \

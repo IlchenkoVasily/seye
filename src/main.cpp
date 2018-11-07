@@ -1,5 +1,6 @@
 #include <QApplication>
 
+#include "mainwindow.h"
 #include "appengine.h"
 #include "fakeconnector.h"
 #include "enums.h"
@@ -16,6 +17,5 @@ int main(int argc, char *argv[])
     seye::AppEngine engine;
     engine.setConnector(conn);
     engine.setUp();
-
     return a.exec();
 }

@@ -6,3 +6,4 @@ ui_mainwindow.h
 *.o
 qrc_*
 moc_*
+*.autosave
