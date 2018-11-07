@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class QAbstractItemModel;
+
 namespace Ui {
 class MainWindow;
 }
@@ -14,6 +16,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void addModel(QString modelName, QAbstractItemModel* model);
 
 private slots:
     void on_pushButton_released();

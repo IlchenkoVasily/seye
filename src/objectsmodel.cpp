@@ -25,9 +25,6 @@ void ObjectModel::addObject(Object& newObj)
         // Сигнал о том, что данные в модели изменены.
         // Индексы наших объектов в моделе, изменённый параметр
         emit dataChanged(index(idx), index(idx), QVector<int>() << CoordinateRole << StateRole);
-
-        qDebug() << "Updated" << newObj.id() << "with" << newObj.coordinate()
-                 << "(" << newObj.state() << ")";
         return;
     }
 
@@ -37,9 +34,6 @@ void ObjectModel::addObject(Object& newObj)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _objects << newObj;
     endInsertRows();
-
-    qDebug() << "Added" << newObj.id() << "with" << newObj.coordinate()
-             << "(" << newObj.state() << ")";
 }
 
 const QList<Object>& ObjectModel::toList() const
@@ -66,7 +60,6 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
     case CoordinateRole:
         return QVariant::fromValue(object.coordinate());
     case StateRole:
-        qDebug() << "model:" << object.state();
         return QVariant(object.state());
     default:
         return QVariant();
