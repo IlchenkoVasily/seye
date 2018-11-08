@@ -3,21 +3,29 @@ import QtLocation 5.9
 import QtPositioning 5.8
 import QtQuick.Controls 2.3
 
-import seye 1.0
+import seye 1.0     // Модуль QML не найден (seye).
 
 Item {
     id: superItem
-    width: 640
-    height: 480
 
     property bool onPolygonCreate: false
+    property bool firstAdded: false
+
+    // Данное свойство - группа элементов карты.
+    // Сюда добавляются "точки" - MapQuickItem, в котором
+    // содержится округлый Rectangle.
+    property MapItemGroup dots: MapItemGroup { }
+    // Линия, отображающая границы полигона.
+    property MapPolyline line: MapPolyline {
+        line.width: 3
+        line.color: "red"
+    }
 
     //
     Plugin {
         id: mapPlugin
         name: "osm"
     }
-
 
     Map {
         id: map
@@ -26,6 +34,7 @@ Item {
         plugin: mapPlugin
         center: QtPositioning.coordinate(56.388, 85.210) // Bogachevo
         zoomLevel: 16
+        Component.onCompleted: { map.addMapItem(line) }
 
         // this is an Polygons view container
         MapItemView {
@@ -79,21 +88,44 @@ Item {
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.RightButton
+            hoverEnabled: true
+            cursorShape: onPolygonCreate ? Qt.CrossCursor : Qt.ArrowCursor
 
             onClicked: {
-                //
+                // Если создаётеся полигнон
                 if (onPolygonCreate) {
+                    // Правая кнопка - отменение создания полигона
                     if (mouse.button & Qt.RightButton) {
-                        // cancel create polygon
                         onPolygonCreate = false
+                        firstAdded = false
                         polygonModel.cancelCreatePolygon()
+                        ///------------чистим dots
+
+                        // чистим line
+                        for (var i = line.pathLength() - 1; i >= 0; i--) {
+                            line.removeCoordinate(i)
+                        }
                     }
 
                     // add new point to new polygon
                     if (mouse.button & Qt.LeftButton) {
-                        // add new point to polygon
                         var coord = map.toCoordinate(Qt.point(mouse.x, mouse.y))
                         polygonModel.addCoordinate(coord)
+                        ///--------------добавляем в dots новый MapQuickItem
+
+                        // добавляем в line новую координату
+                        if (!firstAdded) {
+                            line.addCoordinate(coord)
+                            // Если была добавлена только первая точка,
+                            // тогда добавляем временную точку, для
+                            // слежки за курсором в момент добавления
+                            line.addCoordinate(coord)
+                            firstAdded = true
+                            return
+                        }
+
+                        line.replaceCoordinate(line.pathLength() - 1, coord)
+                        line.addCoordinate(coord);
                     }
                 }
             }
@@ -101,7 +133,26 @@ Item {
             onDoubleClicked: {
                 if (onPolygonCreate) {
                     onPolygonCreate = false
+                    firstAdded = false
                     polygonModel.endCreatePolygon()
+                    // чистим line
+                    for (var i = line.pathLength() - 1; i >= 0; i--) {
+                        line.removeCoordinate(i)
+                    }
+                }
+            }
+
+            onPositionChanged: {
+                if (onPolygonCreate) {
+                    // Если нету точек, то и не откуда следить
+                    if (!firstAdded) {
+                        console.log("netu")
+                        return;
+                    }
+
+                    // подмениваем последнюю точку из полигона
+                    line.replaceCoordinate(line.pathLength() - 1,
+                                           map.toCoordinate(Qt.point(mouse.x, mouse.y)))
                 }
             }
         }
