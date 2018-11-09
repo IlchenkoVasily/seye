@@ -6,6 +6,9 @@
 
 QT       += core gui qml quick quickwidgets positioning
 
+#для dbservice
+QT += sql
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = seye
@@ -31,7 +34,8 @@ SOURCES += \
     polygonmodel.cpp \
     appengine.cpp \
     fakeconnector.cpp \
-    iconnector.cpp
+    iconnector.cpp \
+    dbservice.cpp
 
 HEADERS += \
     objectsmodel.h \
@@ -40,7 +44,8 @@ HEADERS += \
     appengine.h \
     iconnector.h \
     fakeconnector.h \
-    enums.h
+    enums.h \
+    dbservice.h
 
 FORMS +=
 
