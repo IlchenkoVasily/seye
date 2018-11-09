@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialogadddevice.h"
+#include "device.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -28,5 +29,14 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 
 void MainWindow::on_pushButton_released()
 {
+    DialogAddDevice dia;
+    dia.setModal(true);
+    dia.exec();
+}
 
+void MainWindow::on_pushButton_2_clicked()
+{
+    Device dev;
+        dev.setModal(true);
+        dev.exec();
 }

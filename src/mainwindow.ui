@@ -50,7 +50,7 @@
       <item>
        <widget class="QPushButton" name="pushButton_3">
         <property name="text">
-         <string>Объекты</string>
+         <string>Текущее состояние</string>
         </property>
        </widget>
       </item>

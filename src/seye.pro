@@ -33,7 +33,9 @@ SOURCES += \
     fakeconnector.cpp \
     iconnector.cpp \
     mainwindow.cpp \
-    dialogadddevice.cpp
+    dialogadddevice.cpp \
+    device.cpp \
+    login.cpp
 
 HEADERS += \
     objectsmodel.h \
@@ -44,12 +46,15 @@ HEADERS += \
     fakeconnector.h \
     enums.h \
     mainwindow.h \
-    dialogadddevice.h
+    dialogadddevice.h \
+    device.h \
+    login.h
 
 FORMS += \
-    Login.ui \
     mainwindow.ui \
-    dialogadddevice.ui
+    dialogadddevice.ui \
+    device.ui \
+    login.ui
 
 RESOURCES += \
     qml.qrc \
