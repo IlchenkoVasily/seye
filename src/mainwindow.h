@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class QAbstractItemModel;
+class QQuickWidget;
 
 namespace Ui {
 class MainWindow;
@@ -19,12 +20,17 @@ public:
 
     void addModel(QString modelName, QAbstractItemModel* model);
 
+    void setupUi();
+
 private slots:
     void on_pushButton_released();
 
     void on_pushButton_2_clicked();
 
+    void on_pushButton_3_clicked();
+
 private:
+    QQuickWidget* gisWidget;
     Ui::MainWindow *ui;
 };
 

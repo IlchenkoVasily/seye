@@ -146,7 +146,6 @@ Item {
                 if (onPolygonCreate) {
                     // Если нету точек, то и не откуда следить
                     if (!firstAdded) {
-                        console.log("netu")
                         return;
                     }
 
