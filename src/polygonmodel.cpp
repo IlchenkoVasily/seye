@@ -31,19 +31,33 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
 
     Polygon* poly = _polygons[index.row()];
 
-    if (role == PathRole)
-    {
+    switch (role) {
+    case PathRole: {
         QVariantList path;
 
         for (auto coord: poly->path())
         {
             path.append(QVariant::fromValue(coord));
         }
+
         return path;
     }
 
+    case IdRole: {
+        return poly->id();
+    }
 
-    return QVariant();
+    case ColorRole: {
+        return QVariant::fromValue(poly->color());
+    }
+
+    case BorderColorRole: {
+        return QVariant::fromValue(poly->borderColor());
+    }
+
+    default:
+        return QVariant();
+    }
 }
 
 // пока без реализации всвязи с отсутствием необходимости
@@ -90,6 +104,10 @@ void PolygonModel::addCoordinate(const QGeoCoordinate &coord)
 void PolygonModel::endCreatePolygon()
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    _tempPolygon->setId(228);
+    _tempPolygon->setName("Bonjur");
+    _tempPolygon->setColor(QColor(64, 255, 64, 128));
+    _tempPolygon->setBorderColor(QColor(0, 100, 0));
     _polygons.append(_tempPolygon);
     endInsertRows();
 
@@ -114,6 +132,10 @@ QHash<int, QByteArray> PolygonModel::roleNames() const
     QHash<int, QByteArray> roles;
 
     roles[PathRole] = "path";
+    roles[IdRole] = "role";
+    roles[ColorRole] = "color";
+    roles[BorderColorRole] = "borderColor";
+    roles[NameRole] = "name";
 
     return roles;
 }

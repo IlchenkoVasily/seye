@@ -47,8 +47,8 @@ Item {
 
             MapPolygon {
                 path: model.path
-                color: Qt.rgba(64, 255, 64, 0.5)
-                border.color: "green"
+                color: model.color
+                border.color: model.borderColor
                 border.width: 2
             }
         }

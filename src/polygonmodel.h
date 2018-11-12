@@ -17,7 +17,11 @@ namespace seye
 
     public:
         enum {
-            PathRole = Qt::UserRole + 1
+            PathRole = Qt::UserRole + 1,
+            IdRole,
+            NameRole,
+            ColorRole,
+            BorderColorRole
         };
 
         explicit PolygonModel(QObject *parent = nullptr);
