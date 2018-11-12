@@ -7,7 +7,7 @@
 #define POLYGONMODEL_H
 
 #include <QAbstractListModel>
-#include <QGeoPolygon>
+#include "polygon.h"
 
 namespace seye
 {
@@ -42,12 +42,12 @@ namespace seye
             Данный метод добавляет в модель созданный
             в qml новый полигон
         */
-        Q_INVOKABLE void addPolygon(QGeoPolygon* polygon);
+        Q_INVOKABLE void addPolygon(Polygon* polygon);
 
         /*
             Данный метод, вызываемый из qml, сообщает
             о начале создания нового полигона. Выделяет
-            место в куче для нового QGeoPolygon.
+            место в куче для нового Polygon.
         */
         Q_INVOKABLE void beginCreatePolygon();
 
@@ -75,7 +75,7 @@ namespace seye
             Данный метод возвращает ссылку на лист
             со всеми полигонами.
         */
-        const QList<QGeoPolygon*>& toList() const;
+        const QList<Polygon*>& toList() const;
 
     protected:
         /* */
@@ -85,9 +85,9 @@ namespace seye
         // Идёт процесс создания полигона.
         bool _onCreatePolygon;
         // Временная переменная для полигона.
-        QGeoPolygon* _tempPolygon;
+        Polygon* _tempPolygon;
 
-        QList<QGeoPolygon*> _polygons;
+        QList<Polygon*> _polygons;
     };
 }
 

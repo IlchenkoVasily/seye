@@ -1,7 +1,5 @@
 #include "polygonmodel.h"
 
-#include <QtDebug>
-
 using namespace seye;
 
 PolygonModel::PolygonModel(QObject *parent)
@@ -31,7 +29,7 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
     if (index.row() < 0 || index.row() >= _polygons.count())
         return QVariant();
 
-    QGeoPolygon* poly = _polygons[index.row()];
+    Polygon* poly = _polygons[index.row()];
 
     if (role == PathRole)
     {
@@ -39,12 +37,8 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
 
         for (auto coord: poly->path())
         {
-//            QVariant variantCoord(coord);
             path.append(QVariant::fromValue(coord));
         }
-
-//        auto temp = QVariant::fromValue(poly->path());
-//        return QVariant::fromValue(poly->path());
         return path;
     }
 
@@ -72,7 +66,7 @@ Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEditable; // FIXME: Implement me!
 }
 
-void PolygonModel::addPolygon(QGeoPolygon* polygon)
+void PolygonModel::addPolygon(Polygon* polygon)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _polygons << polygon;
@@ -81,19 +75,15 @@ void PolygonModel::addPolygon(QGeoPolygon* polygon)
 
 void PolygonModel::beginCreatePolygon()
 {
-    qDebug() << "begin creating";
-
     if (_onCreatePolygon)
         delete _tempPolygon;
 
     _onCreatePolygon = true;
-    _tempPolygon = new QGeoPolygon;
+    _tempPolygon = new Polygon;
 }
 
 void PolygonModel::addCoordinate(const QGeoCoordinate &coord)
 {
-    qDebug() << "added " << coord;
-
     _tempPolygon->addCoordinate(coord);
 }
 
@@ -114,7 +104,7 @@ void PolygonModel::cancelCreatePolygon()
     _onCreatePolygon = false;
 }
 
-const QList<QGeoPolygon*>& PolygonModel::toList() const
+const QList<Polygon*>& PolygonModel::toList() const
 {
     return _polygons;
 }
