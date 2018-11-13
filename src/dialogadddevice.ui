@@ -90,14 +90,14 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>30</width>
+         <width>42</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="surnamelineEdit_3"/>
+      <widget class="QLineEdit" name="lastname"/>
      </item>
     </layout>
    </item>
@@ -120,14 +120,18 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>62</width>
+         <width>74</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="surnamelineEdit_2"/>
+      <widget class="QLineEdit" name="firstname">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -136,7 +140,7 @@
      <item>
       <widget class="QLabel" name="label_8">
        <property name="text">
-        <string>Роль</string>
+        <string>Дата рождения</string>
        </property>
       </widget>
      </item>
@@ -146,18 +150,18 @@
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
+        <enum>QSizePolicy::Minimum</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>58</width>
+         <width>0</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="surnamelineEdit_4"/>
+      <widget class="QLineEdit" name="date"/>
      </item>
     </layout>
    </item>
@@ -166,7 +170,7 @@
      <item>
       <widget class="QLabel" name="label_9">
        <property name="text">
-        <string>Телефон</string>
+        <string>Позывной</string>
        </property>
       </widget>
      </item>
@@ -180,19 +184,37 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>31</width>
+         <width>37</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="surnamelineEdit_5"/>
+      <widget class="QLineEdit" name="callSign"/>
      </item>
     </layout>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox_2">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>392</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>160000</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="cursor">
+      <cursorShape>IBeamCursor</cursorShape>
+     </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
      </property>

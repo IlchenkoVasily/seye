@@ -50,7 +50,7 @@
       <item>
        <widget class="QPushButton" name="pushButton_3">
         <property name="text">
-         <string>Объекты</string>
+         <string>Текущее состояние</string>
         </property>
        </widget>
       </item>
@@ -109,20 +109,13 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QQuickWidget" name="quickWidget">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="resizeMode">
-          <enum>QQuickWidget::SizeRootObjectToView</enum>
-         </property>
+        <widget class="QStackedWidget" name="mainStackedWidget">
+         <widget class="QWidget" name="page_3"/>
+         <widget class="QWidget" name="page_4"/>
         </widget>
        </item>
        <item>
-        <widget class="QStackedWidget" name="stackedWidget">
+        <widget class="QStackedWidget" name="smallStackedWidget">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -199,13 +192,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QQuickWidget</class>
-   <extends>QWidget</extends>
-   <header>QtQuickWidgets/QQuickWidget</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
