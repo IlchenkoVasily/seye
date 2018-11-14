@@ -38,6 +38,11 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     QQmlContext* context = gisWidget->rootContext();
 
     context->setContextProperty(name, model);
+
+    if (name.contains("poly"))
+    {
+        ui->polygonView->setModel(model);
+    }
 }
 
 void MainWindow::on_pushButton_released()
