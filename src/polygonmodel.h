@@ -44,7 +44,7 @@ namespace seye
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
         /*
-            TODO: comment index
+            Данным метод делает в представлении таблицы именованные хедеры
         */
         QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
