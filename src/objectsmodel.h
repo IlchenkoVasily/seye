@@ -7,7 +7,7 @@
 #define OBJECTSMODEL_H
 
 // Qt includes
-#include <QAbstractListModel>
+#include <QAbstractTableModel>
 #include <QTimer>
 
 // other includes
@@ -16,7 +16,7 @@
 
 namespace seye
 {
-    class ObjectModel : public QAbstractListModel
+    class ObjectModel : public QAbstractTableModel
     {
         Q_OBJECT
 
@@ -32,16 +32,14 @@ namespace seye
 
         // form QAbstractListModel
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+        int columnCount(const QModelIndex& parent = QModelIndex()) const override;
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+        QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
         // own
         void addObject(Object& newObj);
 
         const QList<Object>& toList() const;
-
-    // need for test. delete it after
-    public slots:
-        void update();
 
     protected:
         QHash<int, QByteArray> roleNames() const override;
