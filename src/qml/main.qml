@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQml.Models 2.2
 import QtLocation 5.9
 import QtPositioning 5.8
 import QtQuick.Controls 2.3
@@ -50,6 +51,14 @@ Item {
                 color: model.color
                 border.color: model.borderColor
                 border.width: 2
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        polygonSelection.select(index,
+                              ItemSelectionModel.Select | ItemSelectionModel.Current)
+                    }
+                }
             }
         }
 

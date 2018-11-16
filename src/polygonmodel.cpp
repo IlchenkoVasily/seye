@@ -1,5 +1,7 @@
 #include "polygonmodel.h"
 
+#include <QtDebug>
+
 using namespace seye;
 
 PolygonModel::PolygonModel(QObject *parent)
@@ -25,7 +27,7 @@ int PolygonModel::rowCount(const QModelIndex &parent) const
     return _polygons.count();
 }
 
-int PolygonModel::columnCount(const QModelIndex &parent) const
+int PolygonModel::columnCount(const QModelIndex& parent) const
 {
     if (parent.isValid())
         return 0;
@@ -102,6 +104,11 @@ QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int 
                 break;
             }
         }
+
+        if (orientation == Qt::Vertical)
+        {
+            return QString::number(section);
+        }
     }
 
     return QVariant();
@@ -124,8 +131,8 @@ Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-//    return Qt::ItemIsEnabled;
-    return Qt::ItemIsEditable; // FIXME: Implement me!
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled
+         | Qt::ItemIsEditable;
 }
 
 void PolygonModel::addPolygon(Polygon* polygon)
@@ -161,6 +168,7 @@ void PolygonModel::endCreatePolygon()
 
     _tempPolygon = nullptr;
     _onCreatePolygon = false;
+
 }
 
 void PolygonModel::cancelCreatePolygon()

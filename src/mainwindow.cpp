@@ -2,10 +2,12 @@
 #include "ui_mainwindow.h"
 #include "dialogadddevice.h"
 #include "device.h"
+#include "polygonmodel.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
 #include <QQuickWidget>
+#include <QItemSelectionModel>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -52,7 +54,12 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     // Сразу забрасываем модель в боковое представление
     if (name.contains("poly"))
     {
+//        QItemSelectionModel* selectionModel = new QItemSelectionModel(model);
+
         polygonView->setModel(model);
+        QItemSelectionModel* selectionModel = polygonView->selectionModel();
+//        polygonView->setSelectionModel(selectionModel);
+        context->setContextProperty("polygonSelection", selectionModel);
     }
     if (name.contains("obj"))
     {
