@@ -1,4 +1,5 @@
 #include "appengine.h"
+#include "QTime"
 
 using namespace seye;
 
@@ -23,7 +24,7 @@ void AppEngine::setUp()
     //--- setup connnector ----//
     connect(_connector, SIGNAL(complete(ObjectsPakPtr&)), this, SLOT(onObjectsUpdate(ObjectsPakPtr&)));
     _connector->connectTo(228);
-    _connector->start();
+33    _connector->start();
 
     // имитация доставания из бд )00)
     _polygonModel.beginCreatePolygon();
@@ -59,6 +60,7 @@ void AppEngine::checkEntries(Object& object)
         if (poly->contains(object.coordinate()))
         {
             object.setState(State::Intruder);
+            //CollideTo(obj.id()); //при пересечение зоны будет уведомление
         }
     }
 }
@@ -77,9 +79,35 @@ void AppEngine::checkEntriesAll()
             if (poly->contains(obj.coordinate()))
             {
                 qDebug() << "Объект[" << obj.id() << "] пересекает некоторую зону.";
+
             }
         }
         // где-то здесь установка статуса для полигона,
         // чтобы постоянно не драконить методы полигона.
     }
+}
+
+void AppEngine::AddToWidget()
+{
+    WarnList.addItems(WarnsListToView);
+}
+
+void AppEngine::CollideTo(int &Objid, int &Zoneid)
+{
+    add_ward();
+}
+
+void AppEngine::add_ward(int tarid, int warnid)
+{
+    /*tarid - id нарушителя
+     *warnid - id нарушения
+     */
+    WarnListStr[WarningQ].time = QTime::currentTime();
+    WarnListStr[WarningQ].id = tarid;
+    WarnListStr[WarningQ].warnid = warnid; //TODO id зоны, пока не используется
+    WarnsListToView = QStringList() << WarnListStr[WarningQ].time.toString() + '|' + QString(WarnListStr[WarningQ].id) + "зашёл в зону";
+    if(WarningQ == 255) WarningQ = 0;
+    WarningQ++;
+    AddToWidget();
+
 }

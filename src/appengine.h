@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQuickView>
 #include <QQmlContext>
+#include <QTime>
 
 #include "object.h"
 #include "objectsmodel.h"
@@ -61,10 +62,32 @@ namespace seye
         */
         void checkEntriesAll();
 
+        /*
+            Здесь функции для добавления уведомления
+        */
+        void add_ward(int tarid, int warnid);
+        void CollideTo(int &Objid);
+        QStringList WarnsListToView; // уведомления на вывод
+        //взято short чтобы не было сильно страшно
+        short int WarningQ = 0; // количество уведомлений
+
+        /*
+            Структура для уведомления
+        */
+        struct warn
+        {
+            int warnid; //id нарушения
+            int id; //id нарушителя
+            int idzone; //id зоны
+            QTime time; // время нарушения
+        };
+        warn WarnListStr[255]; //Уведомления для внутреннего использования
+
         MainWindow* _window;
         PolygonModel _polygonModel;
         ObjectModel _objectModel;
         IConnector* _connector;
+        //QListWidget* _WarnList; // набор уведомлений
         // here DatabaseDriver
     };
 }

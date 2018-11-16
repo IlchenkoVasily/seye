@@ -6,12 +6,12 @@
 #ifndef POLYGONMODEL_H
 #define POLYGONMODEL_H
 
-#include <QAbstractListModel>
+#include <QAbstractTableModel>
 #include "polygon.h"
 
 namespace seye
 {
-    class PolygonModel : public QAbstractListModel
+    class PolygonModel : public QAbstractTableModel
     {
         Q_OBJECT
 
@@ -31,11 +31,23 @@ namespace seye
             Данный метод возвращает количество полигонов в моделе
         */
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
+        /*
+            Данный метод возвращает количество полей на каждый полигон
+        */
+        int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+
         /*
             Данный метод возвращает данные полигона по индексу
             и роли.
         */
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+        /*
+            Данным метод делает в представлении таблицы именованные хедеры
+        */
+        QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+
 
         // Для изменения уже имеющихся данных:
         bool setData(const QModelIndex &index, const QVariant &value,
@@ -86,6 +98,8 @@ namespace seye
         QHash<int, QByteArray> roleNames() const override;
 
     private:
+        // udolee
+        int newPolyId = 0;
         // Идёт процесс создания полигона.
         bool _onCreatePolygon;
         // Временная переменная для полигона.

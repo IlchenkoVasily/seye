@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTableView>
+#include <QListWidget>
 
 class QAbstractItemModel;
 class QQuickWidget;
@@ -22,15 +24,26 @@ public:
 
     void setupUi();
 
+    QListWidget* WarnList;
+
 private slots:
     void on_pushButton_released();
 
+    // Объекты кнопка
     void on_pushButton_2_clicked();
 
+    //
     void on_pushButton_3_clicked();
+
+    // Зоны кнопка
+    void on_pushButton_5_clicked();
+
+    void on_WarnList_itemDoubleClicked(QListWidgetItem *item);
 
 private:
     QQuickWidget* gisWidget;
+    QTableView* polygonView;
+    QTableView* objectView;
     Ui::MainWindow *ui;
 };
 
