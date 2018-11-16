@@ -3,51 +3,48 @@
 
 #include <QtSql>
 
-class DBService
+#include <QDebug>
+#include <QDate>
+#include <structs.h>
+
+namespace seye
 {
-public:
-    DBService();
-//тут пока ничего не менял
-//прокатывает ли соединение пока не тестил
-
-    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL", "seyedb");
-/*
- * Ругается на db
- * Александер сказал перенести в метод, шо логично, но пока туда не заглядывал
-    db.setHostName("localhost");
-    db.setDatabaseName("seye");
-    db.setUserName("admin");
-    db.setPassword("admin");
-    bool ok = db.open();
-*/
-
- //id есть, но он с автоинкрементом
-    void addPassport(QString callSign, QString firstName, QString lastName, QDate date)
+    class DBService
     {
-        QSqlQuery query;
-        query.prepare("INSERT INTO passports (call_sign, first_name, last_name, birthday)"
-                      "VALUES (:call_sign, :first_name, :last_name, :birthday)");
-        query.bindValue(":call_sign", callSign);
-        query.bindValue(":first_name", firstName);
-        query.bindValue(":last_name", lastName);
-        query.bindValue(":birthday", date);
-//необходима обработка ошибок
-        query.exec();
-    }
+    public:
+        DBService(QString, QString, QString);
+//        void isOpen();
 
-    void addObject(QString idDevice, int idRole, QString callSign, int speedLimitMperS, int link)
-    {
-        QSqlQuery query;
-        query.prepare("INSERT INTO objects (id_device, id_character, call_sign, speed_limit_mpers, link)"
-                      "VALUES (:id_device, :id_character, :call_sign, :speed_limit_mpers, :link)");
-        query.bindValue(":id_device", idDevice);
-        query.bindValue(":id_character", idRole);
-        query.bindValue(":call_sign", callSign);
-        query.bindValue(":speed_limit_mpers", speedLimitMperS);
-        query.bindValue(":link", link);
-        query.exec();
-    }
+        // успех - true и Success в дебаге, иначе fals и в дебаге причина неудачи
+        // занесение данных в таблицу по одной строке
+        bool add(passport);
+        bool add(object, QString callSign);
+        bool add(zone);
+        bool add(access);
+        bool add(group);
 
-};
+        // обновление данных после редактирования многих строк
+        bool update(QVector<passport>);
+        bool update(QList<object>);
+        bool update(QVector<zone>);
+        bool update(QVector<access>);
+        bool update(QVector<group>);
 
+        // запрос всех данных таблицы (для редактирования)
+        QVector<passport> getAllPassports();
+        QList<object> getAllObjects();
+        QVector<access> getAllAccesses();
+        QVector<group> getAllGroups();
+
+        // запросы необходимого
+        QVector<zone> getAllZones();
+        passport getPassportForObject(QString objectId);
+        QVector<access> getCurrentAccesses();
+        object getObject(QString objectId);
+
+        ~DBService();
+    private:
+        QSqlDatabase db;
+    };
+}
 #endif // DBSERVICE_H

@@ -45,7 +45,8 @@ HEADERS += \
     iconnector.h \
     fakeconnector.h \
     enums.h \
-    dbservice.h
+    dbservice.h \
+    structs.h
 
 FORMS +=
 
