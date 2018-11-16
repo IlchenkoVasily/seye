@@ -7,6 +7,7 @@
 #define POLYGONMODEL_H
 
 #include <QAbstractTableModel>
+#include <QItemSelectionModel>
 #include "polygon.h"
 
 namespace seye
@@ -104,7 +105,7 @@ namespace seye
         bool _onCreatePolygon;
         // Временная переменная для полигона.
         Polygon* _tempPolygon;
-
+        // Список всех полигонов
         QList<Polygon*> _polygons;
     };
 }
