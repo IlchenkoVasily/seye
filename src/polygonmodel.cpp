@@ -117,9 +117,37 @@ QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int 
 // пока без реализации всвязи с отсутствием необходимости
 bool PolygonModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    int changedRole;
+
+    QString strValue = value.toString();
+    if (strValue.isEmpty())
+        return false;
+
     if (data(index, role) != value) {
-        // FIXME: Implement me!
-        emit dataChanged(index, index, QVector<int>() << role);
+        auto poly = _polygons[index.row()];
+        switch (index.column()) {
+        case 1: {
+            poly->setName(strValue);
+            changedRole = NameRole;
+            break;
+        }
+        case 2: {
+            QColor color(strValue);
+            poly->setColor(color);
+            changedRole = ColorRole;
+            break;
+        }
+        case 3:{
+            QColor b_color(strValue);
+            poly->setBorderColor(b_color);
+            changedRole = BorderColorRole;
+            break;
+        }
+        }
+
+        emit dataChanged(createIndex(index.row(), 0),
+                         createIndex(index.row(), 0),
+                         QVector<int>() << changedRole);
         return true;
     }
     return false;
@@ -131,8 +159,8 @@ Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled
-         | Qt::ItemIsEditable;
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled |
+           Qt::ItemIsEditable;
 }
 
 void PolygonModel::addPolygon(Polygon* polygon)

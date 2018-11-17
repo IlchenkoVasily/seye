@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     gisWidget = new QQuickWidget(this);
     // Создаём боковые представления
     polygonView = new QTableView(this);
+    polygonView->setSelectionBehavior(QAbstractItemView::SelectRows);
     objectView = new QTableView(this);
     // ! Здесь будет создание виджета для уведомлений
 
