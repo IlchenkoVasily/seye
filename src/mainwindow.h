@@ -23,6 +23,8 @@ public:
 
     void setupUi();
 
+    QItemSelectionModel* getPolygonSelection();
+
 private slots:
     void on_pushButton_released();
 

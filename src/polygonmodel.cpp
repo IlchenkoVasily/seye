@@ -80,6 +80,18 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
         return QVariant::fromValue(poly->borderColor());
     }
 
+    case SelectionRole: {
+        return poly->isSelected();
+    }
+
+    case MapColorRole: {
+        return QVariant::fromValue(poly->mapColor());
+    }
+
+    case MapBorderColorRole: {
+        return QVariant::fromValue(poly->mapBorderColor());
+    }
+
     default:
         return QVariant();
     }
@@ -191,6 +203,7 @@ void PolygonModel::endCreatePolygon()
     _tempPolygon->setName("Polygon #" + QString::number(_tempPolygon->id()));
     _tempPolygon->setColor(QColor(64, 255, 64, 128));
     _tempPolygon->setBorderColor(QColor(0, 100, 0));
+    _tempPolygon->setIsSelected(false);
     _polygons.append(_tempPolygon);
     endInsertRows();
 
@@ -211,6 +224,31 @@ const QList<Polygon*>& PolygonModel::toList() const
     return _polygons;
 }
 
+void PolygonModel::onPolygonSelected(const QItemSelection &selected,
+                                     const QItemSelection &deselected)
+{
+    // Снимаем выделение с полигонов, которые были развыделены
+    auto deselectedIdx = deselected.indexes();
+    for (auto idx: deselectedIdx)
+    {
+        auto poly = _polygons[idx.row()];
+        poly->setIsSelected(false);
+        emit dataChanged(idx, idx, QVector<int>()
+                         << MapColorRole
+                         << MapBorderColorRole);
+    }
+
+    auto selectedIdx = selected.indexes();
+    for (auto idx: selectedIdx)
+    {
+        auto poly = _polygons[idx.row()];
+        poly->setIsSelected(true);
+        emit dataChanged(idx, idx, QVector<int>()
+                         << MapColorRole
+                         << MapBorderColorRole);
+    }
+}
+
 QHash<int, QByteArray> PolygonModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
@@ -220,6 +258,9 @@ QHash<int, QByteArray> PolygonModel::roleNames() const
     roles[ColorRole] = "color";
     roles[BorderColorRole] = "borderColor";
     roles[NameRole] = "name";
+    roles[SelectionRole] = "isSelected";
+    roles[MapColorRole] = "mapColor";
+    roles[MapBorderColorRole] = "mapBorderColor";
 
     return roles;
 }

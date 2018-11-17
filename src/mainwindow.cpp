@@ -55,17 +55,19 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     // Сразу забрасываем модель в боковое представление
     if (name.contains("poly"))
     {
-//        QItemSelectionModel* selectionModel = new QItemSelectionModel(model);
-
         polygonView->setModel(model);
         QItemSelectionModel* selectionModel = polygonView->selectionModel();
-//        polygonView->setSelectionModel(selectionModel);
         context->setContextProperty("polygonSelection", selectionModel);
     }
     if (name.contains("obj"))
     {
         objectView->setModel(model);
     }
+}
+
+QItemSelectionModel *MainWindow::getPolygonSelection()
+{
+    return polygonView->selectionModel();
 }
 
 void MainWindow::on_pushButton_released()

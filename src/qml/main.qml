@@ -48,8 +48,8 @@ Item {
 
             MapPolygon {
                 path: model.path
-                color: model.color
-                border.color: model.borderColor
+                color: model.mapColor
+                border.color: model.mapBorderColor
                 border.width: 2
 
                 MouseArea {

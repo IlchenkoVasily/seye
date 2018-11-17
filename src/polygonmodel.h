@@ -22,7 +22,10 @@ namespace seye
             IdRole,
             NameRole,
             ColorRole,
-            BorderColorRole
+            BorderColorRole,
+            MapColorRole,
+            MapBorderColorRole,
+            SelectionRole
         };
 
         explicit PolygonModel(QObject *parent = nullptr);
@@ -93,6 +96,13 @@ namespace seye
             со всеми полигонами.
         */
         const QList<Polygon*>& toList() const;
+
+    public slots:
+        /*
+            Слот для изменения статус isSelected во
+            всех полигонах, которые были выделены.
+         */
+        void onPolygonSelected(const QItemSelection &selected, const QItemSelection &deselected);
 
     protected:
         /* */
