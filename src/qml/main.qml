@@ -55,8 +55,24 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        polygonSelection.select(index,
-                              ItemSelectionModel.Select | ItemSelectionModel.Current)
+                        // При клике без доп. клавиш для единичного выделения
+                        if ((mouse.button == Qt.LeftButton) &&
+                            (mouse.modifiers == Qt.NoModifier))
+                        {
+                            polygonSelection.select(polygonModel.index(index, 0),
+                                  ItemSelectionModel.ClearAndSelect |
+                                  ItemSelectionModel.Rows)
+                        }
+
+                        // При клике с ктрл`ом для множественно выделения
+                        if ((mouse.button == Qt.LeftButton) &&
+                            (mouse.modifiers & Qt.ControlModifier))
+                        {
+                            polygonSelection.select(polygonModel.index(index, 0),
+                                  ItemSelectionModel.Select |
+                                  ItemSelectionModel.Rows |
+                                  ItemSelectionModel.Toggle)
+                        }
                     }
                 }
             }
@@ -101,6 +117,9 @@ Item {
             cursorShape: onPolygonCreate ? Qt.CrossCursor : Qt.ArrowCursor
 
             onClicked: {
+                // Чистим какие-либо выделения
+                polygonSelection.clearSelection()
+
                 // Если создаётеся полигнон
                 if (onPolygonCreate) {
                     // Правая кнопка - отменение создания полигона
