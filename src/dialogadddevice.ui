@@ -127,6 +127,9 @@
       </spacer>
      </item>
      <item>
+      <widget class="QDateEdit" name="dateEdit"/>
+     </item>
+     <item>
       <widget class="QLineEdit" name="firstname">
        <property name="text">
         <string/>

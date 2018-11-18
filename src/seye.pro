@@ -24,37 +24,42 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
-SOURCES += \
-    main.cpp \
-    objectsmodel.cpp \
-    object.cpp \
-    polygonmodel.cpp \
-    appengine.cpp \
+SOURCES += appengine.cpp \
+    device.cpp \
+    dialogadddevice.cpp \
     fakeconnector.cpp \
     iconnector.cpp \
+    login.cpp \
+    main.cpp \
     mainwindow.cpp \
-    dialogadddevice.cpp \
-    device.cpp \
-    login.cpp
+    object.cpp \
+    objectsmodel.cpp \
+    polygon.cpp \
+    polygonmodel.cpp \
+    delegate.cpp \
+    passport.cpp
 
-HEADERS += \
-    objectsmodel.h \
-    object.h \
-    polygonmodel.h \
-    appengine.h \
-    iconnector.h \
-    fakeconnector.h \
-    enums.h \
-    mainwindow.h \
-    dialogadddevice.h \
+HEADERS += appengine.h \
     device.h \
-    login.h
+    dialogadddevice.h \
+    enums.h \
+    fakeconnector.h \
+    iconnector.h \
+    login.h \
+    mainwindow.h \
+    object.h \
+    objectsmodel.h \
+    polygon.h \
+    polygonmodel.h \
+    delegate.h \
+    passport.h
 
 FORMS += \
     mainwindow.ui \
     dialogadddevice.ui \
     device.ui \
-    login.ui
+    login.ui \
+    passport.ui
 
 RESOURCES += \
     qml.qrc \

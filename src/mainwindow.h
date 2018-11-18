@@ -2,8 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTableView>
 
 class QAbstractItemModel;
+class QQuickWidget;
 
 namespace Ui {
 class MainWindow;
@@ -19,12 +21,24 @@ public:
 
     void addModel(QString modelName, QAbstractItemModel* model);
 
+    void setupUi();
+
 private slots:
     void on_pushButton_released();
 
+    // Объекты кнопка
     void on_pushButton_2_clicked();
 
+    //
+    void on_pushButton_3_clicked();
+
+    // Зоны кнопка
+    void on_pushButton_5_clicked();
+
 private:
+    QQuickWidget* gisWidget;
+    QTableView* polygonView;
+    QTableView* objectView;
     Ui::MainWindow *ui;
 };
 

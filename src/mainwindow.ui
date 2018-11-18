@@ -109,20 +109,13 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QQuickWidget" name="quickWidget">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="resizeMode">
-          <enum>QQuickWidget::SizeRootObjectToView</enum>
-         </property>
+        <widget class="QStackedWidget" name="mainStackedWidget">
+         <widget class="QWidget" name="page_3"/>
+         <widget class="QWidget" name="page_4"/>
         </widget>
        </item>
        <item>
-        <widget class="QStackedWidget" name="stackedWidget">
+        <widget class="QStackedWidget" name="smallStackedWidget">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -148,38 +141,8 @@
           <number>1</number>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>-1</number>
          </property>
-         <widget class="QWidget" name="page">
-          <widget class="QLabel" name="label_2">
-           <property name="geometry">
-            <rect>
-             <x>70</x>
-             <y>0</y>
-             <width>111</width>
-             <height>16</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Хоба полигоны</string>
-           </property>
-          </widget>
-         </widget>
-         <widget class="QWidget" name="page_2">
-          <widget class="QLabel" name="label">
-           <property name="geometry">
-            <rect>
-             <x>90</x>
-             <y>10</y>
-             <width>101</width>
-             <height>16</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Хоба объекты</string>
-           </property>
-          </widget>
-         </widget>
         </widget>
        </item>
       </layout>
@@ -199,13 +162,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QQuickWidget</class>
-   <extends>QWidget</extends>
-   <header>QtQuickWidgets/QQuickWidget</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
