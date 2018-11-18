@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     gisWidget = new QQuickWidget(this);
     // Создаём боковые представления
     polygonView = new QTableView(this);
+    polygonView->setSelectionBehavior(QAbstractItemView::SelectRows);
     objectView = new QTableView(this);
     // ! Здесь будет создание виджета для уведомлений
 
@@ -54,17 +55,19 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     // Сразу забрасываем модель в боковое представление
     if (name.contains("poly"))
     {
-//        QItemSelectionModel* selectionModel = new QItemSelectionModel(model);
-
         polygonView->setModel(model);
         QItemSelectionModel* selectionModel = polygonView->selectionModel();
-//        polygonView->setSelectionModel(selectionModel);
         context->setContextProperty("polygonSelection", selectionModel);
     }
     if (name.contains("obj"))
     {
         objectView->setModel(model);
     }
+}
+
+QItemSelectionModel *MainWindow::getPolygonSelection()
+{
+    return polygonView->selectionModel();
 }
 
 void MainWindow::on_pushButton_released()
