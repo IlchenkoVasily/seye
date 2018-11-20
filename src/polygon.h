@@ -61,8 +61,6 @@ private:
     QString _name;
     QColor _borderColor;
     QColor _color;
-    QColor _mapColor;
-    QColor _borderMapColor;
 };
 
 }

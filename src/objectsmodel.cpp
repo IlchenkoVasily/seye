@@ -115,6 +115,20 @@ QVariant ObjectModel::headerData(int section, Qt::Orientation orientation, int r
     return QVariant();
 }
 
+bool ObjectModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+
+}
+
+Qt::ItemFlags ObjectModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled; /*|
+           Qt::ItemIsEditable;*/
+}
+
 QHash<int, QByteArray> ObjectModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
