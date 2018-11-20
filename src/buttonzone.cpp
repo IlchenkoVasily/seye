@@ -1,24 +1,18 @@
 #include <QtGui>
-#include "delegate.h"
+#include "buttonzone.h"
 #include <QApplication>
 //#include <QDialog>
-#include <passport.h>
+#include "zoneinfo.h"
 
- MyDelegate::MyDelegate(QObject *parent)
+ ButtonZone::ButtonZone(QObject *parent)
      : QItemDelegate(parent)
  {
  }
 
- void MyDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+ void ButtonZone::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
  {
 
-//     if (index.column() <= 2)
-//     {
-//         painter->drawText(QPointF(option.rect.topLeft()),
-//                           index.data().toString());
-//     }
-
-     if (index.column() == 2) {
+     if (index.column() == 4) {
 
      QStyleOptionButton button;
      QRect r = option.rect;//getting the rect of the cell
@@ -28,19 +22,17 @@
      w = 30;//button width
      h = 30;//button height
      button.rect = QRect(x,y,w,h);
-     button.text = "=^.^=";
+     button.text = ">^ω^<";
      button.state = QStyle::State_Enabled;
 
      QApplication::style()->drawControl( QStyle::CE_PushButton, &button, painter);
       }
 }
-
- bool MyDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+ bool ButtonZone::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
  {
-
      if( event->type() == QEvent::MouseButtonRelease  )
      {
-         if (index.column() == 2) {
+         if (index.column() == 4) {
          QMouseEvent * e = (QMouseEvent *)event;
          int clickX = e->x();
          int clickY = e->y();
@@ -52,19 +44,16 @@
          w = 30;//button width
          h = 30;//button height
 
-//         int q=0; //флаг открытия окна
          if( clickX > x && clickX < x + w )
-             if( clickY > y && clickY < y + h  )
+             if( clickY > y && clickY < y + h )
              {
 //                 QDialog * d = new QDialog(); // открытие окна
 //                 d->setGeometry(0,0,100,100);
 //                 d->show();
 
-                 Passport *pass = new Passport();
-                 pass->show();
-
+                 zoneinfo *info = new zoneinfo();
+                 info->show();
              }
-
      }
 }
 

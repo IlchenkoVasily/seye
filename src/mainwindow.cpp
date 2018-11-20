@@ -3,15 +3,22 @@
 #include "dialogadddevice.h"
 #include "device.h"
 #include "delegate.h"
+#include "buttonzone.h"
+#include "login.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
 #include <QQuickWidget>
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    login user(this);
+    user.setModal(true);
+    user.exec();
+
     //
     ui->setupUi(this);
     // Создаём 'гис'-виджет
@@ -36,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Ставим корректный виджет на отображение (а должен быть уведомлений)
     ui->smallStackedWidget->setCurrentWidget(polygonView);
+
 }
 
 MainWindow::~MainWindow()
@@ -53,6 +61,9 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     // Сразу забрасываем модель в боковое представление
     if (name.contains("poly"))
     {
+        ButtonZone* infozone = new ButtonZone(this);
+
+        polygonView->setItemDelegateForColumn(4, infozone);// кнопка открытия паспорта
         polygonView->setModel(model);
     }
     if (name.contains("obj"))

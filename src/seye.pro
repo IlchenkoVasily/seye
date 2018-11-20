@@ -37,7 +37,9 @@ SOURCES += appengine.cpp \
     polygon.cpp \
     polygonmodel.cpp \
     delegate.cpp \
-    passport.cpp
+    passport.cpp \
+    buttonzone.cpp \
+    zoneinfo.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -52,14 +54,17 @@ HEADERS += appengine.h \
     polygon.h \
     polygonmodel.h \
     delegate.h \
-    passport.h
+    passport.h \
+    buttonzone.h \
+    zoneinfo.h
 
 FORMS += \
     mainwindow.ui \
     dialogadddevice.ui \
     device.ui \
     login.ui \
-    passport.ui
+    passport.ui \
+    zoneinfo.ui
 
 RESOURCES += \
     qml.qrc \
