@@ -55,7 +55,9 @@ int ObjectModel::columnCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return 2;
+    // Здесь возвращается число 3
+    // Это число столбцов: айди, цвет, информация о объекте
+    return 3;
 }
 
 QVariant ObjectModel::data(const QModelIndex& index, int role) const
@@ -106,6 +108,8 @@ QVariant ObjectModel::headerData(int section, Qt::Orientation orientation, int r
                 return QString("ID");
             case 1:
                 return QString("Status");
+            case 2:
+                return QString("Info");
             default:
                 break;
             }

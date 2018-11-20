@@ -40,7 +40,11 @@ SOURCES += \
     appengine.cpp \
     fakeconnector.cpp \
     iconnector.cpp \
-    dbservice.cpp
+    dbservice.cpp \
+    delegate.cpp \
+    passport.cpp \
+    buttonzone.cpp \
+    zoneinfo.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -55,13 +59,19 @@ HEADERS += appengine.h \
     polygon.h \
     polygonmodel.h \
     dbservice.h \
-    structs.h
+    structs.h \
+    delegate.h \
+    passport.h \
+    buttonzone.h \
+    zoneinfo.h
 
 FORMS += \
     mainwindow.ui \
     dialogadddevice.ui \
     device.ui \
-    login.ui
+    login.ui \
+    passport.ui \
+    zoneinfo.ui
 
 RESOURCES += \
     qml.qrc \

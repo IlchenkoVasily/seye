@@ -30,7 +30,6 @@ public:
 
     bool isSelected();
     void setIsSelected(bool newStatus);
-
     int id();
     void setId(int newId);
 
