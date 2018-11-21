@@ -44,6 +44,13 @@ namespace seye
 
         const QList<Object>& toList() const;
 
+    signals:
+        /*
+            Сигнал для уведомлений.
+            Передаётся: айди, позывной, статус.
+        */
+        void noticePushed(int, QString, State);
+
     protected:
         QHash<int, QByteArray> roleNames() const override;
 
