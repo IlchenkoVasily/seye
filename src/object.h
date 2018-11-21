@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QGeoCoordinate>
 #include <QColor>
+#include <QTime>
 
 #include "enums.h"
 
@@ -18,8 +19,8 @@ namespace seye
 
     public:
 
-        Object(int id, double latitude, double longitude);
-        Object(int id, QGeoCoordinate coord);
+        Object(int id, double latitude, double longitude, double speed = 1.39);
+        Object(int id, QGeoCoordinate coord, double speed);
         Object(const Object&);
 
         // для свойства id
@@ -34,6 +35,12 @@ namespace seye
         State state() const;
         void setState(State stat);
 
+        /*
+            Возвращает время между последней проверкой
+            координаты и последней удачной проверкой.
+         */
+        double checkTime();
+
         //
         bool operator==(Object);
         Object &operator=(const Object&);
@@ -44,9 +51,22 @@ namespace seye
         void stateChanged(State);
 
     private:
-        int _id; // ?
+        // Данные из бд
+        int _id;            // айди
+        double _speedLimit; // Предельная скорость
+        //
+        QTime _lastCheck;
+        QTime _lastGoodCheck;
         QGeoCoordinate _currentCoordinate;
+        QGeoCoordinate _previousCoordinate;
         State _state;
+
+        /*
+            Подсчитывает дистанцию, которую
+            объект мог пройти за время с
+            последнего обновления.
+         */
+        double scoreMaxDistance();
     };
 }
 

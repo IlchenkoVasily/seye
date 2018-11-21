@@ -6,6 +6,9 @@
 
 QT       += core gui qml quick quickwidgets positioning
 
+#для dbservice
+QT += sql
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = seye
@@ -24,18 +27,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
-SOURCES += appengine.cpp \
+SOURCES += \
     device.cpp \
     dialogadddevice.cpp \
-    fakeconnector.cpp \
-    iconnector.cpp \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
     object.cpp \
     objectsmodel.cpp \
     polygon.cpp \
-    polygonmodel.cpp
+    polygonmodel.cpp \
+    appengine.cpp \
+    fakeconnector.cpp \
+    iconnector.cpp \
+    dbservice.cpp \
+    delegate.cpp \
+    passport.cpp \
+    buttonzone.cpp \
+    zoneinfo.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -48,13 +57,21 @@ HEADERS += appengine.h \
     object.h \
     objectsmodel.h \
     polygon.h \
-    polygonmodel.h
+    polygonmodel.h \
+    dbservice.h \
+    structs.h \
+    delegate.h \
+    passport.h \
+    buttonzone.h \
+    zoneinfo.h
 
 FORMS += \
     mainwindow.ui \
     dialogadddevice.ui \
     device.ui \
-    login.ui
+    login.ui \
+    passport.ui \
+    zoneinfo.ui
 
 RESOURCES += \
     qml.qrc \

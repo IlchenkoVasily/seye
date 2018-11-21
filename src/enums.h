@@ -7,9 +7,19 @@
 namespace seye
 {
     Q_NAMESPACE
+
+    /*
+        Статусы расположены в данном
+        порядке для удобства сортировки
+        в прокси моделе по статусу.
+     */
     enum State {
-        Allowed = 228,
-        Intruder
+        Offline = 0,    // Отключенный девайс
+        Destroyed,      // Поломанный
+        Lost,           // Утерянный
+        New,            // Новый
+        Allowed,        // Разрешённый
+        Intruder        // Нарушитель
     };
     Q_ENUM_NS(State)
 }

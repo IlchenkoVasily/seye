@@ -1,6 +1,6 @@
 #include "objectsmodel.h"
 
-#include <QtDebug>
+#define MAX_LOST_TIME 5
 
 using namespace seye;
 
@@ -22,6 +22,24 @@ void ObjectModel::addObject(Object& newObj)
         _objects[idx].setCoordinate(newObj.coordinate());
         _objects[idx].setState(newObj.state());
 
+        // Если вермя между последним нормальным пакетом
+        // и последним пакетом > 1 секунды (время между
+        // обновлениями), то помечаем пакет потерянным.
+        if (_objects[idx].checkTime() > 1.)
+        {
+            _objects[idx].setState(State::Lost);
+        }
+
+        // Если время между последним нормальным пакетом
+        // и последним пакетом > максимально возможного времени
+        // то помечаем устройство как поломанное.
+        if (_objects[idx].checkTime() > MAX_LOST_TIME)
+        {
+            _objects[idx].setState(State::Destroyed);
+            emit noticePushed(_objects[idx].id(), "empty name",
+                              State::Destroyed);
+        }
+
         // Сигнал о том, что данные в модели изменены.
         // Индексы наших объектов в моделе, изменённый параметр
         emit dataChanged(index(idx, 0), index(idx, 0),
@@ -35,6 +53,8 @@ void ObjectModel::addObject(Object& newObj)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _objects << newObj;
     endInsertRows();
+    emit noticePushed(newObj.id(), "empty name",
+                      State::New);
 }
 
 const QList<Object>& ObjectModel::toList() const
@@ -55,7 +75,9 @@ int ObjectModel::columnCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return 2;
+    // Здесь возвращается число 3
+    // Это число столбцов: айди, цвет, информация о объекте
+    return 3;
 }
 
 QVariant ObjectModel::data(const QModelIndex& index, int role) const
@@ -106,6 +128,8 @@ QVariant ObjectModel::headerData(int section, Qt::Orientation orientation, int r
                 return QString("ID");
             case 1:
                 return QString("Status");
+            case 2:
+                return QString("Info");
             default:
                 break;
             }
@@ -113,6 +137,20 @@ QVariant ObjectModel::headerData(int section, Qt::Orientation orientation, int r
     }
 
     return QVariant();
+}
+
+bool ObjectModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+
+}
+
+Qt::ItemFlags ObjectModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled; /*|
+           Qt::ItemIsEditable;*/
 }
 
 QHash<int, QByteArray> ObjectModel::roleNames() const

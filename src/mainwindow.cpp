@@ -3,6 +3,9 @@
 #include "dialogadddevice.h"
 #include "device.h"
 #include "polygonmodel.h"
+#include "delegate.h"
+#include "buttonzone.h"
+#include "login.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -13,6 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    login user(this);
+    user.setModal(true);
+    user.exec();
+
     //
     ui->setupUi(this);
     // Создаём 'гис'-виджет
@@ -55,6 +62,8 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     // Сразу забрасываем модель в боковое представление
     if (name.contains("poly"))
     {
+        ButtonZone* infozone = new ButtonZone(this);
+        polygonView->setItemDelegateForColumn(4, infozone);// кнопка открытия паспорта
         polygonView->setModel(model);
         QItemSelectionModel* selectionModel = polygonView->selectionModel();
         context->setContextProperty("polygonSelection", selectionModel);
@@ -62,6 +71,9 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     if (name.contains("obj"))
     {
         objectView->setModel(model);
+        MyDelegate* delegate = new MyDelegate(this);
+
+        objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
     }
 }
 

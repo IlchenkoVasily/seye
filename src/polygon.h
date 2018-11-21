@@ -30,7 +30,6 @@ public:
 
     bool isSelected();
     void setIsSelected(bool newStatus);
-
     int id();
     void setId(int newId);
 
@@ -61,8 +60,6 @@ private:
     QString _name;
     QColor _borderColor;
     QColor _color;
-    QColor _mapColor;
-    QColor _borderMapColor;
 };
 
 }

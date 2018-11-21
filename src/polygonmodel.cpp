@@ -1,7 +1,5 @@
 #include "polygonmodel.h"
 
-#include <QtDebug>
-
 using namespace seye;
 
 PolygonModel::PolygonModel(QObject *parent)
@@ -32,9 +30,9 @@ int PolygonModel::columnCount(const QModelIndex& parent) const
     if (parent.isValid())
         return 0;
 
-    // Здесь возвращается число 4.
-    // Это число столбцов: айди, имя, цвет, цвет_рамки
-    return 4;
+    // Здесь возвращается число 5.
+    // Это число столбцов: айди, имя, цвет, цвет_рамки, информация о зоне
+    return 5;
 }
 
 QVariant PolygonModel::data(const QModelIndex &index, int role) const
@@ -112,11 +110,12 @@ QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int 
                 return QString("Color");
             case 3:
                 return QString("Border");
+            case 4:
+                return QString("Info");
             default:
                 break;
             }
         }
-
         if (orientation == Qt::Vertical)
         {
             return QString::number(section);
