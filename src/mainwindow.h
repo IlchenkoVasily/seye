@@ -26,7 +26,6 @@ public:
     QItemSelectionModel* getPolygonSelection();
 
 private slots:
-    void on_pushButton_released();
 
     // Объекты кнопка
     void on_pushButton_2_clicked();
@@ -36,6 +35,10 @@ private slots:
 
     // Зоны кнопка
     void on_pushButton_5_clicked();
+
+
+
+    void on_pushButton_4_clicked();
 
 private:
     QQuickWidget* gisWidget;

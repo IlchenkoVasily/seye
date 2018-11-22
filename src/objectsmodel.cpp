@@ -53,7 +53,7 @@ void ObjectModel::addObject(Object& newObj)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _objects << newObj;
     endInsertRows();
-    emit noticePushed(_objects[idx].id(), "empty name",
+    emit noticePushed(newObj.id(), "empty name",
                       State::New);
 }
 
