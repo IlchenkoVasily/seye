@@ -118,11 +118,11 @@ Item {
                             case Roles.Pilot:
                                 return "qrc:/icons/pilot.svg"
                             case Roles.Car:
-                                return "qrc:/icons/car.png"
+                                return "qrc:/icons/car.svg"
                             case Roles.Security:
-                                return "qrc:/icons/security.png"
+                                return "qrc:/icons/security.svg"
                             case Roles.FuelCar:
-                                return "qrc:/icons/fuel.png"
+                                return "qrc:/icons/fuel.svg"
                             }
                         }
                         anchors.fill: parent
