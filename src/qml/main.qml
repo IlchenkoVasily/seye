@@ -103,6 +103,26 @@ Item {
                         }
                         return "blue"
                     }
+                    Image {
+                        source: {
+                            switch (model.role) {
+                            case Roles.Worker:
+                                return "qrc:/icons/worker.png"
+                            case Roles.Pilot:
+                                return "qrc:/icons/pilot.png"
+                            case Roles.Car:
+                                return "qrc:/icons/car.png"
+                            case Roles.Security:
+                                return "qrc:/icons/security.png"
+                            case Roles.FuelCar:
+                                return "qrc:/icons/fuel.png"
+                            }
+                        }
+                        sourceSize.width: parent.width
+                        sourceSize.height: parent.height
+                        horizontalAlignment: Image.AlignLeft
+                        verticalAlignment: Image.AlignTop
+                    }
                 }
                 zoomLevel: 16
                 opacity: 1.0

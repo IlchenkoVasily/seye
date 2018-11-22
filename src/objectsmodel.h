@@ -24,7 +24,8 @@ namespace seye
         enum ObjectRoles {
             IdRole = Qt::UserRole + 1,
             CoordinateRole,
-            StateRole
+            StateRole,
+            RoleRole
         };
 
         explicit ObjectModel(QObject* parent = nullptr);

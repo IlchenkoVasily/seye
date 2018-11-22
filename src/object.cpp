@@ -84,6 +84,16 @@ Object &Object::operator=(const Object &obj)
     return *this;
 }
 
+Role Object::role()
+{
+    return _role;
+}
+
+void Object::setRole(Role newRole)
+{
+    _role = newRole;
+}
+
 double Object::scoreMaxDistance()
 {
     return _speedLimit * (_lastCheck.secsTo(QTime::currentTime()));

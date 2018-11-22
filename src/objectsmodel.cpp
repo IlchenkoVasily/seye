@@ -112,6 +112,9 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
     case StateRole:
         return QVariant(object.state());
 
+    case RoleRole:
+        return QVariant(object.role());
+
     default:
         return QVariant();
     }
@@ -160,6 +163,7 @@ QHash<int, QByteArray> ObjectModel::roleNames() const
     roles[IdRole] = "id";
     roles[CoordinateRole] = "coordinate";
     roles[StateRole] = "state";
+    roles[RoleRole] = "role";
 
     return roles;
 }

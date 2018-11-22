@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>icons/createZone1.png</file>
+        <file>icons/worker.png</file>
+        <file>icons/security.png</file>
+        <file>icons/pilot.png</file>
+        <file>icons/fuel.png</file>
+        <file>icons/car.png</file>
+        <file>icons/intruder.png</file>
     </qresource>
 </RCC>
