@@ -3,6 +3,7 @@ import QtQml.Models 2.2
 import QtLocation 5.9
 import QtPositioning 5.8
 import QtQuick.Controls 2.3
+import QtGraphicalEffects 1.0
 
 import seye 1.0     // Модуль QML не найден (seye).
 
@@ -95,6 +96,9 @@ Item {
                     height: 10
                     radius: 15
                     color: {
+                        if (map.zoomLevel > 17)
+                            return Qt.rgba(0, 0, 0, 0)
+
                         if (model.state === States.Allowed) {
                             return "green"
                         }
@@ -103,13 +107,16 @@ Item {
                         }
                         return "blue"
                     }
+
+                    // Здесь задаётся наша иконка.
                     Image {
+                        id: objectIcon
                         source: {
                             switch (model.role) {
                             case Roles.Worker:
-                                return "qrc:/icons/worker.png"
+                                return "qrc:/icons/worker.svg"
                             case Roles.Pilot:
-                                return "qrc:/icons/pilot.png"
+                                return "qrc:/icons/pilot.svg"
                             case Roles.Car:
                                 return "qrc:/icons/car.png"
                             case Roles.Security:
@@ -118,12 +125,26 @@ Item {
                                 return "qrc:/icons/fuel.png"
                             }
                         }
-                        sourceSize.width: parent.width
-                        sourceSize.height: parent.height
-                        horizontalAlignment: Image.AlignLeft
-                        verticalAlignment: Image.AlignTop
-                    }
-                }
+                        anchors.fill: parent
+                        antialiasing: true
+                        visible: false
+                    } // end Image
+
+                    // Здесь задаётся цвет нашей иконки.
+                    ColorOverlay {
+                        source: objectIcon
+                        anchors.fill: objectIcon
+                        color: {
+                            switch (model.state) {
+                            case States.Intruder:
+                                return "red"
+                            case States.Allowed:
+                                return "green"
+                            }
+                        }
+                        antialiasing: true
+                    } // end ColorOverlay
+                } // end sourceItem: Rectangle
                 zoomLevel: 16
                 opacity: 1.0
                 anchorPoint: Qt.point(sourceItem.width / 2, sourceItem.height / 2)
