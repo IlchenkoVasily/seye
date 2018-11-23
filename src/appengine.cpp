@@ -33,9 +33,17 @@ void AppEngine::setUp()
     _polygonModel.addCoordinate(QGeoCoordinate(56.387214293, 85.209644591));
     _polygonModel.endCreatePolygon();
 
+    // Добавляем модели (уже поднятые из бд) во MainWindow
     _window->addModel("polygonModel", &_polygonModel);
     _window->addModel("objectModel", &_objectModel);
 
+    // Коннектим селекшен модели для обновления выделений
+    connect(_window->getPolygonSelection(),
+            SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+            &_polygonModel,
+            SLOT(onPolygonSelected(const QItemSelection&, const QItemSelection&)));
+
+    // Показываем окно
     _window->show();
 }
 

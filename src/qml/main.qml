@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQml.Models 2.2
 import QtLocation 5.9
 import QtPositioning 5.8
 import QtQuick.Controls 2.3
@@ -47,9 +48,33 @@ Item {
 
             MapPolygon {
                 path: model.path
-                color: model.color
-                border.color: model.borderColor
+                color: model.mapColor
+                border.color: model.mapBorderColor
                 border.width: 2
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        // При клике без доп. клавиш для единичного выделения
+                        if ((mouse.button == Qt.LeftButton) &&
+                            (mouse.modifiers == Qt.NoModifier))
+                        {
+                            polygonSelection.select(polygonModel.index(index, 0),
+                                  ItemSelectionModel.ClearAndSelect |
+                                  ItemSelectionModel.Rows)
+                        }
+
+                        // При клике с ктрл`ом для множественно выделения
+                        if ((mouse.button == Qt.LeftButton) &&
+                            (mouse.modifiers & Qt.ControlModifier))
+                        {
+                            polygonSelection.select(polygonModel.index(index, 0),
+                                  ItemSelectionModel.Select |
+                                  ItemSelectionModel.Rows |
+                                  ItemSelectionModel.Toggle)
+                        }
+                    }
+                }
             }
         }
 
@@ -92,6 +117,9 @@ Item {
             cursorShape: onPolygonCreate ? Qt.CrossCursor : Qt.ArrowCursor
 
             onClicked: {
+                // Чистим какие-либо выделения
+                polygonSelection.clearSelection()
+
                 // Если создаётеся полигнон
                 if (onPolygonCreate) {
                     // Правая кнопка - отменение создания полигона

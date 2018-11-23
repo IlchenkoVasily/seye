@@ -64,10 +64,9 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     {
         ButtonZone* infozone = new ButtonZone(this);
         ComboBoxDelegate *box = new ComboBoxDelegate(this);
-
         polygonView->setItemDelegateForColumn(4, infozone);// кнопка открытия паспорта
-        polygonView->setItemDelegateForColumn(2, box);// кнопка открытия паспорта
-        polygonView->setItemDelegateForColumn(3, box);// кнопка открытия паспорта
+        polygonView->setItemDelegateForColumn(2, box);// цвет поля
+        polygonView->setItemDelegateForColumn(3, box);// цвет края поля
 
         polygonView->setModel(model);
         QItemSelectionModel* selectionModel = polygonView->selectionModel();

@@ -7,6 +7,7 @@
 #define POLYGONMODEL_H
 
 #include <QAbstractTableModel>
+#include <QItemSelectionModel>
 #include "polygon.h"
 
 namespace seye
@@ -21,7 +22,10 @@ namespace seye
             IdRole,
             NameRole,
             ColorRole,
-            BorderColorRole
+            BorderColorRole,
+            MapColorRole,
+            MapBorderColorRole,
+            SelectionRole
         };
 
         explicit PolygonModel(QObject *parent = nullptr);
@@ -93,6 +97,13 @@ namespace seye
         */
         const QList<Polygon*>& toList() const;
 
+    public slots:
+        /*
+            Слот для изменения статус isSelected во
+            всех полигонах, которые были выделены.
+         */
+        void onPolygonSelected(const QItemSelection &selected, const QItemSelection &deselected);
+
     protected:
         /* */
         QHash<int, QByteArray> roleNames() const override;
@@ -104,7 +115,7 @@ namespace seye
         bool _onCreatePolygon;
         // Временная переменная для полигона.
         Polygon* _tempPolygon;
-
+        // Список всех полигонов
         QList<Polygon*> _polygons;
     };
 }

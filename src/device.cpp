@@ -47,18 +47,18 @@ void Device::on_buttonBox_accepted()
             QString host = "31.211.74.221";
             QString login = "pradlol";
             QString password = "g1e6111213";
-            seye::DBService dblink(host, login, password);
+//            seye::DBService dblink(host, login, password);
 
             QString s = QString::number(speed);
 
-            seye::object object;
-            object.id = id;
-            object.role = role;
-            object.link = phone;
-            object.passport = 1;
-            object.speedLimit = s;
+//            seye::object object;
+//            object.id = id;
+//            object.role = role;
+//            object.link = phone;
+//            object.passport = 1;
+//            object.speedLimit = s;
 
-            dblink.add(object, "wqdwqd"); //отправка инфы в бд
+//            dblink.add(object, "wqdwqd"); //отправка инфы в бд
         }
 }
 
