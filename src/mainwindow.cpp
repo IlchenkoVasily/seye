@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "dialogadddevice.h"
 #include "device.h"
+#include "polygonmodel.h"
 #include "delegate.h"
 #include "buttonzone.h"
 #include "login.h"
@@ -9,15 +10,15 @@
 #include <QQmlContext>
 #include <QAbstractItemModel>
 #include <QQuickWidget>
-
+#include <QItemSelectionModel>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    login user(this);
-    user.setModal(true);
-    user.exec();
+//    login user(this);// окно авторизации
+//    user.setModal(true);
+//    user.exec();
 
     //
     ui->setupUi(this);
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     gisWidget = new QQuickWidget(this);
     // Создаём боковые представления
     polygonView = new QTableView(this);
+    polygonView->setSelectionBehavior(QAbstractItemView::SelectRows);
     objectView = new QTableView(this);
     // ! Здесь будет создание виджета для уведомлений
 
@@ -43,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Ставим корректный виджет на отображение (а должен быть уведомлений)
     ui->smallStackedWidget->setCurrentWidget(polygonView);
-
 }
 
 MainWindow::~MainWindow()
@@ -62,26 +63,36 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     if (name.contains("poly"))
     {
         ButtonZone* infozone = new ButtonZone(this);
+        ComboBoxDelegate *box = new ComboBoxDelegate(this);
 
         polygonView->setItemDelegateForColumn(4, infozone);// кнопка открытия паспорта
+        polygonView->setItemDelegateForColumn(2, box);// кнопка открытия паспорта
+        polygonView->setItemDelegateForColumn(3, box);// кнопка открытия паспорта
+
         polygonView->setModel(model);
+        QItemSelectionModel* selectionModel = polygonView->selectionModel();
+        context->setContextProperty("polygonSelection", selectionModel);
     }
     if (name.contains("obj"))
     {
+        objectView->setModel(model);
         MyDelegate* delegate = new MyDelegate(this);
 
         objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
-        objectView->setModel(model);
-//        objectView->setItemDelegate(delegate);
     }
 }
 
-void MainWindow::on_pushButton_released()
+QItemSelectionModel *MainWindow::getPolygonSelection()
 {
-    DialogAddDevice dia(this);
-    dia.setModal(true);
-    dia.exec();
+    return polygonView->selectionModel();
 }
+
+//void MainWindow::on_pushButton_released()
+//{
+//    DialogAddDevice dia(this);
+//    dia.setModal(true);
+//    dia.exec();
+//}
 
 void MainWindow::on_pushButton_2_clicked()
 {
@@ -90,7 +101,7 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    Device dev(this);
+    DialogAddDevice dev(this);
     dev.setModal(true);
     dev.exec();
 }
@@ -98,4 +109,12 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_5_clicked()
 {
     ui->smallStackedWidget->setCurrentWidget(polygonView);
+}
+
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    Device dv(this);
+    dv.setModal(true);
+    dv.exec();
 }

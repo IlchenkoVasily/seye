@@ -20,6 +20,16 @@ Polygon::~Polygon()
 
 }
 
+bool Polygon::isSelected()
+{
+    return _isSelected;
+}
+
+void Polygon::setIsSelected(bool newStatus)
+{
+    _isSelected = newStatus;
+}
+
 int Polygon::id()
 {
     return _id;
@@ -58,4 +68,20 @@ QColor Polygon::borderColor()
 void Polygon::setBorderColor(const QColor &newBorderColor)
 {
     _borderColor = newBorderColor;
+}
+
+QColor Polygon::mapColor()
+{
+    if (_isSelected)
+        return QColor(64, 64, 255, 128);
+    else
+        return color();
+}
+
+QColor Polygon::mapBorderColor()
+{
+    if (_isSelected)
+        return QColor(0, 0, 255); // black
+    else
+        return borderColor();
 }

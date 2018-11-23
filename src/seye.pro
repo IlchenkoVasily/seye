@@ -39,7 +39,8 @@ SOURCES += appengine.cpp \
     delegate.cpp \
     passport.cpp \
     buttonzone.cpp \
-    zoneinfo.cpp
+    zoneinfo.cpp \
+    dbservice.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -56,7 +57,8 @@ HEADERS += appengine.h \
     delegate.h \
     passport.h \
     buttonzone.h \
-    zoneinfo.h
+    zoneinfo.h \
+    dbservice.h
 
 FORMS += \
     mainwindow.ui \
