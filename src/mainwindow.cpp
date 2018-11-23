@@ -16,9 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-//    login user(this);// окно авторизации
-//    user.setModal(true);
-//    user.exec();
+    login user(this);
+    user.setModal(true);
+    user.exec();
 
     //
     ui->setupUi(this);
@@ -62,8 +62,14 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     // Сразу забрасываем модель в боковое представление
     if (name.contains("poly"))
     {
+//        ButtonZone* infozone = new ButtonZone(this);
+//        polygonView->setItemDelegateForColumn(4, infozone);// кнопка открытия паспорта
+//        polygonView->setModel(model);
+//        QItemSelectionModel* selectionModel = polygonView->selectionModel();
+//        context->setContextProperty("polygonSelection", selectionModel);
+
         ButtonZone* infozone = new ButtonZone(this);
-        ComboBoxDelegate *box = new ComboBoxDelegate(this);
+        ComboBoxDelegate* box = new ComboBoxDelegate(this);
         polygonView->setItemDelegateForColumn(4, infozone);// кнопка открытия паспорта
         polygonView->setItemDelegateForColumn(2, box);// цвет поля
         polygonView->setItemDelegateForColumn(3, box);// цвет края поля
@@ -86,12 +92,12 @@ QItemSelectionModel *MainWindow::getPolygonSelection()
     return polygonView->selectionModel();
 }
 
-//void MainWindow::on_pushButton_released()
-//{
-//    DialogAddDevice dia(this);
-//    dia.setModal(true);
-//    dia.exec();
-//}
+void MainWindow::on_pushButton_released()
+{
+    DialogAddDevice dia(this);
+    dia.setModal(true);
+    dia.exec();
+}
 
 void MainWindow::on_pushButton_2_clicked()
 {
@@ -100,7 +106,7 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    DialogAddDevice dev(this);
+    Device dev(this);
     dev.setModal(true);
     dev.exec();
 }
@@ -108,12 +114,4 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_5_clicked()
 {
     ui->smallStackedWidget->setCurrentWidget(polygonView);
-}
-
-
-void MainWindow::on_pushButton_4_clicked()
-{
-    Device dv(this);
-    dv.setModal(true);
-    dv.exec();
 }

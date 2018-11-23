@@ -82,6 +82,9 @@
      return true;
  }
 
+
+
+
  ComboBoxDelegate::ComboBoxDelegate(QObject *parent): QItemDelegate(parent)
  {
  }
@@ -140,3 +143,4 @@
  {
      editor->setGeometry(option.rect);
  }
+

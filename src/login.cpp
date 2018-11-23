@@ -14,7 +14,7 @@ login::~login()
     delete ui;
 }
 
-int q=0;
+int q=0;// флаг верности входа
 
 void login::on_pushButton_clicked()
 {
@@ -24,7 +24,7 @@ void login::on_pushButton_clicked()
     if( user == "zyx" && pass == "qwert"){
 
         q++;// флаг успешно  авторизации
-        QMessageBox::information(this,"Успех", "Авторизция прошла успешно");
+//        QMessageBox::information(this,"Успех", "Авторизция прошла успешно");
         login::close();
          }
     else{

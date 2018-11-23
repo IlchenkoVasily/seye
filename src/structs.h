@@ -9,7 +9,7 @@ namespace seye
     struct passport
     {
         int id = 0;
-        QString callSign = "0"; // позывной
+        QString callSign = "0";
         QString firstName = "0";
         QString lastName = "0";
         QDate birthday = QDate::currentDate();
@@ -31,9 +31,9 @@ namespace seye
     {
         QString id = "0";
         QString role = "0";
-        int passport = 0; // номер объекта
+        int passport = 0;
         QString speedLimit = "0";
-        QString link = "0";// телефон
+        QString link = "0";
     };
 
     struct access

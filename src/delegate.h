@@ -1,9 +1,6 @@
 #include <qitemdelegate.h>
 #include <passport.h>
 
-
-class QComboBox;
-
 class MyDelegate : public QItemDelegate
 {
     Q_OBJECT
@@ -13,6 +10,4 @@ public:
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
 
-private:
-    QComboBox *typeComboBox;
 };

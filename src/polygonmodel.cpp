@@ -1,6 +1,4 @@
 #include "polygonmodel.h"
-#include "buttonzone.h"
-
 
 using namespace seye;
 

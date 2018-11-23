@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
 
     qmlRegisterUncreatableMetaObject(seye::staticMetaObject, "seye", 1, 0,
                                      "States", "Error: only enums");
+    qmlRegisterUncreatableMetaObject(seye::staticMetaObject, "seye", 1, 0,
+                                     "Roles", "Error: only enums");
 
     seye::AppEngine engine;
 
