@@ -106,8 +106,8 @@
 
      QComboBox *comboBox = new QComboBox(editor);
          QStringList colorNames ;
-         colorNames = QColor::colorNames() ;   //Если нужны ВСЕ цвета, присутствущие в системе, разремируем данную строчку и ремируем следующую. Иначе, используем только те цвета, которые указаны строчкой ниже
-//         colorNames <<"darkGreen"<<"green"<<"gray"<<"red"<<"white"<<"blue"<<"cyan"<<"darkMagenta"<<"yellow"<<"darkRed"<<"black"<<"magenta";
+//         QStringList colorNames = QColor::colorNames() ;   //Если нужны ВСЕ цвета, присутствущие в системе, разремируем данную строчку и ремируем следующую. Иначе, используем только те цвета, которые указаны строчкой ниже
+         colorNames <<"darkGreen"<<"green"<<"gray"<<"red"<<"white"<<"blue"<<"cyan"<<"darkMagenta"<<"yellow"<<"darkRed"<<"black"<<"magenta";
 
          comboBox ->setFocusPolicy(Qt::NoFocus);
          int size = comboBox ->style()->pixelMetric(QStyle::PM_SmallIconSize);

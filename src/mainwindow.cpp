@@ -67,7 +67,7 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 
         polygonView->setItemDelegateForColumn(4, infozone);// кнопка открытия паспорта
         polygonView->setItemDelegateForColumn(2, box);// кнопка открытия паспорта
-        polygonView->setItemDelegateForColumn(3, infozone);// кнопка открытия паспорта
+        polygonView->setItemDelegateForColumn(3, box);// кнопка открытия паспорта
 
         polygonView->setModel(model);
         QItemSelectionModel* selectionModel = polygonView->selectionModel();
