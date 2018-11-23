@@ -16,9 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    login user(this);
-    user.setModal(true);
-    user.exec();
+//    login user(this);
+//    user.setModal(true);
+//    user.exec();
 
     //
     ui->setupUi(this);
@@ -70,9 +70,9 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 
         ButtonZone* infozone = new ButtonZone(this);
         ComboBoxDelegate* box = new ComboBoxDelegate(this);
-        polygonView->setItemDelegateForColumn(4, infozone);// кнопка открытия паспорта
-        polygonView->setItemDelegateForColumn(2, box);// цвет поля
-        polygonView->setItemDelegateForColumn(3, box);// цвет края поля
+        polygonView->setItemDelegateForColumn(3, infozone);// кнопка открытия паспорта
+        polygonView->setItemDelegateForColumn(1, box);// цвет поля
+        polygonView->setItemDelegateForColumn(2, box);// цвет края поля
 
         polygonView->setModel(model);
         QItemSelectionModel* selectionModel = polygonView->selectionModel();

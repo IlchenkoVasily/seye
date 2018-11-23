@@ -88,15 +88,36 @@
  ComboBoxDelegate::ComboBoxDelegate(QObject *parent): QItemDelegate(parent)
  {
  }
+int w =0;
 
  QWidget *ComboBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
  {
      QComboBox *editor = new QComboBox(parent);
-     QStringList list;
-     list << " qqq" << "Helvetica" << "Times" << "Courier";
-//     str = fonts.at(2); // даст строку "Times"
+
+
      return editor;
+
  }
+
+// void ComboBoxDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+// {
+//     QStringList colorNames ;
+//     colorNames << "darkGreen"<<"green"<<"gray"<<"red"<<"white"<<"blue"<<"cyan"<<"darkMagenta"<<"yellow"<<"darkRed"<<"black"<<"magenta";
+//     QStyleOptionComboBox t_style_option_combo_box;
+////     w =editor->currentIndex();
+//     t_style_option_combo_box.currentText =colorNames.at(w);
+//     t_style_option_combo_box.rect = option.rect;
+
+//     QApplication::style()->drawComplexControl(QStyle::CC_ComboBox, &t_style_option_combo_box, painter);
+//     QApplication::style()->drawItemText(painter,
+//                                         t_style_option_combo_box.rect,
+//                                         Qt::AlignCenter,
+//                                         QApplication::palette(),
+//                                         true,
+//                                         t_style_option_combo_box.currentText);
+
+// }
+
 
  void ComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
  {
@@ -135,6 +156,8 @@
  void ComboBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
  {
      QComboBox *comboBox = static_cast<QComboBox*>(editor);
+//     w=comboBox->currentIndex();
+
      QString value = comboBox->itemText(comboBox->currentIndex());
      model->setData(index, value, Qt::EditRole);
  }
@@ -142,5 +165,6 @@
  void ComboBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex & index ) const
  {
      editor->setGeometry(option.rect);
+
  }
 
