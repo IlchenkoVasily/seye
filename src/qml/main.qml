@@ -99,13 +99,18 @@ Item {
                         if (map.zoomLevel > 17)
                             return Qt.rgba(0, 0, 0, 0)
 
-                        if (model.state === States.Allowed) {
+                        switch(model.state) {
+                        case States.Allowed:
                             return "green"
-                        }
-                        if (model.state === States.Intruder) {
+                        case States.Intruder:
                             return "red"
+                        case States.OutOfAttention:
+                            return "grey"
+                        case States.Destroyed:
+                            return "blue"
+                        default:
+                            return "white"
                         }
-                        return "blue"
                     }
 
                     // Здесь задаётся наша иконка.
@@ -135,11 +140,17 @@ Item {
                         source: objectIcon
                         anchors.fill: objectIcon
                         color: {
-                            switch (model.state) {
-                            case States.Intruder:
-                                return "red"
+                            switch(model.state) {
                             case States.Allowed:
                                 return "green"
+                            case States.Intruder:
+                                return "red"
+                            case States.OutOfAttention:
+                                return "grey"
+                            case States.Destroyed:
+                                return "blue"
+                            default:
+                                return "white"
                             }
                         }
                         antialiasing: true

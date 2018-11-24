@@ -5,6 +5,7 @@
 #include "zoneinfo.h"
 #include "polygonmodel.h"
 #include <QStringList>
+#include <QColor>
 
  ButtonZone::ButtonZone(QObject *parent)
      : QItemDelegate(parent)
@@ -160,8 +161,12 @@ int w =0;
 
 //     w=comboBox->currentIndex();
 
+
+
      QString value = comboBox->itemText(comboBox->currentIndex());
-     model->setData(index, value, seye::PolygonModel::ColorRole);
+     QColor newColor(value);
+     newColor.setAlpha(128);
+     model->setData(index, newColor.name(QColor::HexArgb), seye::PolygonModel::ColorRole);
  }
 
  void ComboBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex & index ) const

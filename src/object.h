@@ -46,7 +46,7 @@ namespace seye
         bool operator==(Object);
         Object &operator=(const Object&);
 
-        Role role();
+        Role role() const;
         void setRole(Role newRole);
 
     signals:

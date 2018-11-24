@@ -63,8 +63,20 @@ void AppEngine::checkEntries(Object& object)
     auto polygons = _polygonModel.toList();
     object.setState(State::Allowed);
 
+    // Проверяем, находится ли наш объект в зоне внимания
+    auto attention = _polygonModel.attentionZone();
+    if (!attention->contains(object.coordinate()))
+    {
+        object.setState(State::OutOfAttention);
+        return;
+    }
+
     for (auto poly: polygons)
     {
+        // не чекаем зону внимания.
+        if (poly == attention)
+            continue;
+
         if (poly->contains(object.coordinate()))
         {
             object.setState(State::Intruder);

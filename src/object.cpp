@@ -84,7 +84,7 @@ Object &Object::operator=(const Object &obj)
     return *this;
 }
 
-Role Object::role()
+Role Object::role() const
 {
     return _role;
 }

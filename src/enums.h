@@ -15,6 +15,7 @@ namespace seye
      */
     enum State {
         Offline = 0,    // Отключенный девайс
+        OutOfAttention, // За зоной внимания
         Destroyed,      // Поломанный
         Lost,           // Утерянный
         New,            // Новый

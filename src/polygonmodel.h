@@ -92,6 +92,11 @@ namespace seye
         Q_INVOKABLE void cancelCreatePolygon();
 
         /*
+            Возвращает указатель на зону внимания
+         */
+        Polygon* attentionZone();
+
+        /*
             Данный метод возвращает ссылку на лист
             со всеми полигонами.
         */
@@ -115,6 +120,8 @@ namespace seye
         bool _onCreatePolygon;
         // Временная переменная для полигона.
         Polygon* _tempPolygon;
+        // Зона внимания
+        Polygon* _attentionZone;
         // Список всех полигонов
         QList<Polygon*> _polygons;
     };

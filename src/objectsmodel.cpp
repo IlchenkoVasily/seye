@@ -41,6 +41,16 @@ void ObjectModel::addObject(Object& newObj)
                               State::Destroyed);
         }
 
+        // Проверка на то, является ли объект нарушителем
+        if (_objects[idx].state() == State::Intruder)
+            emit noticePushed(_objects[idx].id(), "empty name",
+                              State::Intruder);
+
+        // Проверка на то, находится ли объект за зоной внимания
+        if (_objects[idx].state() == State::OutOfAttention)
+            emit noticePushed(_objects[idx].id(), "empty name",
+                              State::OutOfAttention);
+
         // Сигнал о том, что данные в модели изменены.
         // Индексы наших объектов в моделе, изменённый параметр
 //        emit dataChanged(index(idx, 0), index(idx, 0),

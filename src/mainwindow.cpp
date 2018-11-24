@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     polygonView = new QTableView(this);
     polygonView->setSelectionBehavior(QAbstractItemView::SelectRows);
     objectView = new QTableView(this);
+    objectView->setSelectionBehavior(QAbstractItemView::SelectRows);
     // ! Здесь будет создание виджета для уведомлений
 
     // инит 'гис'-виджета
