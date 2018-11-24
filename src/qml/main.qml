@@ -23,6 +23,18 @@ Item {
         line.color: "red"
     }
 
+    // Данный компонент обеспечивает связь для модели
+    // объектов и карты, используемая для центрирования
+    // карты на выбранном объекте.
+    Connections {
+        target: objectModel
+
+        onObjectCentering: {
+            map.center = coordinate
+            map.zoomLevel = 18
+        }
+    }
+
     //
     Plugin {
         id: mapPlugin

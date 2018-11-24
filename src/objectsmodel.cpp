@@ -74,6 +74,14 @@ const QList<Object>& ObjectModel::toList() const
     return _objects;
 }
 
+void ObjectModel::objectSelected(const QModelIndex& index)
+{
+    auto obj = _objects[index.row()];
+    auto coordinate = obj.coordinate();
+
+    emit objectCentering(coordinate);
+}
+
 int ObjectModel::rowCount(const QModelIndex& parent) const
 {
     if (parent.isValid())

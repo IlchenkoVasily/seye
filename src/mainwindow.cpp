@@ -27,9 +27,11 @@ MainWindow::MainWindow(QWidget *parent) :
     // Создаём боковые представления
     polygonView = new QTableView(this);
     polygonView->setSelectionBehavior(QAbstractItemView::SelectRows);
+
     objectView = new QTableView(this);
     objectView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    // ! Здесь будет создание виджета для уведомлений
+
+    // TODO Здесь будет создание виджета для уведомлений
 
     // инит 'гис'-виджета
     gisWidget->setSource(QUrl("qrc:/qml/main.qml"));
@@ -63,12 +65,6 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     // Сразу забрасываем модель в боковое представление
     if (name.contains("poly"))
     {
-//        ButtonZone* infozone = new ButtonZone(this);
-//        polygonView->setItemDelegateForColumn(4, infozone);// кнопка открытия паспорта
-//        polygonView->setModel(model);
-//        QItemSelectionModel* selectionModel = polygonView->selectionModel();
-//        context->setContextProperty("polygonSelection", selectionModel);
-
         ButtonZone* infozone = new ButtonZone(this);
         ComboBoxDelegate* box = new ComboBoxDelegate(this);
         polygonView->setItemDelegateForColumn(3, infozone);// кнопка открытия паспорта
@@ -83,6 +79,10 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     {
         objectView->setModel(model);
         MyDelegate* delegate = new MyDelegate(this);
+
+        // FIXME connect objectView with smth
+        connect(objectView, SIGNAL(doubleClicked(const QModelIndex&)),
+                model, SLOT(objectSelected(const QModelIndex&)));
 
         objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
     }
