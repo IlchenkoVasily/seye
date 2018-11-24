@@ -18,6 +18,7 @@ void ObjectModel::addObject(Object& newObj)
     int idx = _objects.indexOf(newObj);
     if (idx != -1)
     {
+        beginResetModel();
         // Обновляем координаты у объекта
         _objects[idx].setCoordinate(newObj.coordinate());
         _objects[idx].setState(newObj.state());
@@ -42,8 +43,9 @@ void ObjectModel::addObject(Object& newObj)
 
         // Сигнал о том, что данные в модели изменены.
         // Индексы наших объектов в моделе, изменённый параметр
-        emit dataChanged(index(idx, 0), index(idx, 0),
-                         QVector<int>() << CoordinateRole << StateRole);
+//        emit dataChanged(index(idx, 0), index(idx, 0),
+//                         QVector<int>() << CoordinateRole << StateRole);
+        endResetModel();
         return;
     }
 
