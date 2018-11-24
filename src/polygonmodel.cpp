@@ -93,6 +93,8 @@ PolygonModel::PolygonModel(QObject *parent)
     }
 
     _polygons.append(_attentionZone);
+
+    _attentionZone->toString();
 }
 
 PolygonModel::~PolygonModel()

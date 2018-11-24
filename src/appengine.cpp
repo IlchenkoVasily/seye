@@ -26,12 +26,16 @@ void AppEngine::setUp()
     _connector->start();
 
     // имитация доставания из бд )00)
-    _polygonModel.beginCreatePolygon();
-    _polygonModel.addCoordinate(QGeoCoordinate(56.390058884, 85.212116396));
-    _polygonModel.addCoordinate(QGeoCoordinate(56.388846197, 85.216967378));
-    _polygonModel.addCoordinate(QGeoCoordinate(56.385634613, 85.213272466));
-    _polygonModel.addCoordinate(QGeoCoordinate(56.387214293, 85.209644591));
-    _polygonModel.endCreatePolygon();
+    Polygon* poly = new Polygon;
+    poly->fromString("56.390058884 85.212116396|"
+                     "56.388846197 85.216967378|"
+                     "56.385634613 85.213272466|"
+                     "56.387214293 85.209644591");
+    poly->setColor(QColor(64, 255, 64, 100));
+    poly->setBorderColor(QColor("green"));
+    poly->setName("Парсированная");
+    poly->setIsSelected(false);
+    _polygonModel.addPolygon(poly);
 
     // Добавляем модели (уже поднятые из бд) во MainWindow
     _window->addModel("polygonModel", &_polygonModel);

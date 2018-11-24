@@ -1,5 +1,5 @@
 #include "polygon.h"
-
+#include <QtDebug>
 #include <QGeoCoordinate>
 
 using namespace seye;
@@ -84,4 +84,36 @@ QColor Polygon::mapBorderColor()
         return QColor(0, 0, 255); // black
     else
         return borderColor();
+}
+
+QString Polygon::toString() const
+{
+    QStringList full;
+
+    foreach (auto coord, path())
+    {
+        QString lat = QString::number(coord.latitude()),
+                lon = QString::number(coord.longitude());
+
+
+        full << lat + " " + lon;
+    }
+
+    QString complete = full.join("|");
+    return complete;
+}
+
+void Polygon::fromString(const QString &coordinates)
+{
+    auto strCoords = coordinates.split("|");
+
+    foreach (auto strCoord, strCoords)
+    {
+        auto temp = strCoord.split(" ");
+
+        addCoordinate(QGeoCoordinate(
+            temp[0].toDouble(),
+            temp[1].toDouble())
+        );
+    }
 }
