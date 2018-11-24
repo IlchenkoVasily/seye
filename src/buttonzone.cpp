@@ -3,6 +3,7 @@
 #include <QApplication>
 //#include <QDialog>
 #include "zoneinfo.h"
+#include "polygonmodel.h"
 #include <QStringList>
 
  ButtonZone::ButtonZone(QObject *parent)
@@ -93,7 +94,27 @@ int w =0;
  QWidget *ComboBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
  {
      QComboBox *editor = new QComboBox(parent);
+     QStringList colorNames ;
+     colorNames <<"darkGreen"<<"green"<<"gray"<<"red"<<"white"<<"blue"<<"cyan"<<"darkMagenta"<<"yellow"<<"darkRed"<<"black"<<"magenta";
 
+     editor ->setFocusPolicy(Qt::NoFocus);
+     int size = editor ->style()->pixelMetric(QStyle::PM_SmallIconSize);
+     QPixmap pixmap(size,size-5);
+
+     int con=0;
+     foreach (const QString &colorName, colorNames) {
+         editor ->addItem(colorName);  //Добавляем название цветов
+         pixmap.fill(QColor(colorName));
+
+         QRect rBorder(0,0,size-1,size-6);
+         QPainter p(&pixmap);
+         QPen pen(Qt::lightGray, 1, Qt::SolidLine);
+         p.setPen(pen);
+         p.drawRect(rBorder);
+
+         editor->setItemData(con, pixmap, Qt::DecorationRole);//Добавляем изображение цвета в комбо
+         con=con+1;
+     }
 
      return editor;
 
@@ -128,38 +149,19 @@ int w =0;
 //     comboBox->setItemData(0, QBrush(Qt::red), Qt::TextColorRole);
 
 
-     QComboBox *comboBox = new QComboBox(editor);
-         QStringList colorNames ;
-         colorNames <<"darkGreen"<<"green"<<"gray"<<"red"<<"white"<<"blue"<<"cyan"<<"darkMagenta"<<"yellow"<<"darkRed"<<"black"<<"magenta";
+//     QComboBox *comboBox = new QComboBox(editor);
 
-         comboBox ->setFocusPolicy(Qt::NoFocus);
-         int size = comboBox ->style()->pixelMetric(QStyle::PM_SmallIconSize);
-         QPixmap pixmap(size,size-5);
-
-         int con=0;
-         foreach (const QString &colorName, colorNames) {
-             comboBox ->addItem(colorName);  //Добавляем название цветов
-             pixmap.fill(QColor(colorName));
-
-             QRect rBorder(0,0,size-1,size-6);
-             QPainter p(&pixmap);
-             QPen pen(Qt::lightGray, 1, Qt::SolidLine);
-             p.setPen(pen);
-             p.drawRect(rBorder);
-
-             comboBox->setItemData(con, pixmap, Qt::DecorationRole);//Добавляем изображение цвета в комбо
-             con=con+1;
-         }
 
  }
 
  void ComboBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
  {
      QComboBox *comboBox = static_cast<QComboBox*>(editor);
+
 //     w=comboBox->currentIndex();
 
      QString value = comboBox->itemText(comboBox->currentIndex());
-     model->setData(index, value, Qt::EditRole);
+     model->setData(index, value, seye::PolygonModel::ColorRole);
  }
 
  void ComboBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex & index ) const

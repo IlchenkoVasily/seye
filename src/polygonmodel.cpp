@@ -1,4 +1,5 @@
 #include "polygonmodel.h"
+#include <QtDebug>
 
 using namespace seye;
 
@@ -135,18 +136,18 @@ bool PolygonModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (data(index, role) != value) {
         auto poly = _polygons[index.row()];
         switch (index.column()) {
-        case 1: {
+        case 0: {
             poly->setName(strValue);
             changedRole = NameRole;
             break;
         }
-        case 2: {
+        case 1: {
             QColor color(strValue);
             poly->setColor(color);
             changedRole = ColorRole;
             break;
         }
-        case 3:{
+        case 2:{
             QColor b_color(strValue);
             poly->setBorderColor(b_color);
             changedRole = BorderColorRole;
