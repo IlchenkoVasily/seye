@@ -2,9 +2,11 @@
 #include "ui_dialogadddevice.h"
 #include <QMessageBox>
 #include <QString>
-//#include <QtDebug>
-//#include <DBService> // класс связи с бд
+//#include "structs.h"
+#include "dbservice.h" // класс связи с бд
 #include <QDate>
+
+//using namespace seye;
 
 DialogAddDevice::DialogAddDevice(QWidget *parent) :
     QDialog (parent),
@@ -31,11 +33,22 @@ void DialogAddDevice::on_buttonBox_2_accepted()
     QString lastname = ui->lastname->text();
     QString firstname = ui->firstname->text();
     QString callSign = ui->callSign->text();
-    QString str = ui->date->text();//не знаю как выводить сразу в date
+    QDate date = ui->date1->date();//
 
-    QDate date = QDate::fromString(str,"dd/MM/yyyy");
+//    QDate date = QDate::fromString(str,"dd/MM/yyyy");
 
-    if(lastname.isEmpty() || firstname.isEmpty() || callSign.isEmpty() || str.isEmpty()){
+    QString host = "31.211.74.221";
+    QString login = "pradlol";
+    QString password = "g1e6111213";
+    seye::DBService dblink(host, login, password);
+
+    seye::passport passport;
+    passport.callSign = callSign;
+    passport.firstName = firstname;
+    passport.lastName = lastname;
+    passport.birthday = date;
+
+    if(lastname.isEmpty() || firstname.isEmpty() || callSign.isEmpty() /*|| str.isEmpty()*/){
         QMessageBox::warning(this,"Ошибка", "Заполните все поля");
 
     }
@@ -45,10 +58,17 @@ void DialogAddDevice::on_buttonBox_2_accepted()
         ui->lastname->clear();
         ui->firstname->clear();
         ui->callSign->clear();
-        ui->date->clear();
+        ui->date1->clear();
 
-//        dblink.addPassport(callSign, firstName, lastName, date) //отправка инфы в бд
+           dblink.add(passport); //отправка инфы в бд
 //        qDebug() << date ;
+
+//           dblink.isOpen(passport);
+//           QVector<seye::passport> passports = dblink.getAllPassports();
+//           for(int i = 0; i < passports.size(); ++i)
+//               qDebug() << seye::toString(passports[i]) << endl;
+//           seye::object object;
+//           object.id = "9999999999999990";
+//           dblink.add(object, "");
     }
- //   QWidget::close();
 }

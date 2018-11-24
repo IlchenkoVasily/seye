@@ -1,4 +1,5 @@
 #include "polygonmodel.h"
+#include <QtDebug>
 
 using namespace seye;
 
@@ -30,9 +31,9 @@ int PolygonModel::columnCount(const QModelIndex& parent) const
     if (parent.isValid())
         return 0;
 
-    // Здесь возвращается число 5.
-    // Это число столбцов: айди, имя, цвет, цвет_рамки, информация о зоне
-    return 5;
+    // Здесь возвращается число 4.
+    // Это число столбцов:  имя, цвет, цвет_рамки, информация о зоне
+    return 4;
 }
 
 QVariant PolygonModel::data(const QModelIndex &index, int role) const
@@ -44,14 +45,14 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case Qt::DisplayRole: {
-        if (index.column() == 0) return QString::number(poly->id());
-        if (index.column() == 1) return QString(poly->name());
+//        if (index.column() == 0) return QString::number(poly->id());
+        if (index.column() == 0) return QString(poly->name());
         return QVariant();
     }
 
     case Qt::DecorationRole: {
-        if (index.column() == 2) return poly->color();
-        if (index.column() == 3) return poly->borderColor();
+        if (index.column() == 1) return poly->color();
+        if (index.column() == 2) return poly->borderColor();
         return QVariant();
     }
 
@@ -103,14 +104,12 @@ QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int 
         {
             switch (section) {
             case 0:
-                return QString("ID");
-            case 1:
                 return QString("Name");
-            case 2:
+            case 1:
                 return QString("Color");
-            case 3:
+            case 2:
                 return QString("Border");
-            case 4:
+            case 3:
                 return QString("Info");
             default:
                 break;
@@ -137,18 +136,18 @@ bool PolygonModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (data(index, role) != value) {
         auto poly = _polygons[index.row()];
         switch (index.column()) {
-        case 1: {
+        case 0: {
             poly->setName(strValue);
             changedRole = NameRole;
             break;
         }
-        case 2: {
+        case 1: {
             QColor color(strValue);
             poly->setColor(color);
             changedRole = ColorRole;
             break;
         }
-        case 3:{
+        case 2:{
             QColor b_color(strValue);
             poly->setBorderColor(b_color);
             changedRole = BorderColorRole;

@@ -69,7 +69,7 @@ FORMS += \
     mainwindow.ui \
     dialogadddevice.ui \
     device.ui \
-    login.ui \
+    login.ui\
     passport.ui \
     zoneinfo.ui
 
