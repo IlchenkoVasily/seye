@@ -261,8 +261,8 @@ Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
     if (index.row() == 0)
         return Qt::NoItemFlags;
 
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled |
-           Qt::ItemIsEditable;
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled /*|
+           Qt::ItemIsEditable*/;
 }
 
 void PolygonModel::addPolygon(Polygon* polygon)
@@ -342,6 +342,11 @@ void PolygonModel::onPolygonSelected(const QItemSelection &selected,
                          << MapColorRole
                          << MapBorderColorRole);
     }
+}
+
+void PolygonModel::polygonLook(const QModelIndex &index)
+{
+    emit polygonCentering(_polygons[index.row()]->center());
 }
 
 QHash<int, QByteArray> PolygonModel::roleNames() const

@@ -35,6 +35,15 @@ Item {
         }
     }
 
+    Connections {
+        target: polygonModel
+
+        onPolygonCentering: {
+            map.center = coordinate
+            map.zoomLevel = 16
+        }
+    }
+
     //
     Plugin {
         id: mapPlugin

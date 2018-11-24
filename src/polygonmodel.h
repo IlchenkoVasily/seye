@@ -102,12 +102,23 @@ namespace seye
         */
         const QList<Polygon*>& toList() const;
 
+    signals:
+        /*
+            TODO write comment here
+         */
+        void polygonCentering(const QGeoCoordinate& coordinate);
+
     public slots:
         /*
             Слот для изменения статус isSelected во
             всех полигонах, которые были выделены.
          */
         void onPolygonSelected(const QItemSelection &selected, const QItemSelection &deselected);
+
+        /*
+           TODO write comment here
+         */
+        void polygonLook(const QModelIndex& index);
 
     protected:
         /* */

@@ -74,13 +74,15 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         polygonView->setModel(model);
         QItemSelectionModel* selectionModel = polygonView->selectionModel();
         context->setContextProperty("polygonSelection", selectionModel);
+
+        connect(polygonView, SIGNAL(doubleClicked(const QModelIndex&)),
+                model, SLOT(polygonLook(const QModelIndex&)));
     }
     if (name.contains("obj"))
     {
         objectView->setModel(model);
         MyDelegate* delegate = new MyDelegate(this);
 
-        // FIXME connect objectView with smth
         connect(objectView, SIGNAL(doubleClicked(const QModelIndex&)),
                 model, SLOT(objectSelected(const QModelIndex&)));
 

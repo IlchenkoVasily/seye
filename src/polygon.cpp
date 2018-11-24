@@ -117,3 +117,30 @@ void Polygon::fromString(const QString &coordinates)
         );
     }
 }
+
+QGeoCoordinate Polygon::center()
+{
+    double maxLentgh = 0;
+    int index1 = 0, index2 = 1;
+    auto poly = path();
+
+    for (int i = 0; i < poly.size() - 1; i++)
+        for (int j = i + 1; j < poly.size(); j++)
+        {
+            double check = poly[i].distanceTo(poly[j]);
+            if (maxLentgh < check)
+            {
+                maxLentgh = check;
+                index1 = i;
+                index2 = j;
+            }
+        }
+
+    auto first = poly[index1];
+    auto second = poly[index2];
+
+    double midLat = (first.latitude() + second.latitude()) / 2.;
+    double midLon = (first.longitude() + second.longitude()) / 2.;
+
+    return QGeoCoordinate(midLat, midLon);
+}
