@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QTableView>
+#include "mainwindow2.h"
+
 
 class QAbstractItemModel;
 class QQuickWidget;
@@ -37,11 +39,14 @@ private slots:
     // Зоны кнопка
     void on_pushButton_5_clicked();
 
+    void on_pushButton_4_clicked();
+
 private:
     QQuickWidget* gisWidget;
     QTableView* polygonView;
     QTableView* objectView;
     Ui::MainWindow *ui;
+    Mainwindow2* window;
 };
 
 #endif // MAINWINDOW_H

@@ -5,6 +5,7 @@
 #include "zoneinfo.h"
 #include "polygonmodel.h"
 #include <QStringList>
+#include <QColor>
 
  ButtonZone::ButtonZone(QObject *parent)
      : QItemDelegate(parent)
@@ -94,7 +95,7 @@ int w =0;
  QWidget *ComboBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
  {
      QComboBox *editor = new QComboBox(parent);
-     QStringList colorNames ;
+     QStringList colorNames;
      colorNames <<"darkGreen"<<"green"<<"gray"<<"red"<<"white"<<"blue"<<"cyan"<<"darkMagenta"<<"yellow"<<"darkRed"<<"black"<<"magenta";
 
      editor ->setFocusPolicy(Qt::NoFocus);
@@ -104,7 +105,9 @@ int w =0;
      int con=0;
      foreach (const QString &colorName, colorNames) {
          editor ->addItem(colorName);  //Добавляем название цветов
-         pixmap.fill(QColor(colorName));
+         QColor newColor(colorName);
+         newColor.setAlpha(128);
+         pixmap.fill(QColor(newColor));
 
          QRect rBorder(0,0,size-1,size-6);
          QPainter p(&pixmap);
@@ -157,11 +160,12 @@ int w =0;
  void ComboBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
  {
      QComboBox *comboBox = static_cast<QComboBox*>(editor);
-
-//     w=comboBox->currentIndex();
-
      QString value = comboBox->itemText(comboBox->currentIndex());
-     model->setData(index, value, seye::PolygonModel::ColorRole);
+     QColor newColor(value);
+     newColor.setAlpha(128);
+     model->setData(index, newColor.name(QColor::HexArgb), seye::PolygonModel::ColorRole);
+     qDebug()<< newColor;
+//     model->setData(index, value, seye::PolygonModel::ColorRole);
  }
 
  void ComboBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex & index ) const

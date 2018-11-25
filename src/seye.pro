@@ -44,7 +44,8 @@ SOURCES += \
     delegate.cpp \
     passport.cpp \
     buttonzone.cpp \
-    zoneinfo.cpp
+    zoneinfo.cpp \
+    mainwindow2.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -63,7 +64,8 @@ HEADERS += appengine.h \
     delegate.h \
     passport.h \
     buttonzone.h \
-    zoneinfo.h
+    zoneinfo.h \
+    mainwindow2.h
 
 FORMS += \
     mainwindow.ui \
@@ -71,7 +73,9 @@ FORMS += \
     device.ui \
     login.ui\
     passport.ui \
-    zoneinfo.ui
+    zoneinfo.ui \
+    mainwindow2.ui \
+    mainwindow2.ui
 
 RESOURCES += \
     qml.qrc \
