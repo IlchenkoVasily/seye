@@ -4,7 +4,6 @@
 #include "fakeconnector.h"
 #include "enums.h"
 #include "dbservice.h"
-#include "structs.h"
 
 int main()//int argc, char *argv[])
 {
@@ -24,7 +23,7 @@ int main()//int argc, char *argv[])
 
     QString host = "31.211.74.221";
     QString login = "pradlol";
-    QString password = "******";
+    QString password = "g1e6111213";
     seye::DBService dblink(host, login, password);
 //    seye::passport passport;
 //    passport.callSign = "";
@@ -38,4 +37,7 @@ int main()//int argc, char *argv[])
 //    seye::object object;
 //    object.id = "9999999999999990";
 //    dblink.add(object, "");
+    seye::passport p;
+    p.toString();
+    dblink.add(p);
 }
