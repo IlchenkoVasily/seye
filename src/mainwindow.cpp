@@ -2,11 +2,15 @@
 #include "ui_mainwindow.h"
 #include "dialogadddevice.h"
 #include "device.h"
+#include "polygonmodel.h"
+#include "notice.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
 #include <QQuickWidget>
-#include <QListWidget>
+#include <QItemSelectionModel>
+
+//QListWidget
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,8 +22,13 @@ MainWindow::MainWindow(QWidget *parent) :
     gisWidget = new QQuickWidget(this);
     // Создаём боковые представления
     polygonView = new QTableView(this);
+    polygonView->setSelectionBehavior(QAbstractItemView::SelectRows);
     objectView = new QTableView(this);
     // ! Здесь будет создание виджета для уведомлений
+    //noticeList = new QListWidget(this);
+    noticeService = new seye::notice(ui->noticeList);
+    connect(this, SIGNAL(clickNot(int, QString, int)),
+            noticeService, SLOT(NoticeAlarm(int, QString, int)));
 
     // инит 'гис'-виджета
     gisWidget->setSource(QUrl("qrc:/qml/main.qml"));
@@ -54,11 +63,18 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     if (name.contains("poly"))
     {
         polygonView->setModel(model);
+        QItemSelectionModel* selectionModel = polygonView->selectionModel();
+        context->setContextProperty("polygonSelection", selectionModel);
     }
     if (name.contains("obj"))
     {
         objectView->setModel(model);
     }
+}
+
+QItemSelectionModel *MainWindow::getPolygonSelection()
+{
+    return polygonView->selectionModel();
 }
 
 void MainWindow::on_pushButton_released()
@@ -85,10 +101,15 @@ void MainWindow::on_pushButton_5_clicked()
     ui->smallStackedWidget->setCurrentWidget(polygonView);
 }
 
-void MainWindow::on_WarnList_itemDoubleClicked(QListWidgetItem *item)
+void MainWindow::on_noticeList_itemDoubleClicked(QListWidgetItem *item)
 {
-    int curNum = WarnList->currentRow(); // Берём номер выбранного объекта по двойному щелчку
-    //и кидаем  в куДебуг
-    qDebug() << WarnListStr[curNum].time.toString() + '|' + QString(WarnListStr[curNum].id) + "зашёл в зону";
+    //emit notice::
+}
 
+void MainWindow::on_pushButton_6_clicked()
+{
+    emit clickNot(25, "Васёк", 1);
+    emit clickNot(26, "КТО ЭТО", 0);
+    emit clickNot(2, "Васёк1", 2);
+    emit clickNot(5, "ПОКУШАТЬ", 3);
 }

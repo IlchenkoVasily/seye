@@ -1,7 +1,7 @@
 #include "appengine.h"
-#include "QTime"
 
 using namespace seye;
+
 
 AppEngine::AppEngine(QObject *parent) : QObject(parent),
     _window(new MainWindow)
@@ -24,7 +24,7 @@ void AppEngine::setUp()
     //--- setup connnector ----//
     connect(_connector, SIGNAL(complete(ObjectsPakPtr&)), this, SLOT(onObjectsUpdate(ObjectsPakPtr&)));
     _connector->connectTo(228);
-33    _connector->start();
+    _connector->start();
 
     // имитация доставания из бд )00)
     _polygonModel.beginCreatePolygon();
@@ -34,9 +34,17 @@ void AppEngine::setUp()
     _polygonModel.addCoordinate(QGeoCoordinate(56.387214293, 85.209644591));
     _polygonModel.endCreatePolygon();
 
+    // Добавляем модели (уже поднятые из бд) во MainWindow
     _window->addModel("polygonModel", &_polygonModel);
     _window->addModel("objectModel", &_objectModel);
 
+    // Коннектим селекшен модели для обновления выделений
+    connect(_window->getPolygonSelection(),
+            SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+            &_polygonModel,
+            SLOT(onPolygonSelected(const QItemSelection&, const QItemSelection&)));
+
+    // Показываем окно
     _window->show();
 }
 
@@ -60,7 +68,6 @@ void AppEngine::checkEntries(Object& object)
         if (poly->contains(object.coordinate()))
         {
             object.setState(State::Intruder);
-            //CollideTo(obj.id()); //при пересечение зоны будет уведомление
         }
     }
 }
@@ -79,35 +86,9 @@ void AppEngine::checkEntriesAll()
             if (poly->contains(obj.coordinate()))
             {
                 qDebug() << "Объект[" << obj.id() << "] пересекает некоторую зону.";
-
             }
         }
         // где-то здесь установка статуса для полигона,
         // чтобы постоянно не драконить методы полигона.
     }
-}
-
-void AppEngine::AddToWidget()
-{
-    WarnList.addItems(WarnsListToView);
-}
-
-void AppEngine::CollideTo(int &Objid, int &Zoneid)
-{
-    add_ward();
-}
-
-void AppEngine::add_ward(int tarid, int warnid)
-{
-    /*tarid - id нарушителя
-     *warnid - id нарушения
-     */
-    WarnListStr[WarningQ].time = QTime::currentTime();
-    WarnListStr[WarningQ].id = tarid;
-    WarnListStr[WarningQ].warnid = warnid; //TODO id зоны, пока не используется
-    WarnsListToView = QStringList() << WarnListStr[WarningQ].time.toString() + '|' + QString(WarnListStr[WarningQ].id) + "зашёл в зону";
-    if(WarningQ == 255) WarningQ = 0;
-    WarningQ++;
-    AddToWidget();
-
 }

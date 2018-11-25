@@ -1,5 +1,7 @@
 #include "polygonmodel.h"
 
+#include <QtDebug>
+
 using namespace seye;
 
 PolygonModel::PolygonModel(QObject *parent)
@@ -25,7 +27,7 @@ int PolygonModel::rowCount(const QModelIndex &parent) const
     return _polygons.count();
 }
 
-int PolygonModel::columnCount(const QModelIndex &parent) const
+int PolygonModel::columnCount(const QModelIndex& parent) const
 {
     if (parent.isValid())
         return 0;
@@ -78,6 +80,18 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
         return QVariant::fromValue(poly->borderColor());
     }
 
+    case SelectionRole: {
+        return poly->isSelected();
+    }
+
+    case MapColorRole: {
+        return QVariant::fromValue(poly->mapColor());
+    }
+
+    case MapBorderColorRole: {
+        return QVariant::fromValue(poly->mapBorderColor());
+    }
+
     default:
         return QVariant();
     }
@@ -102,6 +116,11 @@ QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int 
                 break;
             }
         }
+
+        if (orientation == Qt::Vertical)
+        {
+            return QString::number(section);
+        }
     }
 
     return QVariant();
@@ -110,9 +129,37 @@ QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int 
 // пока без реализации всвязи с отсутствием необходимости
 bool PolygonModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    int changedRole;
+
+    QString strValue = value.toString();
+    if (strValue.isEmpty())
+        return false;
+
     if (data(index, role) != value) {
-        // FIXME: Implement me!
-        emit dataChanged(index, index, QVector<int>() << role);
+        auto poly = _polygons[index.row()];
+        switch (index.column()) {
+        case 1: {
+            poly->setName(strValue);
+            changedRole = NameRole;
+            break;
+        }
+        case 2: {
+            QColor color(strValue);
+            poly->setColor(color);
+            changedRole = ColorRole;
+            break;
+        }
+        case 3:{
+            QColor b_color(strValue);
+            poly->setBorderColor(b_color);
+            changedRole = BorderColorRole;
+            break;
+        }
+        }
+
+        emit dataChanged(createIndex(index.row(), 0),
+                         createIndex(index.row(), 0),
+                         QVector<int>() << changedRole);
         return true;
     }
     return false;
@@ -124,8 +171,8 @@ Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-//    return Qt::ItemIsEnabled;
-    return Qt::ItemIsEditable; // FIXME: Implement me!
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled |
+           Qt::ItemIsEditable;
 }
 
 void PolygonModel::addPolygon(Polygon* polygon)
@@ -156,11 +203,13 @@ void PolygonModel::endCreatePolygon()
     _tempPolygon->setName("Polygon #" + QString::number(_tempPolygon->id()));
     _tempPolygon->setColor(QColor(64, 255, 64, 128));
     _tempPolygon->setBorderColor(QColor(0, 100, 0));
+    _tempPolygon->setIsSelected(false);
     _polygons.append(_tempPolygon);
     endInsertRows();
 
     _tempPolygon = nullptr;
     _onCreatePolygon = false;
+
 }
 
 void PolygonModel::cancelCreatePolygon()
@@ -175,6 +224,31 @@ const QList<Polygon*>& PolygonModel::toList() const
     return _polygons;
 }
 
+void PolygonModel::onPolygonSelected(const QItemSelection &selected,
+                                     const QItemSelection &deselected)
+{
+    // Снимаем выделение с полигонов, которые были развыделены
+    auto deselectedIdx = deselected.indexes();
+    for (auto idx: deselectedIdx)
+    {
+        auto poly = _polygons[idx.row()];
+        poly->setIsSelected(false);
+        emit dataChanged(idx, idx, QVector<int>()
+                         << MapColorRole
+                         << MapBorderColorRole);
+    }
+
+    auto selectedIdx = selected.indexes();
+    for (auto idx: selectedIdx)
+    {
+        auto poly = _polygons[idx.row()];
+        poly->setIsSelected(true);
+        emit dataChanged(idx, idx, QVector<int>()
+                         << MapColorRole
+                         << MapBorderColorRole);
+    }
+}
+
 QHash<int, QByteArray> PolygonModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
@@ -184,6 +258,9 @@ QHash<int, QByteArray> PolygonModel::roleNames() const
     roles[ColorRole] = "color";
     roles[BorderColorRole] = "borderColor";
     roles[NameRole] = "name";
+    roles[SelectionRole] = "isSelected";
+    roles[MapColorRole] = "mapColor";
+    roles[MapBorderColorRole] = "mapBorderColor";
 
     return roles;
 }

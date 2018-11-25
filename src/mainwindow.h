@@ -5,6 +5,8 @@
 #include <QTableView>
 #include <QListWidget>
 
+#include "notice.h"
+
 class QAbstractItemModel;
 class QQuickWidget;
 
@@ -24,7 +26,7 @@ public:
 
     void setupUi();
 
-    QListWidget* WarnList;
+    QItemSelectionModel* getPolygonSelection();
 
 private slots:
     void on_pushButton_released();
@@ -38,13 +40,18 @@ private slots:
     // Зоны кнопка
     void on_pushButton_5_clicked();
 
-    void on_WarnList_itemDoubleClicked(QListWidgetItem *item);
+    void on_noticeList_itemDoubleClicked(QListWidgetItem *item);
+    void on_pushButton_6_clicked();
 
 private:
     QQuickWidget* gisWidget;
     QTableView* polygonView;
     QTableView* objectView;
+    seye::notice* noticeService;
     Ui::MainWindow *ui;
+signals:
+    void clickNot(int idSend, QString strSend, int idNot);
+
 };
 
 #endif // MAINWINDOW_H
