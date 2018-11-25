@@ -13,12 +13,16 @@
 #include <QItemSelectionModel>
 #include <QProcess>
 #include <QMessageBox>
+#include "dbservice.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    login user(this);
+    seye::DBService* dblink;
+    QString role;
+
+    login user(dblink, &role, this);
     user.setModal(true);
     user.exec();
 
@@ -123,6 +127,9 @@ void MainWindow::on_pushButton_5_clicked()
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    window = new Mainwindow2(this);
-    window->show();
+//    window = new Mainwindow2(this);
+//    window->show();
+    Device dia(this);
+    dia.setModal(true);
+    dia.exec();
 }

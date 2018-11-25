@@ -29,7 +29,10 @@ void Device::on_buttonBox_accepted()
     if(id.isEmpty() || role.isEmpty() || phone.isEmpty() || nik.isEmpty()){  //проверка на заполненость
         QMessageBox::warning(this,"Ошибка", "Заполните все поля");
     }
+//    qint16 role = ui->role->text().toInt();
+
     else{
+        qint16 role = ui->role->text().toInt();
         QMessageBox::information(this,"Успех", "Вы успешно добавили объект");
 //        qDebug() << speed;
 
@@ -49,16 +52,13 @@ void Device::on_buttonBox_accepted()
             QString password = "g1e6111213";
             seye::DBService dblink(host, login, password);
 
-            QString s = QString::number(speed);
-
             seye::object object;
             object.id = id;
             object.role = role;
             object.link = phone;
-            object.passport = 1;
-            object.speedLimit = s;
+            object.speedLimit = speed;
 
-            dblink.add(object, "wqdwqd"); //отправка инфы в бд
+            dblink.add(object); //отправка инфы в бд
         }
 }
 

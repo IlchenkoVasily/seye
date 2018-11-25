@@ -120,7 +120,7 @@ namespace seye
          * и поиск необходимого на нашей стороне */
 
         // управление пользователем
-        QString getRole(QString login); // в нашем случае токен функционала
+        QString getRole(QString login) {return "operator";} // в нашем случае токен функционала
         bool creatNewUser(QString user, QString password, QString role);
         bool dropUser(QString user);
         QList<QString> getListOfUsers(); // Формат User, Role

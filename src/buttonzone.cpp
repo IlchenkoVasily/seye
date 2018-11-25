@@ -159,6 +159,5 @@ int w =0;
  void ComboBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex & index ) const
  {
      editor->setGeometry(option.rect);
-
  }
 
