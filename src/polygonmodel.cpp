@@ -12,6 +12,7 @@ PolygonModel::PolygonModel(QObject *parent)
     _attentionZone->setBorderColor(QColor("#FF606060"));
     _attentionZone->setName("Зона внимания");
     _attentionZone->setIsSelected(false);
+    _attentionZone->setId(newPolyId++);
     QGeoCoordinate coords[] {
         QGeoCoordinate(56.386923585, 85.207064102, 0),
         QGeoCoordinate(56.387148596, 85.206401389, 0),
@@ -354,7 +355,7 @@ QHash<int, QByteArray> PolygonModel::roleNames() const
     QHash<int, QByteArray> roles;
 
     roles[PathRole] = "path";
-    roles[IdRole] = "role";
+    roles[IdRole] = "id";
     roles[ColorRole] = "color";
     roles[BorderColorRole] = "borderColor";
     roles[NameRole] = "name";
