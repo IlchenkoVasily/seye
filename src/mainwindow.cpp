@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     objectView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     // TODO Здесь будет создание виджета для уведомлений
+    noticeService = new seye::Notice(ui->listWidget);
 
     // инит 'гис'-виджета
     gisWidget->setSource(QUrl("qrc:/qml/main.qml"));
@@ -89,8 +90,13 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         objectView->setModel(model);
         MyDelegate* delegate = new MyDelegate(this);
 
+        // вьюхи с моделью для перемещения карты на объект
         connect(objectView, SIGNAL(doubleClicked(const QModelIndex&)),
                 model, SLOT(objectSelected(const QModelIndex&)));
+
+        // модели с уведомлениями
+        connect(model, SIGNAL(noticePushed(int, QString, State)),
+                noticeService, SLOT(NoticeAlarm(int, QString, State)));
 
         objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
     }

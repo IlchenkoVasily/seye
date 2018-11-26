@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTableView>
+#include "notice.h"
 #include "mainwindow_admin.h"
 
 
@@ -45,6 +46,7 @@ private:
     QQuickWidget* gisWidget;
     QTableView* polygonView;
     QTableView* objectView;
+    seye::Notice* noticeService;
     Ui::MainWindow *ui;
     Mainwindow2* window;
 };
