@@ -76,6 +76,7 @@ Item {
 
                 MouseArea {
                     anchors.fill: parent
+                    enabled: model.id == 0 ? false : true
                     onClicked: {
                         // При клике без доп. клавиш для единичного выделения
                         if ((mouse.button == Qt.LeftButton) &&
