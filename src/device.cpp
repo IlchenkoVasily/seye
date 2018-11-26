@@ -22,11 +22,10 @@ void Device::on_buttonBox_accepted()
     QString id = ui->id->text();      //получение данных из строк
     QString role = ui->role->text();
     QString phone = ui->phone->text();
-    QString nik = ui->nik->text();//
     int k = ui->tipe->currentIndex();
     int speed=0;
 
-    if(id.isEmpty() || role.isEmpty() || phone.isEmpty() || nik.isEmpty()){  //проверка на заполненость
+    if(id.isEmpty() || role.isEmpty() || phone.isEmpty()){  //проверка на заполненость
         QMessageBox::warning(this,"Ошибка", "Заполните все поля");
     }
 //    qint16 role = ui->role->text().toInt();
@@ -38,7 +37,6 @@ void Device::on_buttonBox_accepted()
 
             ui->id->clear();   // очищение строк
             ui->role->clear();
-            ui->nik->clear();
             ui->phone->clear();
             if(k ==0){
                speed=5;
