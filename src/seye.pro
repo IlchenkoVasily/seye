@@ -45,7 +45,7 @@ SOURCES += \
     passport.cpp \
     buttonzone.cpp \
     zoneinfo.cpp \
-    mainwindow2.cpp
+    mainwindow_admin.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -65,7 +65,7 @@ HEADERS += appengine.h \
     passport.h \
     buttonzone.h \
     zoneinfo.h \
-    mainwindow2.h
+    mainwindow_admin.h
 
 FORMS += \
     mainwindow.ui \

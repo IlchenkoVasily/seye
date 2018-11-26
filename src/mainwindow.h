@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QTableView>
-#include "mainwindow2.h"
+#include "mainwindow_admin.h"
 
 
 class QAbstractItemModel;
