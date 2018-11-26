@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QCloseEvent>
 #include <QDialog>
+#include <dbservice.h>
 
 namespace Ui {
 class login;
@@ -14,7 +15,7 @@ class login : public QDialog
     Q_OBJECT
 
 public:
-    explicit login(QWidget *parent = nullptr);
+    explicit login(seye::DBService* link, QString* role, QWidget *parent = nullptr);
     ~login();
     bool enter(QObject *parent = 0);
 
@@ -24,6 +25,8 @@ private slots:
 
 
 private:
+    seye::DBService* dblink;
+    QString* role;
     Ui::login *ui;
 };
 

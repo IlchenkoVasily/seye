@@ -45,7 +45,8 @@ SOURCES += \
     passport.cpp \
     buttonzone.cpp \
     zoneinfo.cpp \
-    proxymodel.cpp
+    proxymode.cpp \
+    mainwindow_admin.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -65,7 +66,8 @@ HEADERS += appengine.h \
     passport.h \
     buttonzone.h \
     zoneinfo.h \
-    proxymodel.h
+    proxymodel.h \
+    mainwindow_admin.h
 
 FORMS += \
     mainwindow.ui \
@@ -73,7 +75,8 @@ FORMS += \
     device.ui \
     login.ui\
     passport.ui \
-    zoneinfo.ui
+    zoneinfo.ui \
+    mainwindow2.ui \
 
 RESOURCES += \
     qml.qrc \

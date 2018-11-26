@@ -11,14 +11,20 @@
 #include <QAbstractItemModel>
 #include <QQuickWidget>
 #include <QItemSelectionModel>
+#include <QProcess>
+#include <QMessageBox>
+#include "dbservice.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-//    login user(this);
-//    user.setModal(true);
-//    user.exec();
+    seye::DBService* dblink;
+    QString role;
+
+    login user(dblink, &role, this);
+    user.setModal(true);
+    user.exec();
 
     //
     ui->setupUi(this);
@@ -109,12 +115,24 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    Device dev(this);
-    dev.setModal(true);
-    dev.exec();
+    QMessageBox::StandardButton reply = QMessageBox::question(this,"Смена пользователя", "Вы уверены? Все несохраненые данные будут удалены", QMessageBox::Yes | QMessageBox::No);
+    // restart:
+    if(reply==QMessageBox::Yes){
+    qApp->quit();
+    QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
+    }
+    else {}
 }
-
 void MainWindow::on_pushButton_5_clicked()
 {
     ui->smallStackedWidget->setCurrentWidget(polygonView);
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+//    window = new Mainwindow2(this);
+//    window->show();
+    Device dia(this);
+    dia.setModal(true);
+    dia.exec();
 }

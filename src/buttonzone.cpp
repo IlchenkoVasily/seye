@@ -15,7 +15,7 @@
  void ButtonZone::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
  {
 
-     if (index.column() == 4) {
+     if (index.column() == 3) {
      QStyleOptionButton button;
      QRect r = option.rect;//getting the rect of the cell
      int x,y,w,h;
@@ -31,22 +31,6 @@
 
      QApplication::style()->drawControl( QStyle::CE_PushButton, &button, painter);
       }
-
-//     if (index.column() == 2) {
-//     QStyleOptionButton button;
-//     QRect r = option.rect;//getting the rect of the cell
-//     int x,y,w,h;
-//     x = r.left() + r.width() - 30;//the X coordinate
-//     y = r.top();//the Y coordinate
-//     w = 30;//button width
-//     h = 30;//button height
-//     button.rect = QRect(x,y,w,h);
-//     button.text = "<^ω^<";
-//     button.state = QStyle::State_Enabled;
-//     button.palette = Qt::black;
-
-//     QApplication::style()->drawControl( QStyle::CE_PushButton, &button, painter);
-//      }
 }
 
 
@@ -54,7 +38,7 @@
  {
      if( event->type() == QEvent::MouseButtonRelease  )
      {
-         if (index.column() == 4) {
+         if (index.column() == 3) {
          QMouseEvent * e = (QMouseEvent *)event;
          int clickX = e->x();
          int clickY = e->y();
@@ -73,8 +57,8 @@
 //                 d->setGeometry(0,0,100,100);
 //                 d->show();
 
-//                 zoneinfo *info = new zoneinfo();
-//                 info->show();
+                 zoneinfo *info = new zoneinfo();
+                 info->show();
 //                 nationalityCombo->setModel( new NationalityModel( this ) );
 
              }
@@ -95,7 +79,7 @@ int w =0;
  QWidget *ComboBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
  {
      QComboBox *editor = new QComboBox(parent);
-     QStringList colorNames ;
+     QStringList colorNames;
      colorNames <<"darkGreen"<<"green"<<"gray"<<"red"<<"white"<<"blue"<<"cyan"<<"darkMagenta"<<"yellow"<<"darkRed"<<"black"<<"magenta";
 
      editor ->setFocusPolicy(Qt::NoFocus);
@@ -105,7 +89,11 @@ int w =0;
      int con=0;
      foreach (const QString &colorName, colorNames) {
          editor ->addItem(colorName);  //Добавляем название цветов
-         pixmap.fill(QColor(colorName));
+         QColor newColor(colorName);
+         if (index.column() == 1) {
+         newColor.setAlpha(128);
+         }
+         pixmap.fill(QColor(newColor));
 
          QRect rBorder(0,0,size-1,size-6);
          QPainter p(&pixmap);
@@ -159,19 +147,18 @@ int w =0;
  {
      QComboBox *comboBox = static_cast<QComboBox*>(editor);
 
-//     w=comboBox->currentIndex();
-
-
-
      QString value = comboBox->itemText(comboBox->currentIndex());
      QColor newColor(value);
+     if (index.column() == 1) {
      newColor.setAlpha(128);
+        }
      model->setData(index, newColor.name(QColor::HexArgb), seye::PolygonModel::ColorRole);
- }
+     qDebug()<< newColor;
+//     model->setData(index, value, seye::PolygonModel::ColorRole);
+}
 
  void ComboBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex & index ) const
  {
      editor->setGeometry(option.rect);
-
  }
 
