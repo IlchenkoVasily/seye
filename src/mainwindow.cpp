@@ -57,6 +57,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Ставим корректный виджет на отображение (а должен быть уведомлений)
     ui->smallStackedWidget->setCurrentWidget(polygonView);
+
+    //
+    connect(ui->searchBox, SIGNAL(returnPressed()),
+            this, SLOT(on_searchButton_clicked()));
 }
 
 MainWindow::~MainWindow()
@@ -169,4 +173,19 @@ void MainWindow::on_pushButton_4_clicked()
     Device dia(this);
     dia.setModal(true);
     dia.exec();
+}
+
+void MainWindow::on_searchButton_clicked()
+{
+    auto table = (QTableView*)ui->smallStackedWidget->currentWidget();
+    auto model = table->model();
+
+    if (model == objectProxy)
+    {
+        // re-cast to proxy model
+        auto proxy = (seye::ObjectProxy*)model;
+        QRegExp regular(ui->searchBox->text(), Qt::CaseInsensitive);
+        proxy->setFilterRegExp(regular);
+
+    }
 }

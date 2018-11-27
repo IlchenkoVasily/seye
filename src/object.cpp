@@ -9,6 +9,7 @@ Object::Object(int id, QGeoCoordinate coord, double speed)
 Object::Object(const Object & obj)
     : _id(obj._id), _speedLimit(obj._speedLimit), _lastCheck(obj._lastCheck)
     , _currentCoordinate(obj._currentCoordinate), _state(obj._state)
+    , _role(obj._role), _name(obj._name)
 
 {}
 
@@ -92,6 +93,20 @@ Role Object::role() const
 void Object::setRole(Role newRole)
 {
     _role = newRole;
+}
+
+QString Object::name() const
+{
+    return _name;
+}
+
+void Object::setName(QString name)
+{
+    if (_name == name)
+        return;
+
+    _name = name;
+    emit nameChanged(_name);
 }
 
 double Object::scoreMaxDistance()

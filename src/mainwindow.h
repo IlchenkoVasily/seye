@@ -45,6 +45,8 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_searchButton_clicked();
+
 signals:
     void resort();
 

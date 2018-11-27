@@ -37,23 +37,19 @@ void ObjectModel::addObject(Object& newObj)
         if (_objects[idx].checkTime() > MAX_LOST_TIME)
         {
             _objects[idx].setState(State::Destroyed);
-            emit noticePushed(_objects[idx].id(), "empty name",
+            emit noticePushed(_objects[idx].id(), _objects[idx].name(),
                               State::Destroyed);
         }
 
         // Проверка на то, является ли объект нарушителем
         if (_objects[idx].state() == State::Intruder)
-            emit noticePushed(_objects[idx].id(), "empty name",
+            emit noticePushed(_objects[idx].id(), _objects[idx].name(),
                               State::Intruder);
 
         // Проверка на то, находится ли объект за зоной внимания
         if (_objects[idx].state() == State::OutOfAttention)
-            emit noticePushed(_objects[idx].id(), "empty name",
+            emit noticePushed(_objects[idx].id(), _objects[idx].name(),
                               State::OutOfAttention);
-
-        // NOTE Здесь можно протестить фильтрацию оффлайн устройства
-//        if (newObj.id() == 2534)
-//            _objects[idx].setState(State::Offline);
 
         // Сигнал о том, что данные в модели изменены.
         // Индексы наших объектов в моделе, изменённый параметр
@@ -69,7 +65,7 @@ void ObjectModel::addObject(Object& newObj)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _objects << newObj;
     endInsertRows();
-    emit noticePushed(newObj.id(), "empty name",
+    emit noticePushed(newObj.id(), newObj.name(),
                       State::New);
 }
 
@@ -113,7 +109,7 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case Qt::DisplayRole: {
-        if (index.column() == 0) return QString::number(object.id());
+        if (index.column() == 0) return object.name();
         return QVariant();
     }
 
@@ -139,6 +135,9 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
     case RoleRole:
         return QVariant(object.role());
 
+    case NameRole:
+        return QVariant(object.name());
+
     default:
         return QVariant();
     }
@@ -152,7 +151,7 @@ QVariant ObjectModel::headerData(int section, Qt::Orientation orientation, int r
         {
             switch (section) {
             case 0:
-                return QString("ID");
+                return QString("Name");
             case 1:
                 return QString("Status");
             case 2:
@@ -188,6 +187,7 @@ QHash<int, QByteArray> ObjectModel::roleNames() const
     roles[CoordinateRole] = "coordinate";
     roles[StateRole] = "state";
     roles[RoleRole] = "role";
+    roles[NameRole] = "name";
 
     return roles;
 }

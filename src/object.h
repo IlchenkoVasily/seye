@@ -17,6 +17,7 @@ namespace seye
         Q_PROPERTY(QGeoCoordinate coordinate READ coordinate NOTIFY coordinateChanged)
         Q_PROPERTY(State state READ state WRITE setState NOTIFY stateChanged)
         Q_PROPERTY(Role role READ role WRITE setRole NOTIFY roleChanged)
+        Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 
     public:
 
@@ -49,11 +50,15 @@ namespace seye
         Role role() const;
         void setRole(Role newRole);
 
+        QString name() const;
+        void setName(QString name);
+
     signals:
         void idChanged();
         void coordinateChanged();
         void stateChanged(State);
         void roleChanged(Role);
+        void nameChanged(QString name);
 
     private:
         // Данные из бд
@@ -70,6 +75,8 @@ namespace seye
         State _state;
         // Роль объекта.
         Role _role;
+        // Позывной объекта
+        QString _name;
 
         /*
             Подсчитывает дистанцию, которую
