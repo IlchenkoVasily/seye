@@ -6,6 +6,7 @@
 #include "delegate.h"
 #include "buttonzone.h"
 #include "login.h"
+#include "dbservice.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -13,7 +14,8 @@
 #include <QItemSelectionModel>
 #include <QProcess>
 #include <QMessageBox>
-#include "dbservice.h"
+#include <QHeaderView>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -37,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     objectView = new QTableView(this);
     objectView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    // TODO Здесь будет создание виджета для уведомлений
+    // Здесь создание виджета для уведомлений
     noticeService = new seye::Notice(ui->listWidget);
 
     // инит 'гис'-виджета
@@ -70,6 +72,7 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     context->setContextProperty(name, model);
 
     // Сразу забрасываем модель в боковое представление
+    // модель полигона
     if (name.contains("poly"))
     {
         ButtonZone* infozone = new ButtonZone(this);
@@ -82,13 +85,35 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         QItemSelectionModel* selectionModel = polygonView->selectionModel();
         context->setContextProperty("polygonSelection", selectionModel);
 
+        auto header = polygonView->horizontalHeader();
+        header->setSectionsClickable(false);
+        header->setSectionResizeMode(QHeaderView::ResizeToContents);
+
         connect(polygonView, SIGNAL(doubleClicked(const QModelIndex&)),
                 model, SLOT(polygonLook(const QModelIndex&)));
     }
+    // модель объекта
     if (name.contains("obj"))
     {
-        objectView->setModel(model);
+        // Создаём прокис для объектов
+        objectProxy = new seye::ObjectProxy(this);
+        objectProxy->setSourceModel(model);
+        connect(this, SIGNAL(resort()),
+                objectProxy, SLOT(invalidate()));
+
+        // устанавливаем нашу прокси модель вместо модели
+        objectView->setModel(objectProxy);
+
+        // Ставим сортировку (по статусу).
+        objectView->setSortingEnabled(true);
+        objectView->sortByColumn(1, Qt::DescendingOrder);
+        // Отключаем клик у хедера таблицы
+        auto header = objectView->horizontalHeader();
+        header->setSectionsClickable(false);
+
+        // Ставим делегат
         MyDelegate* delegate = new MyDelegate(this);
+        objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
 
         // вьюхи с моделью для перемещения карты на объект
         connect(objectView, SIGNAL(doubleClicked(const QModelIndex&)),
@@ -97,14 +122,17 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         // модели с уведомлениями
         connect(model, SIGNAL(noticePushed(int, QString, State)),
                 noticeService, SLOT(NoticeAlarm(int, QString, State)));
-
-        objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
     }
 }
 
 QItemSelectionModel *MainWindow::getPolygonSelection()
 {
     return polygonView->selectionModel();
+}
+
+void MainWindow::onObjectsUpdated()
+{
+    emit resort();
 }
 
 void MainWindow::on_pushButton_released()

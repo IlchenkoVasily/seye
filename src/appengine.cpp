@@ -60,6 +60,7 @@ void AppEngine::onObjectsUpdate(ObjectsPakPtr& objPaks)
         checkEntries(obj);
         _objectModel.addObject(obj);
     }
+    emit objectsUpdated();
 }
 
 void AppEngine::checkEntries(Object& object)

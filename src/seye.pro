@@ -45,9 +45,9 @@ SOURCES += \
     passport.cpp \
     buttonzone.cpp \
     zoneinfo.cpp \
-#    proxymode.cpp \
     mainwindow_admin.cpp \
-    notice.cpp
+    notice.cpp \
+    objectproxy.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -67,9 +67,9 @@ HEADERS += appengine.h \
     passport.h \
     buttonzone.h \
     zoneinfo.h \
-#    proxymodel.h \
     mainwindow_admin.h \
-    notice.h
+    notice.h \
+    objectproxy.h
 
 FORMS += \
     mainwindow.ui \
