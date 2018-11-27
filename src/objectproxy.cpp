@@ -6,7 +6,16 @@
 using namespace seye;
 
 ObjectProxy::ObjectProxy(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {}
+
+void ObjectProxy::objectSelected(const QModelIndex& index)
+{
+    auto correctIdx = mapToSource(index);
+
+    auto objModel = (ObjectModel*)sourceModel();
+    objModel->objectSelected(correctIdx);
+}
 
 bool ObjectProxy::filterAcceptsRow(int sourceRow, const QModelIndex &parent) const
 {

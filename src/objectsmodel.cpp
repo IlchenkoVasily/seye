@@ -51,6 +51,10 @@ void ObjectModel::addObject(Object& newObj)
             emit noticePushed(_objects[idx].id(), "empty name",
                               State::OutOfAttention);
 
+        // NOTE Здесь можно протестить фильтрацию оффлайн устройства
+//        if (newObj.id() == 2534)
+//            _objects[idx].setState(State::Offline);
+
         // Сигнал о том, что данные в модели изменены.
         // Индексы наших объектов в моделе, изменённый параметр
 //        emit dataChanged(index(idx, 0), index(idx, 0),

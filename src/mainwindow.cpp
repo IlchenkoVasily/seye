@@ -117,7 +117,7 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 
         // вьюхи с моделью для перемещения карты на объект
         connect(objectView, SIGNAL(doubleClicked(const QModelIndex&)),
-                model, SLOT(objectSelected(const QModelIndex&)));
+                objectProxy, SLOT(objectSelected(const QModelIndex&)));
 
         // модели с уведомлениями
         connect(model, SIGNAL(noticePushed(int, QString, State)),

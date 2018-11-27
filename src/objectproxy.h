@@ -13,6 +13,14 @@ class ObjectProxy : public QSortFilterProxyModel
 public:
     ObjectProxy(QObject* parent = nullptr);
 
+public slots:
+    /*
+        Метод принимает индекс клика во вью.
+        Получает модельный индекс и вызывает
+        соответствующий слот у самой моделе.
+     */
+    void objectSelected(const QModelIndex&);
+
 protected:
     /*
         TODO comment filterAcceptsRow
