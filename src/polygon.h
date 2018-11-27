@@ -45,6 +45,11 @@ public:
     QColor mapColor();
     QColor mapBorderColor();
 
+    QString toString() const;
+    void fromString(const QString& coordinates);
+
+    QGeoCoordinate center();
+
 signals:
     void isSelectedChanged(bool);
     void idChanged(int);

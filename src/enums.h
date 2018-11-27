@@ -15,6 +15,7 @@ namespace seye
      */
     enum State {
         Offline = 0,    // Отключенный девайс
+        OutOfAttention, // За зоной внимания
         Destroyed,      // Поломанный
         Lost,           // Утерянный
         New,            // Новый
@@ -22,6 +23,20 @@ namespace seye
         Intruder        // Нарушитель
     };
     Q_ENUM_NS(State)
+
+    /*
+        Перечисление ролей для
+        последующей удобной установки
+        иконки во вьюхе.
+     */
+    enum Role {
+        Worker,
+        Car,
+        FuelCar,
+        Pilot,
+        Security
+    };
+    Q_ENUM_NS(Role)
 }
 
 #endif // ENUMS_H

@@ -24,7 +24,8 @@ namespace seye
         enum ObjectRoles {
             IdRole = Qt::UserRole + 1,
             CoordinateRole,
-            StateRole
+            StateRole,
+            RoleRole
         };
 
         explicit ObjectModel(QObject* parent = nullptr);
@@ -50,6 +51,20 @@ namespace seye
             Передаётся: айди, позывной, статус.
         */
         void noticePushed(int, QString, State);
+
+        /*
+            Сигнал пересылает координату в гис
+            вьюху для центрирования на объекте.
+         */
+        void objectCentering(const QGeoCoordinate& coordinate);
+
+    public slots:
+        /*
+            Метод принимает модельный индекс и
+            по нему ищет объект. После отправляет
+            сигнал для центрирования.
+         */
+        void objectSelected(const QModelIndex&);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;

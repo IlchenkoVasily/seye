@@ -3,6 +3,7 @@ import QtQml.Models 2.2
 import QtLocation 5.9
 import QtPositioning 5.8
 import QtQuick.Controls 2.3
+import QtGraphicalEffects 1.0
 
 import seye 1.0     // Модуль QML не найден (seye).
 
@@ -20,6 +21,27 @@ Item {
     property MapPolyline line: MapPolyline {
         line.width: 3
         line.color: "red"
+    }
+
+    // Данный компонент обеспечивает связь для модели
+    // объектов и карты, используемая для центрирования
+    // карты на выбранном объекте.
+    Connections {
+        target: objectModel
+
+        onObjectCentering: {
+            map.center = coordinate
+            map.zoomLevel = 18
+        }
+    }
+
+    Connections {
+        target: polygonModel
+
+        onPolygonCentering: {
+            map.center = coordinate
+            map.zoomLevel = 16
+        }
     }
 
     //
@@ -54,6 +76,7 @@ Item {
 
                 MouseArea {
                     anchors.fill: parent
+                    enabled: model.id == 0 ? false : true
                     onClicked: {
                         // При клике без доп. клавиш для единичного выделения
                         if ((mouse.button == Qt.LeftButton) &&
@@ -95,15 +118,66 @@ Item {
                     height: 10
                     radius: 15
                     color: {
-                        if (model.state === States.Allowed) {
+                        if (map.zoomLevel > 17)
+                            return Qt.rgba(0, 0, 0, 0)
+
+                        switch(model.state) {
+                        case States.Allowed:
                             return "green"
-                        }
-                        if (model.state === States.Intruder) {
+                        case States.Intruder:
                             return "red"
+                        case States.OutOfAttention:
+                            return "grey"
+                        case States.Destroyed:
+                            return "blue"
+                        default:
+                            return "white"
                         }
-                        return "blue"
                     }
-                }
+
+                    // Здесь задаётся наша иконка.
+                    Image {
+                        id: objectIcon
+                        source: {
+                            switch (model.role) {
+                            case Roles.Worker:
+                                return "qrc:/icons/worker.svg"
+                            case Roles.Pilot:
+                                return "qrc:/icons/pilot.svg"
+                            case Roles.Car:
+                                return "qrc:/icons/car.svg"
+                            case Roles.Security:
+                                return "qrc:/icons/security.svg"
+                            case Roles.FuelCar:
+                                return "qrc:/icons/fuel.svg"
+                            }
+                        }
+                        anchors.fill: parent
+                        antialiasing: true
+                        visible: false
+                    } // end Image
+
+                    // Здесь задаётся цвет нашей иконки.
+                    ColorOverlay {
+                        source: objectIcon
+                        anchors.fill: objectIcon
+                        color: {
+                            switch(model.state) {
+                            case States.Allowed:
+                                return "green"
+                            case States.Intruder:
+                                return "red"
+                            case States.OutOfAttention:
+                                return "grey"
+                            case States.Destroyed:
+                                return "blue"
+                            default:
+                                return "white"
+                            }
+                        }
+                        antialiasing: true
+                    } // end ColorOverlay
+                } // end sourceItem: Rectangle
                 zoomLevel: 16
                 opacity: 1.0
                 anchorPoint: Qt.point(sourceItem.width / 2, sourceItem.height / 2)

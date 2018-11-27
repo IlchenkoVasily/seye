@@ -44,7 +44,10 @@ SOURCES += \
     delegate.cpp \
     passport.cpp \
     buttonzone.cpp \
-    zoneinfo.cpp
+    zoneinfo.cpp \
+    mainwindow_admin.cpp \
+    notice.cpp \
+    objectproxy.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -63,15 +66,19 @@ HEADERS += appengine.h \
     delegate.h \
     passport.h \
     buttonzone.h \
-    zoneinfo.h
+    zoneinfo.h \
+    mainwindow_admin.h \
+    notice.h \
+    objectproxy.h
 
 FORMS += \
     mainwindow.ui \
     dialogadddevice.ui \
     device.ui \
-    login.ui \
+    login.ui\
     passport.ui \
-    zoneinfo.ui
+    zoneinfo.ui \
+    mainwindow2.ui \
 
 RESOURCES += \
     qml.qrc \

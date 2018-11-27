@@ -92,10 +92,21 @@ namespace seye
         Q_INVOKABLE void cancelCreatePolygon();
 
         /*
+            Возвращает указатель на зону внимания
+         */
+        Polygon* attentionZone();
+
+        /*
             Данный метод возвращает ссылку на лист
             со всеми полигонами.
         */
         const QList<Polygon*>& toList() const;
+
+    signals:
+        /*
+            TODO write comment here
+         */
+        void polygonCentering(const QGeoCoordinate& coordinate);
 
     public slots:
         /*
@@ -103,6 +114,11 @@ namespace seye
             всех полигонах, которые были выделены.
          */
         void onPolygonSelected(const QItemSelection &selected, const QItemSelection &deselected);
+
+        /*
+           TODO write comment here
+         */
+        void polygonLook(const QModelIndex& index);
 
     protected:
         /* */
@@ -115,6 +131,8 @@ namespace seye
         bool _onCreatePolygon;
         // Временная переменная для полигона.
         Polygon* _tempPolygon;
+        // Зона внимания
+        Polygon* _attentionZone;
         // Список всех полигонов
         QList<Polygon*> _polygons;
     };

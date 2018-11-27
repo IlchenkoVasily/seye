@@ -16,6 +16,7 @@ namespace seye
         Q_PROPERTY(int id READ id NOTIFY idChanged)
         Q_PROPERTY(QGeoCoordinate coordinate READ coordinate NOTIFY coordinateChanged)
         Q_PROPERTY(State state READ state WRITE setState NOTIFY stateChanged)
+        Q_PROPERTY(Role role READ role WRITE setRole NOTIFY roleChanged)
 
     public:
 
@@ -45,21 +46,30 @@ namespace seye
         bool operator==(Object);
         Object &operator=(const Object&);
 
+        Role role() const;
+        void setRole(Role newRole);
+
     signals:
         void idChanged();
         void coordinateChanged();
         void stateChanged(State);
+        void roleChanged(Role);
 
     private:
         // Данные из бд
         int _id;            // айди
         double _speedLimit; // Предельная скорость
-        //
+        // Время последнего изменения координат
+        // и время последнего удачного изменения.
         QTime _lastCheck;
         QTime _lastGoodCheck;
+        // Текущая позиция объекта и предыдущая.
         QGeoCoordinate _currentCoordinate;
         QGeoCoordinate _previousCoordinate;
+        // Статус объекта.
         State _state;
+        // Роль объекта.
+        Role _role;
 
         /*
             Подсчитывает дистанцию, которую

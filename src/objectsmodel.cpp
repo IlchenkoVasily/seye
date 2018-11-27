@@ -18,6 +18,7 @@ void ObjectModel::addObject(Object& newObj)
     int idx = _objects.indexOf(newObj);
     if (idx != -1)
     {
+        beginResetModel();
         // Обновляем координаты у объекта
         _objects[idx].setCoordinate(newObj.coordinate());
         _objects[idx].setState(newObj.state());
@@ -40,10 +41,25 @@ void ObjectModel::addObject(Object& newObj)
                               State::Destroyed);
         }
 
+        // Проверка на то, является ли объект нарушителем
+        if (_objects[idx].state() == State::Intruder)
+            emit noticePushed(_objects[idx].id(), "empty name",
+                              State::Intruder);
+
+        // Проверка на то, находится ли объект за зоной внимания
+        if (_objects[idx].state() == State::OutOfAttention)
+            emit noticePushed(_objects[idx].id(), "empty name",
+                              State::OutOfAttention);
+
+        // NOTE Здесь можно протестить фильтрацию оффлайн устройства
+//        if (newObj.id() == 2534)
+//            _objects[idx].setState(State::Offline);
+
         // Сигнал о том, что данные в модели изменены.
         // Индексы наших объектов в моделе, изменённый параметр
-        emit dataChanged(index(idx, 0), index(idx, 0),
-                         QVector<int>() << CoordinateRole << StateRole);
+//        emit dataChanged(index(idx, 0), index(idx, 0),
+//                         QVector<int>() << CoordinateRole << StateRole);
+        endResetModel();
         return;
     }
 
@@ -60,6 +76,14 @@ void ObjectModel::addObject(Object& newObj)
 const QList<Object>& ObjectModel::toList() const
 {
     return _objects;
+}
+
+void ObjectModel::objectSelected(const QModelIndex& index)
+{
+    auto obj = _objects[index.row()];
+    auto coordinate = obj.coordinate();
+
+    emit objectCentering(coordinate);
 }
 
 int ObjectModel::rowCount(const QModelIndex& parent) const
@@ -112,6 +136,9 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
     case StateRole:
         return QVariant(object.state());
 
+    case RoleRole:
+        return QVariant(object.role());
+
     default:
         return QVariant();
     }
@@ -160,6 +187,7 @@ QHash<int, QByteArray> ObjectModel::roleNames() const
     roles[IdRole] = "id";
     roles[CoordinateRole] = "coordinate";
     roles[StateRole] = "state";
+    roles[RoleRole] = "role";
 
     return roles;
 }

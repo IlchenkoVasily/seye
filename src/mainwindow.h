@@ -3,6 +3,10 @@
 
 #include <QMainWindow>
 #include <QTableView>
+#include "notice.h"
+#include "mainwindow_admin.h"
+#include "objectproxy.h"
+
 
 class QAbstractItemModel;
 class QQuickWidget;
@@ -26,6 +30,8 @@ public:
     QItemSelectionModel* getPolygonSelection();
 
 private slots:
+    void onObjectsUpdated();
+
     void on_pushButton_released();
 
     // Объекты кнопка
@@ -37,11 +43,19 @@ private slots:
     // Зоны кнопка
     void on_pushButton_5_clicked();
 
+    void on_pushButton_4_clicked();
+
+signals:
+    void resort();
+
 private:
     QQuickWidget* gisWidget;
     QTableView* polygonView;
     QTableView* objectView;
+    seye::Notice* noticeService;
+    seye::ObjectProxy* objectProxy;
     Ui::MainWindow *ui;
+    Mainwindow2* window;
 };
 
 #endif // MAINWINDOW_H

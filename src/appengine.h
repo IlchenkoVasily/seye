@@ -37,6 +37,7 @@ namespace seye
         void setUp();
 
     signals:
+        void objectsUpdated();
 
     public slots:
         /*
