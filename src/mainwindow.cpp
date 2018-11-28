@@ -57,10 +57,54 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Ставим корректный виджет на отображение (а должен быть уведомлений)
     ui->smallStackedWidget->setCurrentWidget(polygonView);
-
     //
     connect(ui->searchBox, SIGNAL(returnPressed()),
             this, SLOT(on_searchButton_clicked()));
+
+    /*
+        Здесь проверяется роль и убирает/добавляет
+        кнопки которые не нужны для данной роли
+    */
+
+    if(role == "operator") //для роли Оператор
+    {
+        ui->pushButton_6->hide();
+        ui->pushButton_7->hide();
+        ui->pushButton_8->hide();
+        ui->pushButton_9->hide();
+        ui->pushButton_11->hide();
+        ui->pushButton_12->hide();
+        ui->pushButton_14->hide();
+        ui->pushButton_15->hide();
+        ui->pushButton_16->hide();
+        ui->pushButton_17->hide();
+        ui->pushButton_5->setText("Зоны");
+        ui->buttonBox->hide();
+        ui->pushButton_2->show();
+        ui->pushButton_13->show();
+        ui->listWidget->show();
+        ui->pushButton_18->hide();
+    }
+
+    if(role == "admin") //для роли Админ
+    {
+        ui->pushButton_6->show();
+        ui->pushButton_7->show();
+        ui->pushButton_8->show();
+        ui->pushButton_9->show();
+        ui->pushButton_11->show();
+        ui->pushButton_12->show();
+        ui->pushButton_14->show();
+        ui->pushButton_15->show();
+        ui->pushButton_16->show();
+        ui->pushButton_17->show();
+        ui->pushButton_5->setText("Зоны (ГИС)");
+        ui->pushButton_18->show();
+        ui->buttonBox->show();
+        ui->pushButton_2->hide();
+        ui->pushButton_13->hide();
+        ui->listWidget->hide();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -175,6 +219,7 @@ void MainWindow::on_pushButton_4_clicked()
     dia.exec();
 }
 
+<<<<<<< HEAD
 void MainWindow::on_searchButton_clicked()
 {
     auto table = (QTableView*)ui->smallStackedWidget->currentWidget();
@@ -188,4 +233,30 @@ void MainWindow::on_searchButton_clicked()
         proxy->setFilterRegExp(regular);
 
     }
+=======
+void MainWindow::on_pushButton_13_clicked()
+{
+    /*
+        Прячет виджет с боковой панелью
+        от этого увеличивается окно
+        с уведомлениями
+    */
+    if(ui->smallStackedWidget->isVisible())
+        ui->pushButton_13->setText("↓");
+    else
+        ui->pushButton_13->setText("↑");
+    ui->smallStackedWidget->setVisible(!ui->smallStackedWidget->isVisible());
+}
+
+void MainWindow::on_pushButton_18_clicked()
+{
+    /*
+        Сева, это не костыль
+    */
+    if(ui->listWidget->isVisible())
+        ui->pushButton_18->setText("↓");
+    else
+        ui->pushButton_18->setText("↑");
+    ui->listWidget->setVisible(!ui->listWidget->isVisible());
+>>>>>>> ba9f0dc5c6b60714a7292f256f8380b1304e34f4
 }

@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QTableView>
+#include <QStackedWidget>
+
 #include "notice.h"
 #include "mainwindow_admin.h"
 #include "objectproxy.h"
@@ -45,7 +47,12 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    // Кнопка поиска
     void on_searchButton_clicked();
+
+    void on_pushButton_13_clicked();
+
+    void on_pushButton_18_clicked();
 
 signals:
     void resort();
