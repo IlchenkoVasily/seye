@@ -25,6 +25,7 @@ void login::on_pushButton_clicked()
     dblink = new seye::DBService(host, user, pass);
 
     *role = dblink->getRole(user);
+    *role = user;
     if(role->isEmpty()) {QMessageBox::warning(this,"Ошибка", "Неверный логин или  пароль");}
     else { q++;// флаг успешно  авторизации
         //        QMessageBox::information(this,"Успех", "Авторизция прошла успешно");

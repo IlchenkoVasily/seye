@@ -137,8 +137,13 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         header->setSectionsClickable(false);
         header->setSectionResizeMode(QHeaderView::ResizeToContents);
 
+        // Для центрирования
         connect(polygonView, SIGNAL(doubleClicked(const QModelIndex&)),
                 model, SLOT(polygonLook(const QModelIndex&)));
+
+        // Для создания полигона
+        connect(ui->pushButton_16, SIGNAL(clicked()),
+                model, SLOT(beginCreatePolygon()));
     }
     // модель объекта
     if (name.contains("obj"))
@@ -219,7 +224,7 @@ void MainWindow::on_pushButton_4_clicked()
     dia.exec();
 }
 
-<<<<<<< HEAD
+
 void MainWindow::on_searchButton_clicked()
 {
     auto table = (QTableView*)ui->smallStackedWidget->currentWidget();
@@ -233,7 +238,8 @@ void MainWindow::on_searchButton_clicked()
         proxy->setFilterRegExp(regular);
 
     }
-=======
+}
+
 void MainWindow::on_pushButton_13_clicked()
 {
     /*
@@ -258,5 +264,4 @@ void MainWindow::on_pushButton_18_clicked()
     else
         ui->pushButton_18->setText("↑");
     ui->listWidget->setVisible(!ui->listWidget->isVisible());
->>>>>>> ba9f0dc5c6b60714a7292f256f8380b1304e34f4
 }

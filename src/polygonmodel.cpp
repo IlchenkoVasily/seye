@@ -280,6 +280,8 @@ void PolygonModel::beginCreatePolygon()
 
     _onCreatePolygon = true;
     _tempPolygon = new Polygon;
+
+    emit onCreateChanged(true);
 }
 
 void PolygonModel::addCoordinate(const QGeoCoordinate &coord)
@@ -301,6 +303,7 @@ void PolygonModel::endCreatePolygon()
     _tempPolygon = nullptr;
     _onCreatePolygon = false;
 
+    emit onCreateChanged(false);
 }
 
 void PolygonModel::cancelCreatePolygon()
@@ -308,6 +311,8 @@ void PolygonModel::cancelCreatePolygon()
     delete _tempPolygon;
     _tempPolygon = nullptr;
     _onCreatePolygon = false;
+
+    emit onCreateChanged(false);
 }
 
 Polygon *PolygonModel::attentionZone()
