@@ -22,9 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     seye::DBService* dblink;
     QString role;
 
-    login user(dblink, &role, this);
-    user.setModal(true);
-    user.exec();
+//    login user(dblink, &role, this);
+//    user.setModal(true);
+//    user.exec();
 
     //
     ui->setupUi(this);
@@ -95,6 +95,7 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
     }
 }
+
 
 QItemSelectionModel *MainWindow::getPolygonSelection()
 {

@@ -50,6 +50,4 @@ void login::closeEvent(QCloseEvent *event)
         if(q==0){
             event->ignore();
         }
-    //создаем бокс или просто решаем, что делать, если нажат крестик
-
     }

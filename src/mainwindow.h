@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTableView>
 #include "mainwindow_admin.h"
+#include <popup.h>
 
 
 class QAbstractItemModel;
@@ -26,6 +27,7 @@ public:
     void setupUi();
 
     QItemSelectionModel* getPolygonSelection();
+//    MainWindow* mainwindow = 0;
 
 private slots:
     void on_pushButton_released();
@@ -47,6 +49,9 @@ private:
     QTableView* objectView;
     Ui::MainWindow *ui;
     Mainwindow2* window;
+    PopUp *popUp;       // попап паспортов
+  //  MainWindow* mainwindow = 0;
 };
+
 
 #endif // MAINWINDOW_H

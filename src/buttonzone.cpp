@@ -6,6 +6,8 @@
 #include "polygonmodel.h"
 #include <QStringList>
 #include <QColor>
+//#include "popup.h"
+
 
  ButtonZone::ButtonZone(QObject *parent)
      : QItemDelegate(parent)
@@ -56,11 +58,20 @@
 //                 QDialog * d = new QDialog(); // открытие окна
 //                 d->setGeometry(0,0,100,100);
 //                 d->show();
+//                    ui->setupUi(this);
+                 if (e->button() == Qt::LeftButton)
+                 {
+                     popUp = new PopUp();
+                     QString q="qeq \n"
+                               "Имя:\n"
+                               "Фамилия \n";
+                     popUp->setPopupText(q);
+                     popUp->show(clickX, clickY);
+                 }
 
-                 zoneinfo *info = new zoneinfo();
-                 info->show();
-//                 nationalityCombo->setModel( new NationalityModel( this ) );
 
+//                 zoneinfo *info = new zoneinfo();
+//                 info->show();
              }
      }
  }
@@ -74,7 +85,6 @@
  ComboBoxDelegate::ComboBoxDelegate(QObject *parent): QItemDelegate(parent)
  {
  }
-int w =0;
 
  QWidget *ComboBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
  {
@@ -109,26 +119,6 @@ int w =0;
 
  }
 
-// void ComboBoxDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-// {
-//     QStringList colorNames ;
-//     colorNames << "darkGreen"<<"green"<<"gray"<<"red"<<"white"<<"blue"<<"cyan"<<"darkMagenta"<<"yellow"<<"darkRed"<<"black"<<"magenta";
-//     QStyleOptionComboBox t_style_option_combo_box;
-////     w =editor->currentIndex();
-//     t_style_option_combo_box.currentText =colorNames.at(w);
-//     t_style_option_combo_box.rect = option.rect;
-
-//     QApplication::style()->drawComplexControl(QStyle::CC_ComboBox, &t_style_option_combo_box, painter);
-//     QApplication::style()->drawItemText(painter,
-//                                         t_style_option_combo_box.rect,
-//                                         Qt::AlignCenter,
-//                                         QApplication::palette(),
-//                                         true,
-//                                         t_style_option_combo_box.currentText);
-
-// }
-
-
  void ComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
  {
 //     QStringList list;
@@ -136,11 +126,7 @@ int w =0;
 //     QComboBox *comboBox = static_cast<QComboBox*>(editor);
 //     comboBox->addItems(list);
 //     comboBox->setItemData(0, QBrush(Qt::red), Qt::TextColorRole);
-
-
 //     QComboBox *comboBox = new QComboBox(editor);
-
-
  }
 
  void ComboBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const

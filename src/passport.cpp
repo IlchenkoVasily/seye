@@ -5,6 +5,7 @@ Passport::Passport(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Passport)
 {
+//    setWindowFlags(Qt::FramelessWindowHint);
     ui->setupUi(this);
 }
 
