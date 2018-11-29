@@ -6,7 +6,7 @@
 #include "polygonmodel.h"
 #include <QStringList>
 #include <QColor>
-//#include "popup.h"
+#include "mainwindow.h"
 
 
  ButtonZone::ButtonZone(QObject *parent)
@@ -66,6 +66,7 @@
                                "Имя:\n"
                                "Фамилия \n";
                      popUp->setPopupText(q);
+                     clickX=mainwindow-> QWidget::frameGeometry().width();
                      popUp->show(clickX, clickY);
                  }
 

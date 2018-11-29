@@ -67,7 +67,7 @@ void PopUp::setPopupText(const QString &text)
     adjustSize();           // С пересчётом размеров уведомления
 }
 
-void PopUp::show(int x, int y)
+void PopUp::show(int x,int y)
 {
     setWindowOpacity(0.0);  // Устанавливаем прозрачность в ноль
 
@@ -75,7 +75,7 @@ void PopUp::show(int x, int y)
     animation.setStartValue(0.0);   // Стартовое значение будет 0 (полностью прозрачный виджет)
     animation.setEndValue(1.0);     // Конечное - полностью непрозрачный виджет
 
-    setGeometry(QApplication::desktop()->availableGeometry().width() - 36 - width() + QApplication::desktop() -> availableGeometry().x(),
+    setGeometry(x - 36,
                 QApplication::desktop()->availableGeometry().height() - 36 - height() + QApplication::desktop() -> availableGeometry().y(),
                 width(),
                 height());

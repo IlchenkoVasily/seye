@@ -70,7 +70,7 @@
                      mainwindow = new MainWindow();
                      popUp->setPopupText(q);
                      clickX=mainwindow-> QWidget::frameGeometry().width();
-                     clickY=mainwindow-> QWidget::frameGeometry().height();
+//                     clickY=mainwindow-> QWidget::frameGeometry().height();
                      popUp->show(clickX, clickY);
                  }
 

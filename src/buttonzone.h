@@ -3,6 +3,7 @@
 #include <QItemDelegate>
 #include "popup.h"
 #include <QWidget>
+#include "mainwindow.h"
 
 class ButtonZone : public QItemDelegate
 {
@@ -14,6 +15,7 @@ public:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
 private:
     PopUp *popUp;       // попап паспортов
+    MainWindow *mainwindow;
  };
 
 #include <QItemDelegate>
