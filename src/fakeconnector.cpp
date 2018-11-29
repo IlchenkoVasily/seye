@@ -41,7 +41,7 @@ void FakeConnector::askDevice()
 {
     int deviceCount = 3; // !!!
 
-    if (currentIndex >= 90)
+    if (currentIndex >= 180)
         currentIndex = 0;
 
     ObjectsPakPtr listPak(new QList<Pak>);
@@ -63,5 +63,5 @@ void FakeConnector::askDevice()
 
 void FakeConnector::start()
 {
-    timer->start(5000);
+    timer->start(1000);
 }

@@ -1,23 +1,54 @@
 import QtQuick 2.0
+import QtQml.Models 2.2
 import QtLocation 5.9
 import QtPositioning 5.8
 import QtQuick.Controls 2.3
+import QtGraphicalEffects 1.0
 
-import seye 1.0
+import seye 1.0     // Модуль QML не найден (seye).
 
 Item {
     id: superItem
-    width: 640
-    height: 480
 
     property bool onPolygonCreate: false
+    property bool firstAdded: false
+
+    // Данное свойство - группа элементов карты.
+    // Сюда добавляются "точки" - MapQuickItem, в котором
+    // содержится округлый Rectangle.
+    property MapItemGroup dots: MapItemGroup { }
+    // Линия, отображающая границы полигона.
+    property MapPolyline line: MapPolyline {
+        line.width: 3
+        line.color: "red"
+    }
+
+    // Данный компонент обеспечивает связь для модели
+    // объектов и карты, используемая для центрирования
+    // карты на выбранном объекте.
+    Connections {
+        target: objectModel
+
+        onObjectCentering: {
+            map.center = coordinate
+            map.zoomLevel = 18
+        }
+    }
+
+    Connections {
+        target: polygonModel
+
+        onPolygonCentering: {
+            map.center = coordinate
+            map.zoomLevel = 16
+        }
+    }
 
     //
     Plugin {
         id: mapPlugin
         name: "osm"
     }
-
 
     Map {
         id: map
@@ -26,6 +57,7 @@ Item {
         plugin: mapPlugin
         center: QtPositioning.coordinate(56.388, 85.210) // Bogachevo
         zoomLevel: 16
+        Component.onCompleted: { map.addMapItem(line) }
 
         // this is an Polygons view container
         MapItemView {
@@ -38,9 +70,34 @@ Item {
 
             MapPolygon {
                 path: model.path
-                color: Qt.rgba(64, 255, 64, 0.5)
-                border.color: "green"
+                color: model.mapColor
+                border.color: model.mapBorderColor
                 border.width: 2
+
+                MouseArea {
+                    anchors.fill: parent
+                    enabled: model.id == 0 ? false : true
+                    onClicked: {
+                        // При клике без доп. клавиш для единичного выделения
+                        if ((mouse.button == Qt.LeftButton) &&
+                            (mouse.modifiers == Qt.NoModifier))
+                        {
+                            polygonSelection.select(polygonModel.index(index, 0),
+                                  ItemSelectionModel.ClearAndSelect |
+                                  ItemSelectionModel.Rows)
+                        }
+
+                        // При клике с ктрл`ом для множественно выделения
+                        if ((mouse.button == Qt.LeftButton) &&
+                            (mouse.modifiers & Qt.ControlModifier))
+                        {
+                            polygonSelection.select(polygonModel.index(index, 0),
+                                  ItemSelectionModel.Select |
+                                  ItemSelectionModel.Rows |
+                                  ItemSelectionModel.Toggle)
+                        }
+                    }
+                }
             }
         }
 
@@ -61,15 +118,66 @@ Item {
                     height: 10
                     radius: 15
                     color: {
-                        if (model.state === States.Allowed) {
+                        if (map.zoomLevel > 17)
+                            return Qt.rgba(0, 0, 0, 0)
+
+                        switch(model.state) {
+                        case States.Allowed:
                             return "green"
-                        }
-                        if (model.state === States.Intruder) {
+                        case States.Intruder:
                             return "red"
+                        case States.OutOfAttention:
+                            return "grey"
+                        case States.Destroyed:
+                            return "blue"
+                        default:
+                            return "white"
                         }
-                        return "blue"
                     }
-                }
+
+                    // Здесь задаётся наша иконка.
+                    Image {
+                        id: objectIcon
+                        source: {
+                            switch (model.role) {
+                            case Roles.Worker:
+                                return "qrc:/icons/worker.svg"
+                            case Roles.Pilot:
+                                return "qrc:/icons/pilot.svg"
+                            case Roles.Car:
+                                return "qrc:/icons/car.svg"
+                            case Roles.Security:
+                                return "qrc:/icons/security.svg"
+                            case Roles.FuelCar:
+                                return "qrc:/icons/fuel.svg"
+                            }
+                        }
+                        anchors.fill: parent
+                        antialiasing: true
+                        visible: false
+                    } // end Image
+
+                    // Здесь задаётся цвет нашей иконки.
+                    ColorOverlay {
+                        source: objectIcon
+                        anchors.fill: objectIcon
+                        color: {
+                            switch(model.state) {
+                            case States.Allowed:
+                                return "green"
+                            case States.Intruder:
+                                return "red"
+                            case States.OutOfAttention:
+                                return "grey"
+                            case States.Destroyed:
+                                return "blue"
+                            default:
+                                return "white"
+                            }
+                        }
+                        antialiasing: true
+                    } // end ColorOverlay
+                } // end sourceItem: Rectangle
                 zoomLevel: 16
                 opacity: 1.0
                 anchorPoint: Qt.point(sourceItem.width / 2, sourceItem.height / 2)
@@ -79,21 +187,47 @@ Item {
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.RightButton
+            hoverEnabled: true
+            cursorShape: onPolygonCreate ? Qt.CrossCursor : Qt.ArrowCursor
 
             onClicked: {
-                //
+                // Чистим какие-либо выделения
+                polygonSelection.clearSelection()
+
+                // Если создаётеся полигнон
                 if (onPolygonCreate) {
+                    // Правая кнопка - отменение создания полигона
                     if (mouse.button & Qt.RightButton) {
-                        // cancel create polygon
                         onPolygonCreate = false
+                        firstAdded = false
                         polygonModel.cancelCreatePolygon()
+                        ///------------чистим dots
+
+                        // чистим line
+                        for (var i = line.pathLength() - 1; i >= 0; i--) {
+                            line.removeCoordinate(i)
+                        }
                     }
 
                     // add new point to new polygon
                     if (mouse.button & Qt.LeftButton) {
-                        // add new point to polygon
                         var coord = map.toCoordinate(Qt.point(mouse.x, mouse.y))
                         polygonModel.addCoordinate(coord)
+                        ///--------------добавляем в dots новый MapQuickItem
+
+                        // добавляем в line новую координату
+                        if (!firstAdded) {
+                            line.addCoordinate(coord)
+                            // Если была добавлена только первая точка,
+                            // тогда добавляем временную точку, для
+                            // слежки за курсором в момент добавления
+                            line.addCoordinate(coord)
+                            firstAdded = true
+                            return
+                        }
+
+                        line.replaceCoordinate(line.pathLength() - 1, coord)
+                        line.addCoordinate(coord);
                     }
                 }
             }
@@ -101,7 +235,25 @@ Item {
             onDoubleClicked: {
                 if (onPolygonCreate) {
                     onPolygonCreate = false
+                    firstAdded = false
                     polygonModel.endCreatePolygon()
+                    // чистим line
+                    for (var i = line.pathLength() - 1; i >= 0; i--) {
+                        line.removeCoordinate(i)
+                    }
+                }
+            }
+
+            onPositionChanged: {
+                if (onPolygonCreate) {
+                    // Если нету точек, то и не откуда следить
+                    if (!firstAdded) {
+                        return;
+                    }
+
+                    // подмениваем последнюю точку из полигона
+                    line.replaceCoordinate(line.pathLength() - 1,
+                                           map.toCoordinate(Qt.point(mouse.x, mouse.y)))
                 }
             }
         }

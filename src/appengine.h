@@ -9,6 +9,7 @@
 #include "objectsmodel.h"
 #include "polygonmodel.h"
 #include "fakeconnector.h"
+#include "mainwindow.h"
 
 namespace seye
 {
@@ -36,6 +37,7 @@ namespace seye
         void setUp();
 
     signals:
+        void objectsUpdated();
 
     public slots:
         /*
@@ -60,10 +62,9 @@ namespace seye
         */
         void checkEntriesAll();
 
-
+        MainWindow* _window;
         PolygonModel _polygonModel;
         ObjectModel _objectModel;
-        QQuickView view;
         IConnector* _connector;
         // here DatabaseDriver
     };

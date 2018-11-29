@@ -6,18 +6,26 @@
 #ifndef POLYGONMODEL_H
 #define POLYGONMODEL_H
 
-#include <QAbstractListModel>
-#include <QGeoPolygon>
+#include <QAbstractTableModel>
+#include <QItemSelectionModel>
+#include "polygon.h"
 
 namespace seye
 {
-    class PolygonModel : public QAbstractListModel
+    class PolygonModel : public QAbstractTableModel
     {
         Q_OBJECT
 
     public:
         enum {
-            PathRole = Qt::UserRole + 1
+            PathRole = Qt::UserRole + 1,
+            IdRole,
+            NameRole,
+            ColorRole,
+            BorderColorRole,
+            MapColorRole,
+            MapBorderColorRole,
+            SelectionRole
         };
 
         explicit PolygonModel(QObject *parent = nullptr);
@@ -27,11 +35,23 @@ namespace seye
             Данный метод возвращает количество полигонов в моделе
         */
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
+        /*
+            Данный метод возвращает количество полей на каждый полигон
+        */
+        int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+
         /*
             Данный метод возвращает данные полигона по индексу
             и роли.
         */
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+        /*
+            Данным метод делает в представлении таблицы именованные хедеры
+        */
+        QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+
 
         // Для изменения уже имеющихся данных:
         bool setData(const QModelIndex &index, const QVariant &value,
@@ -42,12 +62,12 @@ namespace seye
             Данный метод добавляет в модель созданный
             в qml новый полигон
         */
-        Q_INVOKABLE void addPolygon(QGeoPolygon* polygon);
+        Q_INVOKABLE void addPolygon(Polygon* polygon);
 
         /*
             Данный метод, вызываемый из qml, сообщает
             о начале создания нового полигона. Выделяет
-            место в куче для нового QGeoPolygon.
+            место в куче для нового Polygon.
         */
         Q_INVOKABLE void beginCreatePolygon();
 
@@ -72,22 +92,49 @@ namespace seye
         Q_INVOKABLE void cancelCreatePolygon();
 
         /*
+            Возвращает указатель на зону внимания
+         */
+        Polygon* attentionZone();
+
+        /*
             Данный метод возвращает ссылку на лист
             со всеми полигонами.
         */
-        const QList<QGeoPolygon*>& toList() const;
+        const QList<Polygon*>& toList() const;
+
+    signals:
+        /*
+            TODO write comment here
+         */
+        void polygonCentering(const QGeoCoordinate& coordinate);
+
+    public slots:
+        /*
+            Слот для изменения статус isSelected во
+            всех полигонах, которые были выделены.
+         */
+        void onPolygonSelected(const QItemSelection &selected, const QItemSelection &deselected);
+
+        /*
+           TODO write comment here
+         */
+        void polygonLook(const QModelIndex& index);
 
     protected:
         /* */
         QHash<int, QByteArray> roleNames() const override;
 
     private:
+        // udolee
+        int newPolyId = 0;
         // Идёт процесс создания полигона.
         bool _onCreatePolygon;
         // Временная переменная для полигона.
-        QGeoPolygon* _tempPolygon;
-
-        QList<QGeoPolygon*> _polygons;
+        Polygon* _tempPolygon;
+        // Зона внимания
+        Polygon* _attentionZone;
+        // Список всех полигонов
+        QList<Polygon*> _polygons;
     };
 }
 

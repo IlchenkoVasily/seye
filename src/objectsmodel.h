@@ -7,7 +7,7 @@
 #define OBJECTSMODEL_H
 
 // Qt includes
-#include <QAbstractListModel>
+#include <QAbstractTableModel>
 #include <QTimer>
 
 // other includes
@@ -16,7 +16,7 @@
 
 namespace seye
 {
-    class ObjectModel : public QAbstractListModel
+    class ObjectModel : public QAbstractTableModel
     {
         Q_OBJECT
 
@@ -24,24 +24,47 @@ namespace seye
         enum ObjectRoles {
             IdRole = Qt::UserRole + 1,
             CoordinateRole,
-            StateRole
+            StateRole,
+            RoleRole
         };
 
         explicit ObjectModel(QObject* parent = nullptr);
         ~ObjectModel() override;
 
-        // form QAbstractListModel
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+        int columnCount(const QModelIndex& parent = QModelIndex()) const override;
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+        QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+        // Для изменения уже имеющихся данных:
+        bool setData(const QModelIndex &index, const QVariant &value,
+                     int role = Qt::EditRole) override;
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
 
         // own
         void addObject(Object& newObj);
 
         const QList<Object>& toList() const;
 
-    // need for test. delete it after
+    signals:
+        /*
+            Сигнал для уведомлений.
+            Передаётся: айди, позывной, статус.
+        */
+        void noticePushed(int, QString, State);
+
+        /*
+            Сигнал пересылает координату в гис
+            вьюху для центрирования на объекте.
+         */
+        void objectCentering(const QGeoCoordinate& coordinate);
+
     public slots:
-        void update();
+        /*
+            Метод принимает модельный индекс и
+            по нему ищет объект. После отправляет
+            сигнал для центрирования.
+         */
+        void objectSelected(const QModelIndex&);
 
     protected:
         QHash<int, QByteArray> roleNames() const override;

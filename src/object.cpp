@@ -2,17 +2,18 @@
 
 using namespace seye;
 
-Object::Object(int id, QGeoCoordinate coord)
-    : _id(id), _currentCoordinate(coord)
+Object::Object(int id, QGeoCoordinate coord, double speed)
+    : _id(id), _speedLimit(speed), _currentCoordinate(coord)
 {}
 
 Object::Object(const Object & obj)
-    : _id(obj._id), _currentCoordinate(obj._currentCoordinate)
-    , _state(obj._state)
+    : _id(obj._id), _speedLimit(obj._speedLimit), _lastCheck(obj._lastCheck)
+    , _currentCoordinate(obj._currentCoordinate), _state(obj._state)
+
 {}
 
-Object::Object(int id, double alt, double longt)
-    : Object(id, QGeoCoordinate(alt, longt))
+Object::Object(int id, double alt, double longt, double speed)
+    : Object(id, QGeoCoordinate(alt, longt), speed)
 {}
 
 int Object::id() const
@@ -34,7 +35,19 @@ QGeoCoordinate Object::coordinate() const
 
 void Object::setCoordinate(QGeoCoordinate coord)
 {
+    // Сохраняем предыдущую координату
+    _previousCoordinate = _currentCoordinate;
+    // Ставим новую координату
     _currentCoordinate = coord;
+
+    // Сразу проверяем насколько далеко отдалены
+    // координаты друг от друга.
+    auto distance = _currentCoordinate.distanceTo(_previousCoordinate);
+    if (distance <= scoreMaxDistance())
+    {
+        _lastGoodCheck = QTime::currentTime();
+    }
+    _lastCheck = QTime::currentTime();
 
     emit coordinateChanged();
 }
@@ -48,6 +61,11 @@ void Object::setState(State stat)
 {
     _state = stat;
     emit stateChanged(stat);
+}
+
+double Object::checkTime()
+{
+    return _lastCheck.secsTo(_lastGoodCheck);
 }
 
 bool Object::operator==(Object another)
@@ -64,4 +82,19 @@ Object &Object::operator=(const Object &obj)
     }
 
     return *this;
+}
+
+Role Object::role() const
+{
+    return _role;
+}
+
+void Object::setRole(Role newRole)
+{
+    _role = newRole;
+}
+
+double Object::scoreMaxDistance()
+{
+    return _speedLimit * (_lastCheck.secsTo(QTime::currentTime()));
 }

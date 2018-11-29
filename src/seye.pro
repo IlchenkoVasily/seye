@@ -28,27 +28,57 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    device.cpp \
+    dialogadddevice.cpp \
+    login.cpp \
     main.cpp \
-    objectsmodel.cpp \
+    mainwindow.cpp \
     object.cpp \
+    objectsmodel.cpp \
+    polygon.cpp \
     polygonmodel.cpp \
     appengine.cpp \
     fakeconnector.cpp \
     iconnector.cpp \
-    dbservice.cpp
+    dbservice.cpp \
+    delegate.cpp \
+    passport.cpp \
+    buttonzone.cpp \
+    zoneinfo.cpp \
+    mainwindow_admin.cpp \
+    notice.cpp \
+    objectproxy.cpp
 
-HEADERS += \
-    objectsmodel.h \
-    object.h \
-    polygonmodel.h \
-    appengine.h \
-    iconnector.h \
-    fakeconnector.h \
+HEADERS += appengine.h \
+    device.h \
+    dialogadddevice.h \
     enums.h \
+    fakeconnector.h \
+    iconnector.h \
+    login.h \
+    mainwindow.h \
+    object.h \
+    objectsmodel.h \
+    polygon.h \
+    polygonmodel.h \
     dbservice.h \
-    structs.h
+    structs.h \
+    delegate.h \
+    passport.h \
+    buttonzone.h \
+    zoneinfo.h \
+    mainwindow_admin.h \
+    notice.h \
+    objectproxy.h
 
-FORMS +=
+FORMS += \
+    mainwindow.ui \
+    dialogadddevice.ui \
+    device.ui \
+    login.ui\
+    passport.ui \
+    zoneinfo.ui \
+    mainwindow2.ui \
 
 RESOURCES += \
     qml.qrc \
