@@ -42,7 +42,7 @@ void DialogAddDevice::on_buttonBox_2_accepted()
     QString password = "g1e6111213";
     seye::DBService dblink(host, login, password);
 
-    seye::passport passport;
+    seye::Passport passport;
     passport.callSign = callSign;
     passport.firstName = firstname;
     passport.lastName = lastname;

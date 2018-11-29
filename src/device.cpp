@@ -50,7 +50,7 @@ void Device::on_buttonBox_accepted()
             QString password = "g1e6111213";
             seye::DBService dblink(host, login, password);
 
-            seye::object object;
+            seye::ObjectDev object;
             object.id = id;
             object.role = role;
             object.link = phone;
