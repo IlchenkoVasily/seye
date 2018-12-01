@@ -96,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->pushButton_12->show();
         ui->pushButton_14->show();
         ui->pushButton_15->show();
+        ui->pushButton_16->setIcon(QIcon(":/icons/createZone1.png"));
         ui->pushButton_16->show();
         ui->pushButton_17->show();
         ui->pushButton_5->setText("Зоны (ГИС)");
