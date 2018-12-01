@@ -52,7 +52,6 @@ Item {
 
     Map {
         id: map
-        anchors.topMargin: 40
         anchors.fill: parent
         plugin: mapPlugin
         center: QtPositioning.coordinate(56.388, 85.210) // Bogachevo
@@ -188,17 +187,17 @@ Item {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             hoverEnabled: true
-            cursorShape: onPolygonCreate ? Qt.CrossCursor : Qt.ArrowCursor
+            cursorShape: polygonModel.onCreate ? Qt.CrossCursor : Qt.ArrowCursor
 
             onClicked: {
                 // Чистим какие-либо выделения
                 polygonSelection.clearSelection()
 
                 // Если создаётеся полигнон
-                if (onPolygonCreate) {
+                if (polygonModel.onCreate) {
                     // Правая кнопка - отменение создания полигона
                     if (mouse.button & Qt.RightButton) {
-                        onPolygonCreate = false
+//                        polygonModel.onCreate = false
                         firstAdded = false
                         polygonModel.cancelCreatePolygon()
                         ///------------чистим dots
@@ -233,8 +232,8 @@ Item {
             }
 
             onDoubleClicked: {
-                if (onPolygonCreate) {
-                    onPolygonCreate = false
+                if (polygonModel.onCreate) {
+//                    onPolygonCreate = false
                     firstAdded = false
                     polygonModel.endCreatePolygon()
                     // чистим line
@@ -245,7 +244,7 @@ Item {
             }
 
             onPositionChanged: {
-                if (onPolygonCreate) {
+                if (polygonModel.onCreate) {
                     // Если нету точек, то и не откуда следить
                     if (!firstAdded) {
                         return;
@@ -258,56 +257,6 @@ Item {
             }
         }
     }
-
-    ToolBar {
-        id: toolBar
-        x: 0
-        y: 0
-        width: 640
-        height: 40
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.left: parent.left
-
-        Button {
-            id: button
-            x: 0
-            y: 0
-            width: 40
-            height: 40
-            text: qsTr("Добавить зону")
-            rightPadding: 6
-            leftPadding: 6
-            padding: 5
-            font.capitalization: Font.Capitalize
-            display: AbstractButton.IconOnly
-
-            ToolTip.visible: down
-            ToolTip.delay: Qt.styleHints.useHoverEffects
-            ToolTip.text: "Клик - добавить точку \nДвойной клик - закончить зону \nПравый клик - отменить"
-
-            focusPolicy: Qt.TabFocus
-            spacing: 0
-
-            onClicked: {
-                onPolygonCreate = true
-                polygonModel.beginCreatePolygon()
-            }
-
-            Image {
-                id: image
-                x: 5
-                y: 5
-                width: 30
-                height: 30
-                sourceSize.width: 0
-                source: "../icons/createZone1.png"
-            }
-        }
-    }
-
-
-
 }
 
 /*##^## Designer {

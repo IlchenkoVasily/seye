@@ -6,6 +6,7 @@
 #include "delegate.h"
 #include "buttonzone.h"
 #include "login.h"
+#include "dbservice.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -13,7 +14,8 @@
 #include <QItemSelectionModel>
 #include <QProcess>
 #include <QMessageBox>
-#include "dbservice.h"
+#include <QHeaderView>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,9 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     seye::DBService* dblink;
     QString role;
 
-    login user(dblink, &role, this);
-    user.setModal(true);
-    user.exec();
+//    login user(dblink, &role, this);
+//    user.setModal(true);
+//    user.exec();
 
     //
     ui->setupUi(this);
@@ -37,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     objectView = new QTableView(this);
     objectView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    // TODO Здесь будет создание виджета для уведомлений
+    // Здесь создание виджета для уведомлений
     noticeService = new seye::Notice(ui->listWidget);
 
     // инит 'гис'-виджета
@@ -55,6 +57,55 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Ставим корректный виджет на отображение (а должен быть уведомлений)
     ui->smallStackedWidget->setCurrentWidget(polygonView);
+    //
+    connect(ui->searchBox, SIGNAL(returnPressed()),
+            this, SLOT(on_searchButton_clicked()));
+
+    /*
+        Здесь проверяется роль и убирает/добавляет
+        кнопки которые не нужны для данной роли
+    */
+
+    if(role == "operator") //для роли Оператор
+    {
+        ui->pushButton_6->hide();
+        ui->pushButton_7->hide();
+        ui->pushButton_8->hide();
+        ui->pushButton_9->hide();
+        ui->pushButton_11->hide();
+        ui->pushButton_12->hide();
+        ui->pushButton_14->hide();
+        ui->pushButton_15->hide();
+        ui->pushButton_16->hide();
+        ui->pushButton_17->hide();
+        ui->pushButton_5->setText("Зоны");
+        ui->buttonBox->hide();
+        ui->pushButton_2->show();
+        ui->pushButton_13->show();
+        ui->listWidget->show();
+        ui->pushButton_18->hide();
+    }
+
+    if(role == "admin") //для роли Админ
+    {
+        ui->pushButton_6->show();
+        ui->pushButton_7->show();
+        ui->pushButton_8->show();
+        ui->pushButton_9->show();
+        ui->pushButton_11->show();
+        ui->pushButton_12->show();
+        ui->pushButton_14->show();
+        ui->pushButton_15->show();
+        ui->pushButton_16->setIcon(QIcon(":/icons/createZone1.png"));
+        ui->pushButton_16->show();
+        ui->pushButton_17->show();
+        ui->pushButton_5->setText("Зоны (ГИС)");
+        ui->pushButton_18->show();
+        ui->buttonBox->show();
+        ui->pushButton_2->hide();
+        ui->pushButton_13->hide();
+        ui->listWidget->hide();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -70,6 +121,7 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     context->setContextProperty(name, model);
 
     // Сразу забрасываем модель в боковое представление
+    // модель полигона
     if (name.contains("poly"))
     {
         ButtonZone* infozone = new ButtonZone(this);
@@ -82,17 +134,44 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         QItemSelectionModel* selectionModel = polygonView->selectionModel();
         context->setContextProperty("polygonSelection", selectionModel);
 
+        auto header = polygonView->horizontalHeader();
+        header->setSectionsClickable(false);
+        header->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+        // Для центрирования
         connect(polygonView, SIGNAL(doubleClicked(const QModelIndex&)),
                 model, SLOT(polygonLook(const QModelIndex&)));
+
+        // Для создания полигона
+        connect(ui->pushButton_16, SIGNAL(clicked()),
+                model, SLOT(beginCreatePolygon()));
     }
+    // модель объекта
     if (name.contains("obj"))
     {
-        objectView->setModel(model);
+        // Создаём прокис для объектов
+        objectProxy = new seye::ObjectProxy(this);
+        objectProxy->setSourceModel(model);
+        connect(this, SIGNAL(resort()),
+                objectProxy, SLOT(invalidate()));
+
+        // устанавливаем нашу прокси модель вместо модели
+        objectView->setModel(objectProxy);
+
+        // Ставим сортировку (по статусу).
+        objectView->setSortingEnabled(true);
+        objectView->sortByColumn(1, Qt::DescendingOrder);
+        // Отключаем клик у хедера таблицы
+        auto header = objectView->horizontalHeader();
+        header->setSectionsClickable(false);
+
+        // Ставим делегат
         MyDelegate* delegate = new MyDelegate(this);
+        objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
 
         // вьюхи с моделью для перемещения карты на объект
         connect(objectView, SIGNAL(doubleClicked(const QModelIndex&)),
-                model, SLOT(objectSelected(const QModelIndex&)));
+                objectProxy, SLOT(objectSelected(const QModelIndex&)));
 
         // модели с уведомлениями
         connect(model, SIGNAL(noticePushed(int, QString, State)),
@@ -102,9 +181,15 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     }
 }
 
+
 QItemSelectionModel *MainWindow::getPolygonSelection()
 {
     return polygonView->selectionModel();
+}
+
+void MainWindow::onObjectsUpdated()
+{
+    emit resort();
 }
 
 void MainWindow::on_pushButton_released()
@@ -141,4 +226,46 @@ void MainWindow::on_pushButton_4_clicked()
     Device dia(this);
     dia.setModal(true);
     dia.exec();
+}
+
+
+void MainWindow::on_searchButton_clicked()
+{
+    auto table = (QTableView*)ui->smallStackedWidget->currentWidget();
+    auto model = table->model();
+
+    if (model == objectProxy)
+    {
+        // re-cast to proxy model
+        auto proxy = (seye::ObjectProxy*)model;
+        QRegExp regular(ui->searchBox->text(), Qt::CaseInsensitive);
+        proxy->setFilterRegExp(regular);
+
+    }
+}
+
+void MainWindow::on_pushButton_13_clicked()
+{
+    /*
+        Прячет виджет с боковой панелью
+        от этого увеличивается окно
+        с уведомлениями
+    */
+    if(ui->smallStackedWidget->isVisible())
+        ui->pushButton_13->setText("↓");
+    else
+        ui->pushButton_13->setText("↑");
+    ui->smallStackedWidget->setVisible(!ui->smallStackedWidget->isVisible());
+}
+
+void MainWindow::on_pushButton_18_clicked()
+{
+    /*
+        Сева, это не костыль
+    */
+    if(ui->listWidget->isVisible())
+        ui->pushButton_18->setText("↓");
+    else
+        ui->pushButton_18->setText("↑");
+    ui->listWidget->setVisible(!ui->listWidget->isVisible());
 }

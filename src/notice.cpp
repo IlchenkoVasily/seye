@@ -64,8 +64,8 @@ void Notice::NoticeAlarm(int idObject, QString nameObject, State idNotice)
         и проверка ещё
     */
     noticeListId.append(idObject);
-    noticeList->addItem(NoticeListToOut);
-    noticeList->item(noticeList->count()-1)->setForeground(noticeColor[idNotice]);
+    noticeList->insertItem(0, NoticeListToOut);
+    noticeList->item(0)->setForeground(noticeColor[idNotice]);
     NoticeListChecker();
 }
 

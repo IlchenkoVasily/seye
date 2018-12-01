@@ -15,6 +15,7 @@ namespace seye
     class PolygonModel : public QAbstractTableModel
     {
         Q_OBJECT
+        Q_PROPERTY(bool onCreate READ onCreate NOTIFY onCreateChanged)
 
     public:
         enum {
@@ -65,13 +66,6 @@ namespace seye
         Q_INVOKABLE void addPolygon(Polygon* polygon);
 
         /*
-            Данный метод, вызываемый из qml, сообщает
-            о начале создания нового полигона. Выделяет
-            место в куче для нового Polygon.
-        */
-        Q_INVOKABLE void beginCreatePolygon();
-
-        /*
             Данный метод, вызываемый из qml, передаёт
             координату для создаваемого полигона.
         */
@@ -92,6 +86,11 @@ namespace seye
         Q_INVOKABLE void cancelCreatePolygon();
 
         /*
+            TODO write a commnet
+        */
+        bool onCreate() { return _onCreatePolygon; }
+
+        /*
             Возвращает указатель на зону внимания
          */
         Polygon* attentionZone();
@@ -104,11 +103,24 @@ namespace seye
 
     signals:
         /*
-            TODO write comment here
+            TODO write a comment
+         */
+        void onCreateChanged(bool);
+
+        /*
+            Сигнал для центрирования по координате.
          */
         void polygonCentering(const QGeoCoordinate& coordinate);
 
     public slots:
+
+        /*
+            Данный метод, вызываемый из qml, сообщает
+            о начале создания нового полигона. Выделяет
+            место в куче для нового Polygon.
+        */
+        void beginCreatePolygon();
+
         /*
             Слот для изменения статус isSelected во
             всех полигонах, которые были выделены.
@@ -116,7 +128,8 @@ namespace seye
         void onPolygonSelected(const QItemSelection &selected, const QItemSelection &deselected);
 
         /*
-           TODO write comment here
+            Слот по индексу находит полигон, расчитывает центр
+            и отсылает сигнал polygonCentering(...).
          */
         void polygonLook(const QModelIndex& index);
 

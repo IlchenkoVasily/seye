@@ -3,8 +3,12 @@
 
 #include <QMainWindow>
 #include <QTableView>
+#include <QStackedWidget>
+
 #include "notice.h"
 #include "mainwindow_admin.h"
+#include "objectproxy.h"
+#include <popup.h>
 
 
 class QAbstractItemModel;
@@ -27,8 +31,11 @@ public:
     void setupUi();
 
     QItemSelectionModel* getPolygonSelection();
+//    MainWindow* mainwindow = 0;
 
 private slots:
+    void onObjectsUpdated();
+
     void on_pushButton_released();
 
     // Объекты кнопка
@@ -42,13 +49,27 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    // Кнопка поиска
+    void on_searchButton_clicked();
+
+    void on_pushButton_13_clicked();
+
+    void on_pushButton_18_clicked();
+
+signals:
+    void resort();
+
 private:
     QQuickWidget* gisWidget;
     QTableView* polygonView;
     QTableView* objectView;
     seye::Notice* noticeService;
+    seye::ObjectProxy* objectProxy;
     Ui::MainWindow *ui;
     Mainwindow2* window;
+    PopUp *popUp;       // попап паспортов
+  //  MainWindow* mainwindow = 0;
 };
+
 
 #endif // MAINWINDOW_H

@@ -1,8 +1,9 @@
 #ifndef BUTTONZONE_H
 #define BUTTONZONE_H
 #include <QItemDelegate>
-
-//class QComboBox;
+#include "popup.h"
+#include <QWidget>
+#include "mainwindow.h"
 
 class ButtonZone : public QItemDelegate
 {
@@ -12,6 +13,9 @@ public:
     ButtonZone(QObject *parent = 0);
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
+private:
+    PopUp *popUp;       // попап паспортов
+    MainWindow *mainwindow;
  };
 
 #include <QItemDelegate>
@@ -35,6 +39,8 @@ public:
 
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QStringList colorNames ;
+
+
 };
 
 #endif // BUTTONZONE_H

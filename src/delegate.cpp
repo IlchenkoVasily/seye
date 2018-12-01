@@ -2,7 +2,9 @@
 #include "delegate.h"
 #include <QApplication>
 //#include <QDialog>
-#include <passport.h>
+//#include <passport.h>
+#include "popup.h"
+#include "mainwindow.h"
 
  MyDelegate::MyDelegate(QObject *parent)
      : QItemDelegate(parent)
@@ -56,15 +58,23 @@
          if( clickX > x && clickX < x + w )
              if( clickY > y && clickY < y + h  )
              {
-//                 QDialog * d = new QDialog(); // открытие окна
-//                 d->setGeometry(0,0,100,100);
-//                 d->show();
+//                 Passport *pass = new Passport();
+//                 pass->show();
 
-                 Passport *pass = new Passport();
-                 pass->show();
+                 if (e->button() == Qt::LeftButton)
+                 {
+                     popUp = new PopUp();
+                     QString q="qeq \n"
+                               "Имя:\n"
+                               "Фамилия \n";
+                     mainwindow = new MainWindow();
+                     popUp->setPopupText(q);
+                     clickX=mainwindow-> QWidget::frameGeometry().width();
+//                     clickY=mainwindow-> QWidget::frameGeometry().height();
+                     popUp->show(clickX, clickY);
+                 }
 
              }
-
      }
 }
 
