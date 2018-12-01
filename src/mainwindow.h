@@ -8,6 +8,7 @@
 #include "notice.h"
 #include "mainwindow_admin.h"
 #include "objectproxy.h"
+#include <popup.h>
 
 
 class QAbstractItemModel;
@@ -30,6 +31,7 @@ public:
     void setupUi();
 
     QItemSelectionModel* getPolygonSelection();
+//    MainWindow* mainwindow = 0;
 
 private slots:
     void onObjectsUpdated();
@@ -65,6 +67,9 @@ private:
     seye::ObjectProxy* objectProxy;
     Ui::MainWindow *ui;
     Mainwindow2* window;
+    PopUp *popUp;       // попап паспортов
+  //  MainWindow* mainwindow = 0;
 };
+
 
 #endif // MAINWINDOW_H

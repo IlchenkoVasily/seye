@@ -24,9 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     seye::DBService* dblink;
     QString role;
 
-    login user(dblink, &role, this);
-    user.setModal(true);
-    user.exec();
+//    login user(dblink, &role, this);
+//    user.setModal(true);
+//    user.exec();
 
     //
     ui->setupUi(this);
@@ -178,6 +178,7 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
                 noticeService, SLOT(NoticeAlarm(int, QString, State)));
     }
 }
+
 
 QItemSelectionModel *MainWindow::getPolygonSelection()
 {

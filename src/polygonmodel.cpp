@@ -262,8 +262,8 @@ Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
     if (index.row() == 0)
         return Qt::NoItemFlags;
 
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled /*|
-           Qt::ItemIsEditable*/;
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled |
+           Qt::ItemIsEditable;
 }
 
 void PolygonModel::addPolygon(Polygon* polygon)
