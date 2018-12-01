@@ -1,5 +1,7 @@
 #include "dbservice.h"
 
+#include <exception>
+
 using namespace seye;
 
 DBService::DBService(const QString hostAddress, const QString userName, const QString userPassword)
@@ -325,6 +327,11 @@ Passport DBService::getPassportFor(const QString& idDevice)
 
 bool DBService::open()
 {
+    try {
+        db.isOpen();
+    } catch (std::exception& ex) {
+        qDebug() << ex.what();
+    }
     if (db.isOpen()) return true;
     if (db.open()) return true;
     return whatIsError();

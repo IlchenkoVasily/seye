@@ -8,7 +8,8 @@
 #include "notice.h"
 #include "mainwindow_admin.h"
 #include "objectproxy.h"
-#include <popup.h>
+#include "dbservice.h"
+#include "popup.h"
 
 
 class QAbstractItemModel;
@@ -25,6 +26,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    seye::DBService* database() const { return db; }
+    void setDatabase(seye::DBService* newDb) { db = newDb; }
 
     void addModel(QString modelName, QAbstractItemModel* model);
 
@@ -56,18 +60,24 @@ private slots:
 
     void on_pushButton_18_clicked();
 
+    void on_pushButton_15_clicked();
+
+    void on_pushButton_14_clicked();
+
 signals:
     void resort();
 
 private:
-    QQuickWidget* gisWidget;
-    QTableView* polygonView;
-    QTableView* objectView;
-    seye::Notice* noticeService;
-    seye::ObjectProxy* objectProxy;
-    Ui::MainWindow *ui;
-    Mainwindow2* window;
-    PopUp *popUp;       // попап паспортов
+    QQuickWidget* gisWidget;        // Гис виджет
+    QTableView* polygonView;        // Таблица зон
+    QTableView* objectView;         // Таблица объектов
+    seye::Notice* noticeService;    // Сервис уведомлений
+    seye::ObjectProxy* objectProxy; // Прокси для объектов
+    seye::DBService* db;            // База данных
+    Ui::MainWindow *ui;             // юи
+    Mainwindow2* window;            // ?
+    PopUp *popUp;                   // попап паспортов
+    QString userRole;               // Роль пользователя
   //  MainWindow* mainwindow = 0;
 };
 

@@ -21,12 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    seye::DBService* dblink;
-    QString role;
-
-//    login user(dblink, &role, this);
-//    user.setModal(true);
-//    user.exec();
+    login user(&userRole, this);
+    user.setModal(true);
+    user.exec();
 
     //
     ui->setupUi(this);
@@ -66,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
         кнопки которые не нужны для данной роли
     */
 
-    if(role == "operator") //для роли Оператор
+    if(userRole == "operator") //для роли Оператор
     {
         ui->pushButton_6->hide();
         ui->pushButton_7->hide();
@@ -86,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->pushButton_18->hide();
     }
 
-    if(role == "admin") //для роли Админ
+    if(userRole == "admin") //для роли Админ
     {
         ui->pushButton_6->show();
         ui->pushButton_7->show();
@@ -194,9 +191,7 @@ void MainWindow::onObjectsUpdated()
 
 void MainWindow::on_pushButton_released()
 {
-    DialogAddDevice dia(this);
-    dia.setModal(true);
-    dia.exec();
+    // TODO Если это не юзается, удали
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -214,18 +209,16 @@ void MainWindow::on_pushButton_3_clicked()
     }
     else {}
 }
+
 void MainWindow::on_pushButton_5_clicked()
 {
     ui->smallStackedWidget->setCurrentWidget(polygonView);
+    ui->mainStackedWidget->setCurrentWidget(gisWidget);
 }
 
 void MainWindow::on_pushButton_4_clicked()
 {
-//    window = new Mainwindow2(this);
-//    window->show();
-    Device dia(this);
-    dia.setModal(true);
-    dia.exec();
+    // TODO Если это не юзается, удали
 }
 
 
@@ -268,4 +261,18 @@ void MainWindow::on_pushButton_18_clicked()
     else
         ui->pushButton_18->setText("↑");
     ui->listWidget->setVisible(!ui->listWidget->isVisible());
+}
+
+void MainWindow::on_pushButton_15_clicked()
+{
+    Device dia(this);
+    dia.setModal(true);
+    dia.exec();
+}
+
+void MainWindow::on_pushButton_14_clicked()
+{
+    DialogAddDevice dia(this);
+    dia.setModal(true);
+    dia.exec();
 }

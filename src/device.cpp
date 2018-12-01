@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QString>
 #include "dbservice.h"
+#include "mainwindow.h"
 
 
 Device::Device(QWidget *parent) :
@@ -32,7 +33,8 @@ void Device::on_buttonBox_accepted()
 
     else{
         qint16 role = ui->role->text().toInt();
-        QMessageBox::information(this,"Успех", "Вы успешно добавили объект");
+
+        auto dblink = ((MainWindow*)parent())->database();
 //        qDebug() << speed;
 
             ui->id->clear();   // очищение строк
@@ -45,18 +47,16 @@ void Device::on_buttonBox_accepted()
                speed=27;
             }
 
-            QString host = "31.211.74.221";
-            QString login = "pradlol";
-            QString password = "g1e6111213";
-            seye::DBService dblink(host, login, password);
-
             seye::ObjectDev object;
             object.id = id;
             object.role = role;
             object.link = phone;
             object.speedLimit = speed;
 
-            dblink.add(object); //отправка инфы в бд
+            if (true == dblink->add(object)) //отправка инфы в бд
+                QMessageBox::information(this, "Успех", "Вы успешно добавили объект");
+            else
+                QMessageBox::critical(this, "Ошибка", "Не удалось добавить объект");
         }
 }
 

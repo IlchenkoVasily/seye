@@ -15,7 +15,7 @@ class login : public QDialog
     Q_OBJECT
 
 public:
-    explicit login(seye::DBService* link, QString* role, QWidget *parent = nullptr);
+    explicit login(QString* role, QWidget *parent = nullptr);
     ~login();
     bool enter(QObject *parent = 0);
 

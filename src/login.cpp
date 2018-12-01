@@ -1,9 +1,10 @@
 #include "login.h"
 #include "ui_login.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 
-login::login(seye::DBService* link, QString* role, QWidget *parent) :
-    QDialog(parent), role(role), dblink(link),
+login::login(QString* role, QWidget *parent) :
+    QDialog(parent), role(role),
     ui(new Ui::login)
 {
     ui->setupUi(this);
@@ -24,8 +25,9 @@ void login::on_pushButton_clicked()
     QString host = "31.211.74.221";
     dblink = new seye::DBService(host, user, pass);
 
+    ((MainWindow*)parent())->setDatabase(dblink);
+
     *role = dblink->getRole(user);
-    *role = user;
     if(role->isEmpty()) {QMessageBox::warning(this,"Ошибка", "Неверный логин или  пароль");}
     else { q++;// флаг успешно  авторизации
         //        QMessageBox::information(this,"Успех", "Авторизция прошла успешно");
