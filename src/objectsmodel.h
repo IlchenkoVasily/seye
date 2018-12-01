@@ -51,7 +51,7 @@ namespace seye
             Сигнал для уведомлений.
             Передаётся: айди, позывной, статус.
         */
-        void noticePushed(int, QString, State);
+        void noticePushed(QString, QString, State);
 
         /*
             Сигнал пересылает координату в гис

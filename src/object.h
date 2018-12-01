@@ -3,31 +3,31 @@
 
 #include <QObject>
 #include <QGeoCoordinate>
-#include <QColor>
 #include <QTime>
 
 #include "enums.h"
+#include "structs.h"
 
 namespace seye
 {
     class Object : public QObject
     {
         Q_OBJECT
-        Q_PROPERTY(int id READ id NOTIFY idChanged)
+        Q_PROPERTY(QString id READ id NOTIFY idChanged)
         Q_PROPERTY(QGeoCoordinate coordinate READ coordinate NOTIFY coordinateChanged)
         Q_PROPERTY(State state READ state WRITE setState NOTIFY stateChanged)
         Q_PROPERTY(Role role READ role WRITE setRole NOTIFY roleChanged)
         Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 
     public:
-
-        Object(int id, double latitude, double longitude, double speed = 1.39);
-        Object(int id, QGeoCoordinate coord, double speed);
+        Object(const ObjectDev&, QString linkName);
+        Object(QString id, double latitude, double longitude, double speed = 1.39);
+        Object(QString id, QGeoCoordinate coord, double speed);
         Object(const Object&);
 
         // для свойства id
-        int id() const;
-        void setId(int newId);
+        QString id() const;
+        void setId(QString newId);
 
         // для свойства coordinate
         QGeoCoordinate coordinate() const;
@@ -62,11 +62,11 @@ namespace seye
 
     private:
         // Данные из бд
-        int _id;            // айди
+        QString _id;            // айди
         double _speedLimit; // Предельная скорость
-        // Время последнего изменения координат
-        // и время последнего удачного изменения.
+        // Время последнего изменения координат.
         QTime _lastCheck;
+        // и время последнего удачного изменения.
         QTime _lastGoodCheck;
         // Текущая позиция объекта и предыдущая.
         QGeoCoordinate _currentCoordinate;
@@ -77,6 +77,8 @@ namespace seye
         Role _role;
         // Позывной объекта
         QString _name;
+        // Способ связи
+        QString _link;
 
         /*
             Подсчитывает дистанцию, которую

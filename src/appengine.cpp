@@ -57,13 +57,6 @@ void AppEngine::onObjectsUpdate(ObjectsPakPtr& objPaks)
     {
         Object obj(begin->devId, begin->latitude, begin->longitude);
 
-        if (obj.id() == 1187)
-            obj.setName("Vasya");
-        if (obj.id() == 2534)
-            obj.setName("Sanya");
-        if (obj.id() == 3456)
-            obj.setName("Iliya");
-
         obj.setRole(Role::Worker);
         checkEntries(obj);
         _objectModel.addObject(obj);

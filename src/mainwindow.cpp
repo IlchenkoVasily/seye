@@ -7,6 +7,8 @@
 #include "buttonzone.h"
 #include "login.h"
 #include "dbservice.h"
+#include "object.h"
+#include "objectsmodel.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -29,6 +31,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     // Создаём 'гис'-виджет
     gisWidget = new QQuickWidget(this);
+
+    // Создаём таблицу для пасспортов
+    passportView = new QTableView(this);
+    passportView->setSelectionBehavior(QAbstractItemView::SelectRows);
+
     // Создаём боковые представления
     polygonView = new QTableView(this);
     polygonView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -45,10 +52,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Добавление в стек виджет побочных виджетов
     ui->mainStackedWidget->addWidget(gisWidget);
+    ui->mainStackedWidget->addWidget(passportView);
 
     // ставим корректный виджет на отображение
     ui->mainStackedWidget->setCurrentWidget(gisWidget);
 
+    // Добавляем мини вьюхи в боковой стэк
     ui->smallStackedWidget->addWidget(polygonView);
     ui->smallStackedWidget->addWidget(objectView);
 
@@ -171,10 +180,18 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
                 objectProxy, SLOT(objectSelected(const QModelIndex&)));
 
         // модели с уведомлениями
-        connect(model, SIGNAL(noticePushed(int, QString, State)),
-                noticeService, SLOT(NoticeAlarm(int, QString, State)));
+        connect(model, SIGNAL(noticePushed(QString, QString, State)),
+                noticeService, SLOT(NoticeAlarm(QString, QString, State)));
 
-        objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
+        // Добавление в модель абсолютно всех объектов,
+        // которые находятся в бд на данный момент.
+        auto objModel = (seye::ObjectModel*)model;
+        foreach (auto obj, db->getAllObjects())
+        {
+            QString name = db->getCallSignFor(obj.id);
+            seye::Object object(obj, name);
+            objModel->addObject(object);
+        }
     }
 }
 
@@ -233,7 +250,6 @@ void MainWindow::on_searchButton_clicked()
         auto proxy = (seye::ObjectProxy*)model;
         QRegExp regular(ui->searchBox->text(), Qt::CaseInsensitive);
         proxy->setFilterRegExp(regular);
-
     }
 }
 
@@ -275,4 +291,10 @@ void MainWindow::on_pushButton_14_clicked()
     DialogAddDevice dia(this);
     dia.setModal(true);
     dia.exec();
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    ui->mainStackedWidget->setCurrentWidget(passportView);
+    ui->smallStackedWidget->setCurrentWidget(objectView);
 }

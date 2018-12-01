@@ -28,7 +28,7 @@ bool ObjectProxy::filterAcceptsRow(int sourceRow, const QModelIndex &parent) con
 
     // Проверка на оффлайн
     if (state.toInt() < State::OutOfAttention)
-        flag |= false;
+        flag |= true;
     else
         flag |= true;
 

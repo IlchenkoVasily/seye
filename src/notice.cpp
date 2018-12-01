@@ -45,7 +45,7 @@ void Notice::NoticeListChecker()
     }
 }
 
-void Notice::NoticeAlarm(int idObject, QString nameObject, State idNotice)
+void Notice::NoticeAlarm(QString idObject, QString nameObject, State idNotice)
 {
     QString NoticeListToOut;
     if(idNotice == State::Intruder)
@@ -75,16 +75,7 @@ void Notice::outNotice(QListWidgetItem*)
         Берёт id из листа нарушителей и подаёт сигнал
         с ним
     */
-    int current = noticeListId[noticeList->currentRow()];
+    QString current = noticeListId[noticeList->currentRow()];
 
     emit outNoticeInfo(current);
 };
-/*
-void Notice::outNoticeInfoEmit(int idObject)
-{
-    emit Notice::outNoticeInfo(idObject);
-}*/
-//Notice::Notice()
-//{
-
-//}

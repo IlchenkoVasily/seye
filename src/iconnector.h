@@ -17,18 +17,16 @@ namespace seye {
     typedef QScopedPointer<QList<Pak>> ObjectsPakPtr;
 
     struct Pak {
-        Pak(int id, double x, double y, bool v = true)
+        Pak(QString id, double x, double y)
         {
             devId = id;
             latitude = x;
             longitude = y;
-            valid = v;
         }
 
-        int devId;
+        QString devId;
         double latitude;
         double longitude;
-        bool valid;
     };
 
     class IConnector : public QObject

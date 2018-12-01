@@ -205,10 +205,6 @@ QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int 
                 break;
             }
         }
-        if (orientation == Qt::Vertical)
-        {
-            return QString::number(section);
-        }
     }
 
     return QVariant();

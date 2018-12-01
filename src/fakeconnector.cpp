@@ -48,10 +48,11 @@ void FakeConnector::askDevice()
 
     for (int i = 0; i < deviceCount; i++)
     {
-        int id = -1;                // device id
+        QString id = "";            // device id
         double _lat = 0, _long = 0; // x, y
 
-        id = list[currentIndex++].toInt();
+        id = list[currentIndex++];
+        id.remove('\n');
         _lat = list[currentIndex++].toDouble();
         _long = list[currentIndex++].toDouble();
 

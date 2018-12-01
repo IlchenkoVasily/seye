@@ -1,8 +1,9 @@
 #include "object.h"
+#include <QtDebug>
 
 using namespace seye;
 
-Object::Object(int id, QGeoCoordinate coord, double speed)
+Object::Object(QString id, QGeoCoordinate coord, double speed)
     : _id(id), _speedLimit(speed), _currentCoordinate(coord)
 {}
 
@@ -13,16 +14,23 @@ Object::Object(const Object & obj)
 
 {}
 
-Object::Object(int id, double alt, double longt, double speed)
+Object::Object(const ObjectDev& obj, QString name)
+    : _id(obj.id), _speedLimit(obj.speedLimit),
+      _state(State::Offline), _role(Role(obj.role))
+{
+    _name = name;
+}
+
+Object::Object(QString id, double alt, double longt, double speed)
     : Object(id, QGeoCoordinate(alt, longt), speed)
 {}
 
-int Object::id() const
+QString Object::id() const
 {
     return _id;
 }
 
-void Object::setId(int newId)
+void Object::setId(QString newId)
 {
     _id = newId;
 
@@ -79,7 +87,15 @@ Object &Object::operator=(const Object &obj)
     if (this != &obj)
     {
         _id = obj._id;
+        _speedLimit = obj._speedLimit;
+        _lastCheck = obj._lastCheck;
+        _lastGoodCheck = obj._lastGoodCheck;
         _currentCoordinate = QGeoCoordinate(obj._currentCoordinate);
+        _previousCoordinate = QGeoCoordinate(obj._previousCoordinate);
+        _state = obj._state;
+        _role = obj._role;
+        _name = obj._name;
+        _link = obj._link;
     }
 
     return *this;

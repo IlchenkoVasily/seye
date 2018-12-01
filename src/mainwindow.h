@@ -35,7 +35,6 @@ public:
     void setupUi();
 
     QItemSelectionModel* getPolygonSelection();
-//    MainWindow* mainwindow = 0;
 
 private slots:
     void onObjectsUpdated();
@@ -64,6 +63,9 @@ private slots:
 
     void on_pushButton_14_clicked();
 
+    // Кнопка "Объекты и пасспорта"
+    void on_pushButton_6_clicked();
+
 signals:
     void resort();
 
@@ -71,6 +73,7 @@ private:
     QQuickWidget* gisWidget;        // Гис виджет
     QTableView* polygonView;        // Таблица зон
     QTableView* objectView;         // Таблица объектов
+    QTableView* passportView;       // Таблица паспортов
     seye::Notice* noticeService;    // Сервис уведомлений
     seye::ObjectProxy* objectProxy; // Прокси для объектов
     seye::DBService* db;            // База данных
@@ -78,7 +81,6 @@ private:
     Mainwindow2* window;            // ?
     PopUp *popUp;                   // попап паспортов
     QString userRole;               // Роль пользователя
-  //  MainWindow* mainwindow = 0;
 };
 
 
