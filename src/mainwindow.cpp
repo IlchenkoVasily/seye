@@ -17,11 +17,13 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QHeaderView>
+#include <QTableView>
 
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    onEditing(false)
 {
     login user(&userRole, this);
     user.setModal(true);
@@ -149,8 +151,16 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
                 model, SLOT(polygonLook(const QModelIndex&)));
 
         // Для создания полигона
+        ui->pushButton_16->setCheckable(true);
+        ui->pushButton_16->setChecked(false);
         connect(ui->pushButton_16, SIGNAL(clicked()),
                 model, SLOT(beginCreatePolygon()));
+        connect(model, SIGNAL(onCreateChanged(bool)),
+                ui->pushButton_16, SLOT(toggle()));
+        connect(this, SIGNAL(startUpdateData()),
+                model, SLOT(updateStarted()));
+
+        (qobject_cast<seye::PolygonModel*>(model))->setDatabase(db);
     }
     // модель объекта
     if (name.contains("obj"))
@@ -185,7 +195,7 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 
         // Добавление в модель абсолютно всех объектов,
         // которые находятся в бд на данный момент.
-        auto objModel = (seye::ObjectModel*)model;
+        auto objModel = qobject_cast<seye::ObjectModel*>(model);
         foreach (auto obj, db->getAllObjects())
         {
             QString name = db->getCallSignFor(obj.id);
@@ -218,7 +228,9 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    QMessageBox::StandardButton reply = QMessageBox::question(this,"Смена пользователя", "Вы уверены? Все несохраненые данные будут удалены", QMessageBox::Yes | QMessageBox::No);
+    QMessageBox::StandardButton reply = QMessageBox::question(this,
+        "Смена пользователя", "Вы уверены? Все несохраненые данные будут удалены",
+        QMessageBox::Yes | QMessageBox::No);
     // restart:
     if(reply==QMessageBox::Yes){
     qApp->quit();
@@ -241,13 +253,13 @@ void MainWindow::on_pushButton_4_clicked()
 
 void MainWindow::on_searchButton_clicked()
 {
-    auto table = (QTableView*)ui->smallStackedWidget->currentWidget();
+    auto table = qobject_cast<QTableView*>(ui->smallStackedWidget->currentWidget());
     auto model = table->model();
 
     if (model == objectProxy)
     {
         // re-cast to proxy model
-        auto proxy = (seye::ObjectProxy*)model;
+        auto proxy = qobject_cast<seye::ObjectProxy*>(model);
         QRegExp regular(ui->searchBox->text(), Qt::CaseInsensitive);
         proxy->setFilterRegExp(regular);
     }
@@ -297,4 +309,45 @@ void MainWindow::on_pushButton_6_clicked()
 {
     ui->mainStackedWidget->setCurrentWidget(passportView);
     ui->smallStackedWidget->setCurrentWidget(objectView);
+}
+
+void MainWindow::on_pushButton_12_clicked()
+{
+    auto table = qobject_cast<QTableView*>(ui->smallStackedWidget->currentWidget());
+    auto model = table->model();
+
+    if (model == polygonView->model())
+    {
+        auto poly = qobject_cast<seye::PolygonModel*>(model);
+
+        int count = table->selectionModel()->selectedRows().count();
+
+        QString message;
+        message += "Вы уверены, что хотите удалить ";
+        message += QString::number(count);
+        message += " зон?";
+
+        QMessageBox::StandardButton reply = QMessageBox::warning(this,
+            "Удаление зон", message, QMessageBox::Yes | QMessageBox::No);
+
+        if (reply == QMessageBox::Yes)
+        {
+            poly->deleteSelected();
+        }
+    }
+}
+
+void MainWindow::on_pushButton_11_clicked()
+{
+    if (onEditing)
+    {
+        onEditing = false;
+        ui->pushButton_11->setText("Редактирование");
+        emit startUpdateData();
+    }
+    else
+    {
+        onEditing = true;
+        ui->pushButton_11->setText("Сохранить");
+    }
 }

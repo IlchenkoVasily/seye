@@ -3,7 +3,7 @@
 using namespace seye;
 
 AppEngine::AppEngine(QObject *parent) : QObject(parent),
-    _window(new MainWindow)
+    _window(new MainWindow), _polygonModel(_window), _objectModel(_window)
 {
 }
 
@@ -24,18 +24,6 @@ void AppEngine::setUp()
     connect(_connector, SIGNAL(complete(ObjectsPakPtr&)), this, SLOT(onObjectsUpdate(ObjectsPakPtr&)));
     _connector->connectTo(228);
     _connector->start();
-
-    // имитация доставания из бд )00)
-    Polygon* poly = new Polygon;
-    poly->fromString("56.390058884 85.212116396|"
-                     "56.388846197 85.216967378|"
-                     "56.385634613 85.213272466|"
-                     "56.387214293 85.209644591");
-    poly->setColor(QColor(64, 255, 64, 100));
-    poly->setBorderColor(QColor("green"));
-    poly->setName("Парсированная");
-    poly->setIsSelected(false);
-    _polygonModel.addPolygon(poly);
 
     // Добавляем модели (уже поднятые из бд) во MainWindow
     _window->addModel("polygonModel", &_polygonModel);

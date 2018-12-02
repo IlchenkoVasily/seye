@@ -6,7 +6,6 @@
 #include <QStackedWidget>
 
 #include "notice.h"
-#include "mainwindow_admin.h"
 #include "objectproxy.h"
 #include "dbservice.h"
 #include "popup.h"
@@ -33,6 +32,8 @@ public:
     void addModel(QString modelName, QAbstractItemModel* model);
 
     void setupUi();
+
+    bool isEditEnabled() { return onEditing; }
 
     QItemSelectionModel* getPolygonSelection();
 
@@ -66,8 +67,16 @@ private slots:
     // Кнопка "Объекты и пасспорта"
     void on_pushButton_6_clicked();
 
+    // Кнопка "Удалить"
+    void on_pushButton_12_clicked();
+
+    void on_pushButton_11_clicked();
+
 signals:
+    // Ресорт
     void resort();
+    // Сигнал для апдейта всех моделей.
+    void startUpdateData();
 
 private:
     QQuickWidget* gisWidget;        // Гис виджет
@@ -78,9 +87,9 @@ private:
     seye::ObjectProxy* objectProxy; // Прокси для объектов
     seye::DBService* db;            // База данных
     Ui::MainWindow *ui;             // юи
-    Mainwindow2* window;            // ?
     PopUp *popUp;                   // попап паспортов
     QString userRole;               // Роль пользователя
+    bool onEditing;                 // Включено редактирование
 };
 
 

@@ -162,7 +162,7 @@
          </size>
         </property>
         <property name="text">
-         <string>Редактир./Сохр.</string>
+         <string>Редактирование</string>
         </property>
        </widget>
       </item>

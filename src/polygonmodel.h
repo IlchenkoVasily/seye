@@ -8,7 +8,9 @@
 
 #include <QAbstractTableModel>
 #include <QItemSelectionModel>
+
 #include "polygon.h"
+#include "dbservice.h"
 
 namespace seye
 {
@@ -31,6 +33,11 @@ namespace seye
 
         explicit PolygonModel(QObject *parent = nullptr);
         ~PolygonModel() override;
+
+        /*
+            Данный метод передаёт в модель указатель на базу данных
+        */
+        void setDatabase(DBService* service);
 
         /*
             Данный метод возвращает количество полигонов в моделе
@@ -101,6 +108,16 @@ namespace seye
         */
         const QList<Polygon*>& toList() const;
 
+        /*
+            Удаление всех выделенных зон.
+         */
+        void deleteSelected();
+
+        /*
+            Подсчёт всех выделенных объектов.
+         */
+        int selectedCount();
+
     signals:
         /*
             TODO write a comment
@@ -113,6 +130,11 @@ namespace seye
         void polygonCentering(const QGeoCoordinate& coordinate);
 
     public slots:
+        /*
+            Слот вызывается кнопкой сохранить.
+            Сохраняет изменения в базу данных.
+         */
+        void updateStarted();
 
         /*
             Данный метод, вызываемый из qml, сообщает
@@ -138,8 +160,6 @@ namespace seye
         QHash<int, QByteArray> roleNames() const override;
 
     private:
-        // udolee
-        int newPolyId = 0;
         // Идёт процесс создания полигона.
         bool _onCreatePolygon;
         // Временная переменная для полигона.
@@ -148,6 +168,8 @@ namespace seye
         Polygon* _attentionZone;
         // Список всех полигонов
         QList<Polygon*> _polygons;
+        // Указатель на сервис бд
+        DBService* db;
     };
 }
 

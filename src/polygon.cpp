@@ -5,7 +5,8 @@
 using namespace seye;
 
 Polygon::Polygon()
-    : QGeoPolygon()
+    : QGeoPolygon(),
+      _isSelected(false)
 {
 
 }
@@ -73,7 +74,7 @@ void Polygon::setBorderColor(const QColor &newBorderColor)
 QColor Polygon::mapColor()
 {
     if (_isSelected)
-        return QColor(64, 64, 255, 128);
+        return QColor(64, 64, 255, 80);
     else
         return color();
 }
