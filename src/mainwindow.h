@@ -80,7 +80,7 @@ private:
     Mainwindow2* window;            // ?
     PopUp *popUp;                   // попап паспортов
     QString userRole;               // Роль пользователя
-  //  MainWindow* mainwindow = 0;
+
 };
 
 

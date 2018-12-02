@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QDialog>
+#include <QTreeView>
+#include <QTableView>
 
 namespace Ui {
 class Groups;
@@ -18,6 +20,7 @@ public:
 
 private:
     Ui::Groups *ui;
+    QTreeView* groupsView;
 };
 
 #endif // GROUPS_H
