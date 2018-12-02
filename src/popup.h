@@ -19,7 +19,7 @@ class PopUp : public QWidget
     float getPopupOpacity() const;
 
 public:
-    explicit PopUp(QWidget *parent = 0);
+    explicit PopUp(QWidget *parent = nullptr);
 
 protected:
     void paintEvent(QPaintEvent *event);    // Фон будет отрисовываться через метод перерисовки

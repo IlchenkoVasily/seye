@@ -75,8 +75,8 @@ void PopUp::show(int x,int y)
     animation.setStartValue(0.0);   // Стартовое значение будет 0 (полностью прозрачный виджет)
     animation.setEndValue(1.0);     // Конечное - полностью непрозрачный виджет
 
-    setGeometry(x - 36,
-                QApplication::desktop()->availableGeometry().height() - 36 - height() + QApplication::desktop() -> availableGeometry().y(),
+    setGeometry(parentWidget()->rect().bottomRight().x() - width(),
+                parentWidget()->rect().bottomRight().y() - 30,
                 width(),
                 height());
     QWidget::show();                // Отображаем виджет, который полностью прозрачен

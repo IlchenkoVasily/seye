@@ -63,11 +63,11 @@
 
                  if (e->button() == Qt::LeftButton)
                  {
-                     popUp = new PopUp();
+                     mainwindow = qobject_cast<MainWindow*>(parent());
+                     popUp = new PopUp(mainwindow);
                      QString q="qeq \n"
                                "Имя:\n"
                                "Фамилия \n";
-                     mainwindow = new MainWindow();
                      popUp->setPopupText(q);
                      clickX=mainwindow-> QWidget::frameGeometry().width();
 //                     clickY=mainwindow-> QWidget::frameGeometry().height();
