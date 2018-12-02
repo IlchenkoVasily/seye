@@ -7,6 +7,7 @@
 #include "buttonzone.h"
 #include "login.h"
 #include "dbservice.h"
+#include "groups.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -273,6 +274,13 @@ void MainWindow::on_pushButton_15_clicked()
 void MainWindow::on_pushButton_14_clicked()
 {
     DialogAddDevice dia(this);
+    dia.setModal(true);
+    dia.exec();
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+    Groups dia(this);
     dia.setModal(true);
     dia.exec();
 }

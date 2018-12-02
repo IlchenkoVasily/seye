@@ -66,7 +66,7 @@
                                "Имя:\n"
                                "Фамилия \n";
                      popUp->setPopupText(q);
-                     clickX=mainwindow-> QWidget::frameGeometry().width();
+//                     clickX=mainwindow-> QWidget::frameGeometry().width();
                      popUp->show(clickX, clickY);
                  }
 
