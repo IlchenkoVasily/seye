@@ -81,6 +81,11 @@ void Notice::outNotice(QListWidgetItem*)
 
     emit outNoticeInfo(current);
 };
+
+void Notice::noticeClean()
+{
+    noticeList->clear();
+}
 /*
 void Notice::outNoticeInfoEmit(int idObject)
 {

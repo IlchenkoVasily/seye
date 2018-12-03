@@ -86,6 +86,12 @@ namespace seye
             оставляет последние
         */
         void NoticeListChecker();
+        /*
+            Очищает уведомления
+            Используйте при смене
+            пользователя
+        */
+        void noticeClean();
 
     public slots:
         /*

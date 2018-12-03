@@ -80,6 +80,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->pushButton_17->hide();
         ui->pushButton_5->setText("Зоны");
         ui->buttonBox->hide();
+        ui->pushButtonTest->hide();
+        ui->pushButtonSave->hide();
         ui->pushButton_2->show();
         ui->pushButton_13->show();
         ui->listWidget->show();
@@ -100,6 +102,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->pushButton_17->show();
         ui->pushButton_5->setText("Зоны (ГИС)");
         ui->pushButton_18->show();
+        ui->pushButtonTest->show();
+        ui->pushButtonSave->show();
         ui->buttonBox->show();
         ui->pushButton_2->hide();
         ui->pushButton_13->hide();
@@ -264,4 +268,23 @@ void MainWindow::on_pushButton_18_clicked()
     else
         ui->pushButton_18->setText("↓");
     ui->listWidget->setVisible(!ui->listWidget->isVisible());
+}
+
+void MainWindow::on_pushButtonSave_clicked()
+{
+   QMessageBox::StandardButton saveAsk;
+   qDebug() << "Asked for save pushed";
+   saveAsk = QMessageBox::question(this, "Сохранить", "Сохранить изменения?", QMessageBox::Yes|QMessageBox::No);
+   if(saveAsk == QMessageBox::Yes)
+   {
+       /*
+        Здесь код при нажатии Да
+       */qDebug() << "Asked for save -> da";
+   }
+   else
+   {
+       /*
+        Здесь код при нажатии Нет;
+       */qDebug() << "Asked for save -> net";
+   }
 }

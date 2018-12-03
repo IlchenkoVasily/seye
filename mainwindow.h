@@ -54,6 +54,9 @@ private slots:
 
     void on_pushButton_18_clicked();
 
+    // Окно с вопросом о сохранении
+    void on_pushButtonSave_clicked();
+
 signals:
     void resort();
 
