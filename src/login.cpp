@@ -15,8 +15,6 @@ login::~login()
     delete ui;
 }
 
-int q=0;// флаг верности входа
-
 void login::on_pushButton_clicked()
 {
     QString user = ui->username->text();
@@ -25,7 +23,7 @@ void login::on_pushButton_clicked()
     QString host = "31.211.74.221";
     dblink = new seye::DBService(host, user, pass);
 
-    ((MainWindow*)parent())->setDatabase(dblink);
+    qobject_cast<MainWindow*>(parent())->setDatabase(dblink);
 
     *role = dblink->getRole(user);
     if(role->isEmpty()) {QMessageBox::warning(this,"Ошибка", "Неверный логин или  пароль");}

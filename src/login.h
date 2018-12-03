@@ -28,6 +28,8 @@ private:
     seye::DBService* dblink;
     QString* role;
     Ui::login *ui;
+
+    int q=0;// флаг верности входа
 };
 
 #endif // LOGIN_H
