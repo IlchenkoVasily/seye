@@ -1,4 +1,7 @@
 #include "objectsmodel.h"
+#include <QtDebug>
+
+#include <QColor>
 
 #define MAX_LOST_TIME 5
 
@@ -20,40 +23,37 @@ void ObjectModel::addObject(Object& newObj)
     {
         beginResetModel();
         // Обновляем координаты у объекта
-        _objects[idx].setCoordinate(newObj.coordinate());
-        _objects[idx].setState(newObj.state());
+        Object& editable = _objects[idx];
+        editable.setCoordinate(newObj.coordinate());
+        editable.setState(newObj.state());
 
         // Если вермя между последним нормальным пакетом
         // и последним пакетом > 1 секунды (время между
         // обновлениями), то помечаем пакет потерянным.
-        if (_objects[idx].checkTime() > 1.)
+        if (editable.checkTime() > 1.)
         {
-            _objects[idx].setState(State::Lost);
+            editable.setState(State::Lost);
         }
 
         // Если время между последним нормальным пакетом
         // и последним пакетом > максимально возможного времени
         // то помечаем устройство как поломанное.
-        if (_objects[idx].checkTime() > MAX_LOST_TIME)
+        if (editable.checkTime() > MAX_LOST_TIME)
         {
-            _objects[idx].setState(State::Destroyed);
-            emit noticePushed(_objects[idx].id(), "empty name",
+            editable.setState(State::Destroyed);
+            emit noticePushed(editable.id(), editable.name(),
                               State::Destroyed);
         }
 
         // Проверка на то, является ли объект нарушителем
-        if (_objects[idx].state() == State::Intruder)
-            emit noticePushed(_objects[idx].id(), "empty name",
+        if (editable.state() == State::Intruder)
+            emit noticePushed(editable.id(), editable.name(),
                               State::Intruder);
 
         // Проверка на то, находится ли объект за зоной внимания
-        if (_objects[idx].state() == State::OutOfAttention)
-            emit noticePushed(_objects[idx].id(), "empty name",
+        if (editable.state() == State::OutOfAttention)
+            emit noticePushed(editable.id(), editable.name(),
                               State::OutOfAttention);
-
-        // NOTE Здесь можно протестить фильтрацию оффлайн устройства
-//        if (newObj.id() == 2534)
-//            _objects[idx].setState(State::Offline);
 
         // Сигнал о том, что данные в модели изменены.
         // Индексы наших объектов в моделе, изменённый параметр
@@ -69,7 +69,7 @@ void ObjectModel::addObject(Object& newObj)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _objects << newObj;
     endInsertRows();
-    emit noticePushed(newObj.id(), "empty name",
+    emit noticePushed(newObj.id(), newObj.name(),
                       State::New);
 }
 
@@ -81,6 +81,7 @@ const QList<Object>& ObjectModel::toList() const
 void ObjectModel::objectSelected(const QModelIndex& index)
 {
     auto obj = _objects[index.row()];
+    qDebug() << obj.id() << obj.name();
     auto coordinate = obj.coordinate();
 
     emit objectCentering(coordinate);
@@ -113,7 +114,7 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case Qt::DisplayRole: {
-        if (index.column() == 0) return QString::number(object.id());
+        if (index.column() == 0) return object.name();
         return QVariant();
     }
 
@@ -139,6 +140,9 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
     case RoleRole:
         return QVariant(object.role());
 
+    case NameRole:
+        return QVariant(object.name());
+
     default:
         return QVariant();
     }
@@ -152,7 +156,7 @@ QVariant ObjectModel::headerData(int section, Qt::Orientation orientation, int r
         {
             switch (section) {
             case 0:
-                return QString("ID");
+                return QString("Name");
             case 1:
                 return QString("Status");
             case 2:
@@ -188,6 +192,7 @@ QHash<int, QByteArray> ObjectModel::roleNames() const
     roles[CoordinateRole] = "coordinate";
     roles[StateRole] = "state";
     roles[RoleRole] = "role";
+    roles[NameRole] = "name";
 
     return roles;
 }

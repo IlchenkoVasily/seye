@@ -19,13 +19,33 @@ void ObjectProxy::objectSelected(const QModelIndex& index)
 
 bool ObjectProxy::filterAcceptsRow(int sourceRow, const QModelIndex &parent) const
 {
-    auto index = sourceModel()->index(sourceRow, 0, parent);
-    auto data = sourceModel()->data(index, ObjectModel::StateRole);
+    bool flag = false;
 
-    if (data.toInt() < State::OutOfAttention)
-        return false;
+    // Получаем модельный индекс строки
+    auto index = sourceModel()->index(sourceRow, 0, parent);
+    // Получаем статус
+    auto state = sourceModel()->data(index, ObjectModel::StateRole);
+
+    // Проверка на оффлайн
+    if (state.toInt() < State::OutOfAttention)
+        flag |= true;
     else
-        return true;
+        flag |= true;
+
+    // получаем текст
+    auto reg = filterRegExp();
+
+    // Получаем строку с именем из модели
+    auto name = sourceModel()->data(index, ObjectModel::NameRole).toString();
+
+    // Проверяем
+    if (name.contains(reg))
+        flag &= true;
+    else
+        flag &= false;
+
+    // Возвращаем флаг
+    return flag;
 }
 
 bool ObjectProxy::lessThan(const QModelIndex &left, const QModelIndex &right) const

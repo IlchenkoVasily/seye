@@ -1,5 +1,6 @@
 #include "dialogadddevice.h"
 #include "ui_dialogadddevice.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 #include <QString>
 //#include "structs.h"
@@ -35,12 +36,7 @@ void DialogAddDevice::on_buttonBox_2_accepted()
     QString callSign = ui->callSign->text();
     QDate date = ui->date1->date();//
 
-//    QDate date = QDate::fromString(str,"dd/MM/yyyy");
-
-    QString host = "31.211.74.221";
-    QString login = "pradlol";
-    QString password = "g1e6111213";
-    seye::DBService dblink(host, login, password);
+    auto dblink = ((MainWindow*)parent())->database();
 
     seye::Passport passport;
     passport.callSign = callSign;
@@ -52,23 +48,21 @@ void DialogAddDevice::on_buttonBox_2_accepted()
         QMessageBox::warning(this,"Ошибка", "Заполните все поля");
 
     }
-    else{
-        QMessageBox::information(this,"Успех", "Вы успешно добавили объект");
 
         ui->lastname->clear();
         ui->firstname->clear();
         ui->callSign->clear();
         ui->date1->clear();
 
-           dblink.add(passport); //отправка инфы в бд
-//        qDebug() << date ;
+        try {
+            dblink->add(passport);
+        } catch (...) {
+            qDebug() << "Drop it out";
+            delete dblink;
+        }
 
-//           dblink.isOpen(passport);
-//           QVector<seye::passport> passports = dblink.getAllPassports();
-//           for(int i = 0; i < passports.size(); ++i)
-//               qDebug() << seye::toString(passports[i]) << endl;
-//           seye::object object;
-//           object.id = "9999999999999990";
-//           dblink.add(object, "");
-    }
+//        if (dblink->add(passport)) //отправка инфы в бд
+//            QMessageBox::information(this,"Успех", "Вы успешно добавили объект");
+//        else
+//            QMessageBox::critical(this,"Ошибка", "Не удалось добавить паспорт");
 }

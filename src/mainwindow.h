@@ -3,9 +3,12 @@
 
 #include <QMainWindow>
 #include <QTableView>
+#include <QStackedWidget>
+
 #include "notice.h"
-#include "mainwindow_admin.h"
 #include "objectproxy.h"
+#include "dbservice.h"
+#include "popup.h"
 
 
 class QAbstractItemModel;
@@ -23,9 +26,14 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    seye::DBService* database() const { return db; }
+    void setDatabase(seye::DBService* newDb) { db = newDb; }
+
     void addModel(QString modelName, QAbstractItemModel* model);
 
     void setupUi();
+
+    bool isEditEnabled() { return onEditing; }
 
     QItemSelectionModel* getPolygonSelection();
 
@@ -45,17 +53,44 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    // Кнопка поиска
+    void on_searchButton_clicked();
+
+    void on_pushButton_13_clicked();
+
+    void on_pushButton_18_clicked();
+
+    void on_pushButton_15_clicked();
+
+    void on_pushButton_14_clicked();
+
+    // Кнопка "Объекты и пасспорта"
+    void on_pushButton_6_clicked();
+
+    // Кнопка "Удалить"
+    void on_pushButton_12_clicked();
+
+    void on_pushButton_11_clicked();
+
 signals:
+    // Ресорт
     void resort();
+    // Сигнал для апдейта всех моделей.
+    void startUpdateData();
 
 private:
-    QQuickWidget* gisWidget;
-    QTableView* polygonView;
-    QTableView* objectView;
-    seye::Notice* noticeService;
-    seye::ObjectProxy* objectProxy;
-    Ui::MainWindow *ui;
-    Mainwindow2* window;
+    QQuickWidget* gisWidget;        // Гис виджет
+    QTableView* polygonView;        // Таблица зон
+    QTableView* objectView;         // Таблица объектов
+    QTableView* passportView;       // Таблица паспортов
+    seye::Notice* noticeService;    // Сервис уведомлений
+    seye::ObjectProxy* objectProxy; // Прокси для объектов
+    seye::DBService* db;            // База данных
+    Ui::MainWindow *ui;             // юи
+    PopUp *popUp;                   // попап паспортов
+    QString userRole;               // Роль пользователя
+    bool onEditing;                 // Включено редактирование
 };
+
 
 #endif // MAINWINDOW_H

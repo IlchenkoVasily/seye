@@ -58,7 +58,7 @@ namespace seye
             что уведомление - просто текст
             и не содержит id
         */
-        QList<int> noticeListId; //лист с id нарушителей
+        QList<QString> noticeListId; //лист с id нарушителей
 
         /*
             Над этим листВиджетом делаем всё
@@ -108,7 +108,7 @@ namespace seye
             номер краски для уведомления
             Запоминает текущее время и выводит красиво(?).
         */
-        void NoticeAlarm(int idObject, QString nameObject, State idNotice);
+        void NoticeAlarm(QString idObject, QString nameObject, State idNotice);
 
     signals:
         /*
@@ -116,7 +116,7 @@ namespace seye
             если id = -1, то этот объект
             просто сообщение не объект
         */
-        void outNoticeInfo(int idObject);
+        void outNoticeInfo(QString idObject);
     };
 }
 #endif // NOTICE_H

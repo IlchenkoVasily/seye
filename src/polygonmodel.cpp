@@ -1,5 +1,6 @@
 #include "polygonmodel.h"
-#include <QtDebug>
+#include "mainwindow.h"
+#include <QPushButton>
 
 using namespace seye;
 
@@ -8,11 +9,10 @@ PolygonModel::PolygonModel(QObject *parent)
 {
     // Сетап зоны внимания
     _attentionZone = new Polygon;
+    _attentionZone->setId(0);       // здесь айди нуль чтобы была не кликабельна
     _attentionZone->setColor(QColor("#00000000"));
     _attentionZone->setBorderColor(QColor("#FF606060"));
     _attentionZone->setName("Зона внимания");
-    _attentionZone->setIsSelected(false);
-    _attentionZone->setId(newPolyId++);
     QGeoCoordinate coords[] {
         QGeoCoordinate(56.386923585, 85.207064102, 0),
         QGeoCoordinate(56.387148596, 85.206401389, 0),
@@ -94,8 +94,6 @@ PolygonModel::PolygonModel(QObject *parent)
     }
 
     _polygons.append(_attentionZone);
-
-    _attentionZone->toString();
 }
 
 PolygonModel::~PolygonModel()
@@ -106,6 +104,24 @@ PolygonModel::~PolygonModel()
     }
 
     _polygons.clear();
+}
+
+void PolygonModel::setDatabase(DBService *service)
+{
+    db = service;
+
+    // Достаём из базы данных все данные
+    foreach (auto poly, db->getAllZones())
+    {
+        auto polygon = new seye::Polygon;
+        polygon->setId(poly.id);
+        polygon->fromString(poly.polygon);
+        polygon->setName(poly.name);
+        polygon->setColor(poly.color);
+        polygon->setBorderColor(poly.lineColor);
+
+        addPolygon(polygon);
+    }
 }
 
 int PolygonModel::rowCount(const QModelIndex &parent) const
@@ -135,7 +151,6 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case Qt::DisplayRole: {
-//        if (index.column() == 0) return QString::number(poly->id());
         if (index.column() == 0) return QString(poly->name());
         return QVariant();
     }
@@ -205,16 +220,11 @@ QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int 
                 break;
             }
         }
-        if (orientation == Qt::Vertical)
-        {
-            return QString::number(section);
-        }
     }
 
     return QVariant();
 }
 
-// пока без реализации всвязи с отсутствием необходимости
 bool PolygonModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     int changedRole;
@@ -256,14 +266,24 @@ bool PolygonModel::setData(const QModelIndex &index, const QVariant &value, int 
 // пока без реализации всвязи с отсутствием необходимости
 Qt::ItemFlags PolygonModel::flags(const QModelIndex &index) const
 {
+    Qt::ItemFlags flag = Qt::NoItemFlags;
+
+    // Если индекс кривой
     if (!index.isValid())
-        return Qt::NoItemFlags;
+        return flag;
 
+    // Для 0-индекса ничего не доступна (зона внимания)
     if (index.row() == 0)
-        return Qt::NoItemFlags;
+        return flag;
 
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled /*|
-           Qt::ItemIsEditable*/;
+    // Можно выбирать.
+    flag |= Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+
+    // Проверка, включено ли редактирование
+    if (qobject_cast<MainWindow*>(parent())->isEditEnabled())
+        flag |= Qt::ItemIsEditable;
+
+    return flag;
 }
 
 void PolygonModel::addPolygon(Polygon* polygon)
@@ -273,13 +293,45 @@ void PolygonModel::addPolygon(Polygon* polygon)
     endInsertRows();
 }
 
+void PolygonModel::updateStarted()
+{
+    QList<Zone> zones;
+    foreach (auto poly, _polygons)
+    {
+        // Наполняем структуру для работы с бд
+        Zone zone;
+        zone.id = poly->id();
+        zone.color = poly->color().name(QColor::HexArgb);
+        zone.lineColor = poly->borderColor().name(QColor::HexRgb);
+        zone.name = poly->name();
+        zone.polygon = poly->toString();
+
+        zones.append(zone);
+    }
+
+    db->update(zones);
+}
+
 void PolygonModel::beginCreatePolygon()
 {
+    auto btn = (QPushButton*)sender();
+
+    // Заставляем игнорировать нажатие при создании полигона
+    if (onCreate())
+    {
+        btn->setChecked(true);
+        return;
+    }
+
+    btn->setChecked(false);
+
     if (_onCreatePolygon)
         delete _tempPolygon;
 
     _onCreatePolygon = true;
     _tempPolygon = new Polygon;
+
+    emit onCreateChanged(true);
 }
 
 void PolygonModel::addCoordinate(const QGeoCoordinate &coord)
@@ -289,18 +341,32 @@ void PolygonModel::addCoordinate(const QGeoCoordinate &coord)
 
 void PolygonModel::endCreatePolygon()
 {
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    _tempPolygon->setId(newPolyId++);
-    _tempPolygon->setName("Polygon #" + QString::number(_tempPolygon->id()));
+    _tempPolygon->setName("Безымянная зона");
     _tempPolygon->setColor(QColor(64, 255, 64, 128));
     _tempPolygon->setBorderColor(QColor(0, 100, 0));
-    _tempPolygon->setIsSelected(false);
+
+    // Наполняем структуру для работы с бд
+    Zone zone;
+    zone.color = _tempPolygon->color().name(QColor::HexArgb);
+    zone.lineColor = _tempPolygon->borderColor().name(QColor::HexRgb);
+    zone.name = _tempPolygon->name();
+    zone.polygon = _tempPolygon->toString();
+
+    // получаем айди после создания в бд
+    int id = db->add(zone);
+    _tempPolygon->setId(id);
+
+    // Вставляем в бд
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _polygons.append(_tempPolygon);
     endInsertRows();
 
+    // сбрасываем
     _tempPolygon = nullptr;
     _onCreatePolygon = false;
 
+    //
+    emit onCreateChanged(false);
 }
 
 void PolygonModel::cancelCreatePolygon()
@@ -308,6 +374,8 @@ void PolygonModel::cancelCreatePolygon()
     delete _tempPolygon;
     _tempPolygon = nullptr;
     _onCreatePolygon = false;
+
+    emit onCreateChanged(false);
 }
 
 Polygon *PolygonModel::attentionZone()
@@ -318,6 +386,23 @@ Polygon *PolygonModel::attentionZone()
 const QList<Polygon*>& PolygonModel::toList() const
 {
     return _polygons;
+}
+
+void PolygonModel::deleteSelected()
+{
+    beginResetModel();
+    foreach (auto poly, _polygons)
+    {
+        if (poly->isSelected())
+        {
+            Zone zone;
+            zone.id = poly->id();
+
+            if (db->drop(zone))
+                _polygons.removeOne(poly);
+        }
+    }
+    endResetModel();
 }
 
 void PolygonModel::onPolygonSelected(const QItemSelection &selected,

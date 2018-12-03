@@ -45,12 +45,12 @@ SOURCES += \
     passport.cpp \
     buttonzone.cpp \
     zoneinfo.cpp \
-    mainwindow_admin.cpp \
     notice.cpp \
     objectproxy.cpp \
     users.cpp \
     newuser.cpp \
-    chengepassword.cpp
+    changepassword.cpp \
+    popup.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -70,12 +70,12 @@ HEADERS += appengine.h \
     passport.h \
     buttonzone.h \
     zoneinfo.h \
-    mainwindow_admin.h \
     notice.h \
     objectproxy.h \
     users.h \
     newuser.h \
-    chengepassword.h
+    changepassword.h \
+    popup.h
 
 FORMS += \
     mainwindow.ui \
@@ -83,11 +83,11 @@ FORMS += \
     device.ui \
     login.ui\
     passport.ui \
-    zoneinfo.ui \
-    mainwindow2.ui \
     users.ui \
     newuser.ui \
-    chengepassword.ui
+    changepassword.ui \
+    zoneinfo.ui \
+    changepassword.ui
 
 RESOURCES += \
     qml.qrc \

@@ -1,9 +1,10 @@
 #include "login.h"
 #include "ui_login.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 
-login::login(seye::DBService* link, QString* role, QWidget *parent) :
-    QDialog(parent), role(role), dblink(link),
+login::login(QString* role, QWidget *parent) :
+    QDialog(parent), role(role),
     ui(new Ui::login)
 {
     ui->setupUi(this);
@@ -21,8 +22,10 @@ void login::on_pushButton_clicked()
     QString user = ui->username->text();
     QString pass = ui->password->text();
 
-    QString host = "31.211.74.221";
+    QString host = "127.0.0.1"; // "31.211.74.221";
     dblink = new seye::DBService(host, user, pass);
+
+    ((MainWindow*)parent())->setDatabase(dblink);
 
     *role = dblink->getRole(user);
     if(role->isEmpty()) {QMessageBox::warning(this,"Ошибка", "Неверный логин или  пароль");}
@@ -50,6 +53,4 @@ void login::closeEvent(QCloseEvent *event)
         if(q==0){
             event->ignore();
         }
-    //создаем бокс или просто решаем, что делать, если нажат крестик
-
     }

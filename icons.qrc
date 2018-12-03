@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/createZone1.png</file>
+        <file>icons/worker.svg</file>
+        <file>icons/security.svg</file>
+        <file>icons/pilot.svg</file>
+        <file>icons/car.svg</file>
+        <file>icons/fuel.svg</file>
+    </qresource>
+</RCC>
