@@ -72,6 +72,9 @@ private slots:
 
     void on_pushButton_11_clicked();
 
+    void on_pushButton_8_clicked();
+
+
 signals:
     // Ресорт
     void resort();

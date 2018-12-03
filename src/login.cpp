@@ -32,20 +32,6 @@ void login::on_pushButton_clicked()
     else { q++;// флаг успешно  авторизации
         //        QMessageBox::information(this,"Успех", "Авторизция прошла успешно");
                 login::close();}
-
-
-
-
-//    if( user == "zyx" && pass == "qwert"){
-
-//        q++;// флаг успешно  авторизации
-////        QMessageBox::information(this,"Успех", "Авторизция прошла успешно");
-//        login::close();
-//         }
-//    else{
-//        QMessageBox::warning(this,"Ошибка", "Неверный логин или  пароль");
-////        login::closeEvent(QCloseEvent *event)
-//        }
 }
 
 void login::closeEvent(QCloseEvent *event)

@@ -9,6 +9,7 @@
 #include "dbservice.h"
 #include "object.h"
 #include "objectsmodel.h"
+#include "groups.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -350,4 +351,11 @@ void MainWindow::on_pushButton_11_clicked()
         onEditing = true;
         ui->pushButton_11->setText("Сохранить");
     }
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+    Groups dia(this);
+    dia.setModal(true);
+    dia.exec();
 }

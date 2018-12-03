@@ -47,7 +47,8 @@ SOURCES += \
     zoneinfo.cpp \
     notice.cpp \
     objectproxy.cpp \
-    popup.cpp
+    popup.cpp \
+    groups.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -69,15 +70,17 @@ HEADERS += appengine.h \
     zoneinfo.h \
     notice.h \
     objectproxy.h \
-    popup.h
+    popup.h \
+    groups.h
 
 FORMS += \
     mainwindow.ui \
     dialogadddevice.ui \
     device.ui \
-    login.ui\
+    login.ui \
     passport.ui \
-    zoneinfo.ui
+    zoneinfo.ui \
+    groups.ui
 
 RESOURCES += \
     qml.qrc \
