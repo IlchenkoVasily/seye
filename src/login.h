@@ -18,6 +18,7 @@ public:
     explicit login(QString* role, QWidget *parent = nullptr);
     ~login();
     bool enter(QObject *parent = 0);
+    seye::DBService* getDatabase();
 
 private slots:
     void on_pushButton_clicked();

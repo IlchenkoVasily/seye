@@ -2,9 +2,17 @@
 
 using namespace seye;
 
-AppEngine::AppEngine(QObject *parent) : QObject(parent),
-    _window(new MainWindow), _polygonModel(_window), _objectModel(_window)
+AppEngine::AppEngine(QObject *parent) : QObject(parent)
 {
+    login user(&_userRole);
+    user.setModal(true);
+    user.exec();
+    _database = user.getDatabase();
+
+    _window = new MainWindow(_database, _userRole);
+
+    _polygonModel = new PolygonModel(_window);
+    _objectModel = new ObjectModel(_window);
 }
 
 AppEngine::~AppEngine()
@@ -25,14 +33,36 @@ void AppEngine::setUp()
     _connector->connectTo(228);
     _connector->start();
 
+    // Поднимаем из бд все нужны модели
+    // Полигоны
+    foreach (auto poly, _database->getAllZones())
+    {
+        auto polygon = new seye::Polygon;
+        polygon->setId(poly.id);
+        polygon->fromString(poly.polygon);
+        polygon->setName(poly.name);
+        polygon->setColor(poly.color);
+        polygon->setBorderColor(poly.lineColor);
+
+        _polygonModel->addPolygon(polygon);
+    }
+
+    // Объекты
+    foreach (auto obj, _database->getAllObjects())
+    {
+        QString name = _database->getCallSignFor(obj.id);
+        seye::Object object(obj, name);
+        _objectModel->addObject(object);
+    }
+
     // Добавляем модели (уже поднятые из бд) во MainWindow
-    _window->addModel("polygonModel", &_polygonModel);
-    _window->addModel("objectModel", &_objectModel);
+    _window->addModel("polygonModel", _polygonModel);
+    _window->addModel("objectModel", _objectModel);
 
     // Коннектим селекшен модели для обновления выделений
     connect(_window->getPolygonSelection(),
             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-            &_polygonModel,
+            _polygonModel,
             SLOT(onPolygonSelected(const QItemSelection&, const QItemSelection&)));
 
     // Показываем окно
@@ -47,18 +77,18 @@ void AppEngine::onObjectsUpdate(ObjectsPakPtr& objPaks)
 
         obj.setRole(Role::Worker);
         checkEntries(obj);
-        _objectModel.addObject(obj);
+        _objectModel->addObject(obj);
     }
     emit objectsUpdated();
 }
 
 void AppEngine::checkEntries(Object& object)
 {
-    auto polygons = _polygonModel.toList();
+    auto polygons = _polygonModel->toList();
     object.setState(State::Allowed);
 
     // Проверяем, находится ли наш объект в зоне внимания
-    auto attention = _polygonModel.attentionZone();
+    auto attention = _polygonModel->attentionZone();
     if (!attention->contains(object.coordinate()))
     {
         object.setState(State::OutOfAttention);
@@ -80,8 +110,8 @@ void AppEngine::checkEntries(Object& object)
 
 void AppEngine::checkEntriesAll()
 {
-    auto polygons = _polygonModel.toList();
-    auto objects  = _objectModel.toList();
+    auto polygons = _polygonModel->toList();
+    auto objects  = _objectModel->toList();
 
     // QTHREAD
     // or threadpool ?7?

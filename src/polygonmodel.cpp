@@ -109,19 +109,6 @@ PolygonModel::~PolygonModel()
 void PolygonModel::setDatabase(DBService *service)
 {
     db = service;
-
-    // Достаём из базы данных все данные
-    foreach (auto poly, db->getAllZones())
-    {
-        auto polygon = new seye::Polygon;
-        polygon->setId(poly.id);
-        polygon->fromString(poly.polygon);
-        polygon->setName(poly.name);
-        polygon->setColor(poly.color);
-        polygon->setBorderColor(poly.lineColor);
-
-        addPolygon(polygon);
-    }
 }
 
 int PolygonModel::rowCount(const QModelIndex &parent) const

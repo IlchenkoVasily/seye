@@ -9,6 +9,8 @@
 #include "objectproxy.h"
 #include "dbservice.h"
 #include "popup.h"
+#include "polygonmodel.h"
+#include "objectsmodel.h"
 
 
 class QAbstractItemModel;
@@ -23,7 +25,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(seye::DBService* db, QString userRole, QWidget *parent = nullptr);
     ~MainWindow();
 
     seye::DBService* database() const { return db; }
@@ -82,15 +84,21 @@ signals:
     void startUpdateData();
 
 private:
+    Ui::MainWindow *ui;             // юи
+    // Виджеты
     QQuickWidget* gisWidget;        // Гис виджет
     QTableView* polygonView;        // Таблица зон
     QTableView* objectView;         // Таблица объектов
     QTableView* passportView;       // Таблица паспортов
-    seye::Notice* noticeService;    // Сервис уведомлений
+    // Данные
+    seye::PolygonModel* polygonModel;
+    seye::ObjectModel* objectModel; //
     seye::ObjectProxy* objectProxy; // Прокси для объектов
     seye::DBService* db;            // База данных
-    Ui::MainWindow *ui;             // юи
+    // Формы
     PopUp *popUp;                   // попап паспортов
+    // Разное
+    seye::Notice* noticeService;    // Сервис уведомлений
     QString userRole;               // Роль пользователя
     bool onEditing;                 // Включено редактирование
 };

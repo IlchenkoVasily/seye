@@ -10,6 +10,8 @@
 #include "polygonmodel.h"
 #include "fakeconnector.h"
 #include "mainwindow.h"
+#include "dbservice.h"
+#include "login.h"
 
 namespace seye
 {
@@ -63,9 +65,11 @@ namespace seye
         void checkEntriesAll();
 
         MainWindow* _window;
-        PolygonModel _polygonModel;
-        ObjectModel _objectModel;
+        PolygonModel* _polygonModel;
+        ObjectModel* _objectModel;
         IConnector* _connector;
+        DBService* _database;
+        QString _userRole;
         // here DatabaseDriver
     };
 }

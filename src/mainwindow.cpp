@@ -21,17 +21,16 @@
 #include <QTableView>
 
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
     QMainWindow(parent),
+    db(db),
     ui(new Ui::MainWindow),
+    userRole(userRole),
     onEditing(false)
 {
-    login user(&userRole, this);
-    user.setModal(true);
-    user.exec();
-
     //
     ui->setupUi(this);
+
     // Создаём 'гис'-виджет
     gisWidget = new QQuickWidget(this);
 
@@ -133,6 +132,8 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     // модель полигона
     if (name.contains("poly"))
     {
+        polygonModel = qobject_cast<seye::PolygonModel*>(model);
+
         ButtonZone* infozone = new ButtonZone(this);
         ComboBoxDelegate* box = new ComboBoxDelegate(this);
         polygonView->setItemDelegateForColumn(3, infozone);// кнопка открытия паспорта
@@ -166,6 +167,8 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
     // модель объекта
     if (name.contains("obj"))
     {
+        objectModel = qobject_cast<seye::ObjectModel*>(model);
+
         // Создаём прокис для объектов
         objectProxy = new seye::ObjectProxy(this);
         objectProxy->setSourceModel(model);
@@ -193,16 +196,6 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         // модели с уведомлениями
         connect(model, SIGNAL(noticePushed(QString, QString, State)),
                 noticeService, SLOT(NoticeAlarm(QString, QString, State)));
-
-        // Добавление в модель абсолютно всех объектов,
-        // которые находятся в бд на данный момент.
-        auto objModel = qobject_cast<seye::ObjectModel*>(model);
-        foreach (auto obj, db->getAllObjects())
-        {
-            QString name = db->getCallSignFor(obj.id);
-            seye::Object object(obj, name);
-            objModel->addObject(object);
-        }
     }
 }
 
@@ -234,8 +227,9 @@ void MainWindow::on_pushButton_3_clicked()
         QMessageBox::Yes | QMessageBox::No);
     // restart:
     if(reply==QMessageBox::Yes){
-    qApp->quit();
-    QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
+        delete db;
+        qApp->quit();
+        QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
     }
     else {}
 }

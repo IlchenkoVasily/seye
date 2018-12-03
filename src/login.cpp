@@ -23,8 +23,6 @@ void login::on_pushButton_clicked()
     QString host = "31.211.74.221";
     dblink = new seye::DBService(host, user, pass);
 
-    qobject_cast<MainWindow*>(parent())->setDatabase(dblink);
-
     *role = dblink->getRole(user);
     if(role->isEmpty()) {QMessageBox::warning(this,"Ошибка", "Неверный логин или  пароль");}
     else { q++;// флаг успешно  авторизации
@@ -37,4 +35,9 @@ void login::closeEvent(QCloseEvent *event)
         if(q==0){
             event->ignore();
         }
-    }
+}
+
+seye::DBService *login::getDatabase()
+{
+    return dblink;
+}
