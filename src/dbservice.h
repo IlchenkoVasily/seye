@@ -4,13 +4,14 @@
 #include <QtSql>
 
 #include <structs.h>
+#include <polygon.h>
 
 namespace seye
 {
     class DBService
     {
     public:
-        DBService(const QString host, const QString login, const QString password); // стоит ли делать &? Ведь вызывается внутри ссылки
+        DBService(const QString host, const QString login, const QString password);
 
         // успех запроса - Success в дебаге (bool true), иначе - причина неудачи (bool false)
         // следует добавить сигнал с причиной ошибки
@@ -19,7 +20,8 @@ namespace seye
         // не стоит ориентироваться на него, как на индекс QList, после первого же drop они будут различаться
         qint64 add(const Passport&); // можно послать без device
         bool add(const ObjectDev&); // айди вбиваем самостоятельно, возвращать нечего
-        qint32 add(const Zone&);
+//        qint32 add(const Zone&);
+        bool add(Polygon&);
         qint64 add(const Access&);
         qint64 add(Group&);
         qint64 add(const QString& groupName); // создаст запись с именем в таблице групп
@@ -36,7 +38,8 @@ namespace seye
         bool dropReference(const qint64& idGroup, const QString& idDevice);
         bool drop(const Passport&);
         bool drop(const ObjectDev&);
-        bool drop(const Zone&);
+//        bool drop(const Zone&);
+        bool drop(Polygon&);
         bool drop(const Access&);
         bool drop(const Group&);
         bool drop(const User&);
@@ -45,14 +48,16 @@ namespace seye
         // удаление и добавления здесь не отслеживаются
         bool update(const QList<Passport>&);
         bool update(const QList<ObjectDev>&);
-        bool update(const QList<Zone>&);
+//        bool update(const QList<Zone>&);
+        bool update(QList<Polygon>&);
         bool update(const QList<Access>&);
         bool update(const QList<Group>&);
 
         // запрос всей таблицы
         QList<Passport> getAllPassports();
         QList<ObjectDev> getAllObjects();
-        QList<Zone> getAllZones();
+//        QList<Zone> getAllZones();
+        QList<Polygon> getAllZones();
         QList<Access> getAllAccesses();
         QList<Group> getAllGroups();
         QList<User> getAllUsers();
@@ -65,6 +70,7 @@ namespace seye
         QString getCallSignFor(const QString& idDevice);
         Passport getPassportFor(const ObjectDev&);
         Passport getPassportFor(const QString& idDevice);
+        QList<AccessLine> getAllAccessesForTimeline();
 
         ~DBService();
     private:
@@ -72,26 +78,24 @@ namespace seye
 
         bool open();
         bool whatIsError() const; // Выводит ошибку, всегда false
+        // хотя в таком случае следует сделать void
 
-        bool insert(const Passport&) const;
+        qint64 insert(const Passport&) const;
         bool insert(const ObjectDev&) const;
-        bool insert(const Zone&) const;
-        bool insert(const Access&) const;
-        bool insert(const QString& groupName) const;
+//        qint32 insert(const Zone&) const;
+        bool insert(Polygon&) const;
+        qint64 insert(const Access&) const;
+        qint64 insert(const QString& groupName) const;
 
         bool insert(const qint64& idGroup, const QString& idDevice) const;
 
         bool create(const QString& userName, const QString& password) const;
-
-        qint64 selectPassportId(const QString& callSign) const;
-        qint32 selectZoneId(const QString& polygon) const;
-        qint64 selectAccessId(const Access& access) const;
-        qint64 selectGroupId(const QString& groupName) const;
         qint32 selectUserId(const QString& userName) const;
 
         QList<Passport> selectAllPassports() const;
         QList<ObjectDev> selectAllObjects() const;
-        QList<Zone> selectAllZones() const;
+//        QList<Zone> selectAllZones() const;
+        QList<Polygon> selectAllZones() const;
         QList<Access> selectAllAccesses() const;
         QList<Group> selectAllGroups() const;
         Group selectAllReferences(Group&) const;
@@ -126,7 +130,8 @@ namespace seye
 
         bool upDate(const Passport&) const;
         bool upDate(const ObjectDev&) const;
-        bool upDate(const Zone&) const;
+//        bool upDate(const Zone&) const;
+        bool upDate(Polygon&) const;
         bool upDate(const Access&) const;
         bool upDate(const Group&) const;
     };
