@@ -39,7 +39,7 @@ void Notice::NoticeListChecker()
             если их больше чем можно
             (NoticeSize)
         */
-        noticeListId.removeFirst();
+       // noticeListId.removeFirst();
         noticeListId.removeFirst();
         noticeList->takeItem(0);
     }
@@ -47,28 +47,33 @@ void Notice::NoticeListChecker()
 
 void Notice::NoticeAlarm(int idObject, QString nameObject, State idNotice)
 {
-    QString NoticeListToOut;
-    if(idNotice == State::Intruder)
-        NoticeListToOut = QTime::currentTime().toString() + " \"" + nameObject + "\" нарушил рубеж";
-    if(idNotice == State::OutOfAttention)
-        NoticeListToOut = QTime::currentTime().toString() + " \"" + nameObject + "\" покинул зону внимания";
-    if(idNotice == State::Destroyed)
-        NoticeListToOut = QTime::currentTime().toString() + " \"" + nameObject + "\" отключился";
-    if(idNotice == State::New)
-        NoticeListToOut = QTime::currentTime().toString() + " \"" + nameObject + "\" появился";
-    /*
-        кидает id объекта в лист
-        кидает форматированную строку в листВиджет
-        перекрашивает последний объект
-        который только пришёл
-        и проверка ещё
-    */
-    noticeListId.append(idObject);
-    noticeList->insertItem(0, NoticeListToOut);
-    noticeList->item(0)->setForeground(noticeColor[idNotice]);
-//    noticeList->addItem(NoticeListToOut);
-//    noticeList->item(noticeList->count()-1)->setForeground(noticeColor[idNotice]);
-    NoticeListChecker();
+    if(!((lastId == idObject) && (lastNotice == idNotice)))
+    {
+        QString NoticeListToOut;
+        if(idNotice == State::Intruder)
+            NoticeListToOut = QTime::currentTime().toString() + " \"" + nameObject + "\" нарушил рубеж";
+        if(idNotice == State::OutOfAttention)
+            NoticeListToOut = QTime::currentTime().toString() + " \"" + nameObject + "\" покинул зону внимания";
+        if(idNotice == State::Destroyed)
+            NoticeListToOut = QTime::currentTime().toString() + " \"" + nameObject + "\" отключился";
+        if(idNotice == State::New)
+            NoticeListToOut = QTime::currentTime().toString() + " \"" + nameObject + "\" появился";
+        /*
+            кидает id объекта в лист
+            кидает форматированную строку в листВиджет
+            перекрашивает последний объект
+            который только пришёл
+            и проверка ещё
+        */
+        noticeListId.append(idObject);
+        noticeList->insertItem(0, NoticeListToOut);
+        noticeList->item(0)->setForeground(noticeColor[idNotice]);
+        lastId = idObject;
+        lastNotice = idNotice;
+    //    noticeList->addItem(NoticeListToOut);
+    //    noticeList->item(noticeList->count()-1)->setForeground(noticeColor[idNotice]);
+        NoticeListChecker();
+    }
 }
 
 void Notice::outNotice(QListWidgetItem*)

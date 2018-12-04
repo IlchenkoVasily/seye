@@ -7,7 +7,7 @@
 QT       += core gui qml quick quickwidgets positioning
 
 #для dbservice
-QT += sql
+QT += sql testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

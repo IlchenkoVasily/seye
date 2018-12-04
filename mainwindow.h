@@ -56,6 +56,8 @@ private slots:
 
     // Окно с вопросом о сохранении
     void on_pushButtonSave_clicked();
+    //По клику на уведомление выделяет объект в таблице
+    void showObject(int idObject);
 
 signals:
     void resort();

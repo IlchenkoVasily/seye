@@ -3,6 +3,7 @@
 #include "dialogadddevice.h"
 #include "device.h"
 #include "polygonmodel.h"
+#include "objectsmodel.h"
 #include "delegate.h"
 #include "buttonzone.h"
 #include "login.h"
@@ -65,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent) :
         Здесь проверяется роль и убирает/добавляет
         кнопки которые не нужны для данной роли
     */
+    //Соединение сигнала двойного клика по уведомлению с выделением в таблице объектов
+    connect(noticeService, SIGNAL(outNoticeInfo(int)), this, SLOT(showObject(int)));
 
     if(role == "operator") //для роли Оператор
     {
@@ -102,13 +105,40 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->pushButton_17->show();
         ui->pushButton_5->setText("Зоны (ГИС)");
         ui->pushButton_18->show();
-        ui->pushButtonTest->show();
+        ui->pushButtonTest->hide();
         ui->pushButtonSave->show();
         ui->buttonBox->show();
-        ui->pushButton_2->hide();
+        ui->pushButton_2->show();
         ui->pushButton_13->hide();
         ui->listWidget->hide();
     }
+
+    if(role == "supervisor") //для роли СуперАдмина
+    {
+        ui->pushButton_6->show();
+        ui->pushButton_7->show();
+        ui->pushButton_8->show();
+        ui->pushButton_9->show();
+        ui->pushButton_11->show();
+        ui->pushButton_12->show();
+        ui->pushButton_14->show();
+        ui->pushButton_15->show();
+        ui->pushButton_16->show();
+        ui->pushButton_17->show();
+        ui->pushButton_5->setText("Зоны (ГИС)");
+        ui->pushButton_18->show();
+        ui->pushButtonTest->show();
+        ui->pushButtonSave->show();
+        ui->buttonBox->show();
+        ui->pushButton_3->show();
+        ui->pushButton_4->show();
+        ui->pushButton_2->show();
+        ui->pushButton_13->show();
+        ui->searchButton->show();
+        ui->listWidget->show();
+    }
+
+
 }
 
 MainWindow::~MainWindow()
@@ -287,4 +317,25 @@ void MainWindow::on_pushButtonSave_clicked()
         Здесь код при нажатии Нет;
        */qDebug() << "Asked for save -> net";
    }
+}
+
+void MainWindow::showObject(int idObject)
+{
+//   ui->smallStackedWidget->setCurrentWidget(objectView);
+//   //TODO
+//   foreach(ui->smallStackedWidget->currentWidget()->(/*столбец с id*/));
+//    {
+//     if(/*элемент столбца id*/ ==idObject)
+//           ui->smallStackedWidget->setCurrentIndex(/*тут из цикла берём*/);
+//    }
+    ui->smallStackedWidget->setCurrentWidget(objectView);
+    auto proxymodel = qobject_cast<seye::ObjectProxy*>(objectView->model());
+    auto model = qobject_cast<seye::ObjectModel*>(proxymodel->sourceModel());
+    auto objects = model->toList();
+
+    int idx = objects.indexOf(seye::Object(idObject, 0, 0));
+
+    auto selection = objectView->selectionModel();
+    selection->select(model->index(idx, 0), QItemSelectionModel::SelectionFlag::ClearAndSelect);
+    //qDebug() << idObject;
 }

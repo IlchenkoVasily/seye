@@ -92,6 +92,15 @@ namespace seye
             пользователя
         */
         void noticeClean();
+        /*
+            Последний id объекта и тип
+            его нарушения
+            Если текущее нарушение совпадает
+            с последним, то
+            его не выводим
+        */
+        int lastId = -1;
+        int lastNotice = -1;
 
     public slots:
         /*
@@ -124,5 +133,6 @@ namespace seye
         */
         void outNoticeInfo(int idObject);
     };
+
 }
 #endif // NOTICE_H
