@@ -8,6 +8,7 @@
 #include "login.h"
 #include "dbservice.h"
 #include "groups.h"
+#include "scenario.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -22,9 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    login user(&userRole, this);
-    user.setModal(true);
-    user.exec();
+//    login user(&userRole, this);
+//    user.setModal(true);
+//    user.exec();
 
     //
     ui->setupUi(this);
@@ -281,6 +282,13 @@ void MainWindow::on_pushButton_14_clicked()
 void MainWindow::on_pushButton_8_clicked()
 {
     Groups dia(this);
+    dia.setModal(true);
+    dia.exec();
+}
+
+void MainWindow::on_pushButton_17_clicked()
+{
+    Scenario dia(this);
     dia.setModal(true);
     dia.exec();
 }

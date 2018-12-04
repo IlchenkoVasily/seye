@@ -25,9 +25,10 @@ void Device::on_buttonBox_accepted()
     QString phone = ui->phone->text();
     int k = ui->tipe->currentIndex();
     int speed=0;
+    int n = id.size();
 
-    if(id.isEmpty() || role.isEmpty() || phone.isEmpty()){  //проверка на заполненость
-        QMessageBox::warning(this,"Ошибка", "Заполните все поля");
+    if(n!=16 || role.isEmpty() || phone.isEmpty()){  //проверка на заполненость
+        QMessageBox::warning(this,"Ошибка", "Проверьте заполненые поля");
     }
 //    qint16 role = ui->role->text().toInt();
 

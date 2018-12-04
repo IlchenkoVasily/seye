@@ -49,7 +49,8 @@ SOURCES += \
     notice.cpp \
     objectproxy.cpp \
     popup.cpp \
-    groups.cpp
+    groups.cpp \
+    scenario.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -74,7 +75,8 @@ HEADERS += appengine.h \
     objectproxy.h \
     mainwindow_admin.h \
     popup.h \
-    groups.h
+    groups.h \
+    scenario.h
 
 FORMS += \
     mainwindow.ui \
@@ -84,7 +86,8 @@ FORMS += \
     passport.ui \
     zoneinfo.ui \
     mainwindow2.ui \
-    groups.ui
+    groups.ui \
+    scenario.ui
 
 RESOURCES += \
     qml.qrc \
