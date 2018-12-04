@@ -7,7 +7,6 @@ using namespace seye;
 DBService::DBService(const QString hostAddress, const QString userName, const QString userPassword)
 {
     db = QSqlDatabase::addDatabase("QPSQL", "seyedb");
-//    qDebug() << db.isValid();
     db.setHostName(hostAddress);
     db.setDatabaseName("seye");
     db.setUserName(userName);
@@ -684,7 +683,7 @@ QString DBService::selectRole(const qint32& idUser) const
 {
     QSqlQuery query(db);
     QString string = "{" + QString::number(idUser) + "}";
-    query.prepare("SELECT groname FROM pg_group WHERE grolist >= (:grolist)");
+    query.prepare("SELECT groname FROM pg_group WHERE grolist @> (:grolist)");
     query.bindValue(":grolist", string);
     string = nullptr;
     if (query.exec()) qDebug() << "Select role for user success";

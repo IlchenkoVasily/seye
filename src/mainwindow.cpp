@@ -9,6 +9,7 @@
 #include "dbservice.h"
 #include "object.h"
 #include "objectsmodel.h"
+#include "users.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -350,4 +351,11 @@ void MainWindow::on_pushButton_11_clicked()
         onEditing = true;
         ui->pushButton_11->setText("Сохранить");
     }
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+    Users usersForm(this, database());
+    usersForm.setModal(true);
+    usersForm.exec();
 }
