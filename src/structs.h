@@ -52,24 +52,6 @@ namespace seye
         }
     };
     
-    struct Zone
-    {
-        qint32 id = 0;
-        QString name;
-        QString polygon; // обязательное
-        QString color = "# и 8знач"; // -||-
-        QString lineColor = "# и 6зн"; // -||-
-        QString toString() const
-        {
-            QString string = QString::number(id) + ", "
-                    + name + ", "
-                    + polygon + ", "
-                    + color + ", "
-                    + lineColor;
-            return string;
-        }
-    };
-
     struct Access
     {
         qint64 id = 0;

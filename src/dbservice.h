@@ -20,8 +20,7 @@ namespace seye
         // не стоит ориентироваться на него, как на индекс QList, после первого же drop они будут различаться
         qint64 add(const Passport&); // можно послать без device
         bool add(const ObjectDev&); // айди вбиваем самостоятельно, возвращать нечего
-        qint32 add(const Zone&);
-//        bool add(Polygon&);
+        bool add(Polygon&);
         qint64 add(const Access&);
         qint64 add(Group&);
         qint64 add(const QString& groupName); // создаст запись с именем в таблице групп
@@ -38,8 +37,7 @@ namespace seye
         bool dropReference(const qint64& idGroup, const QString& idDevice);
         bool drop(const Passport&);
         bool drop(const ObjectDev&);
-        bool drop(const Zone&);
-//        bool drop(Polygon&);
+        bool drop(Polygon&);
         bool drop(const Access&);
         bool drop(const Group&);
         bool drop(const User&);
@@ -48,16 +46,14 @@ namespace seye
         // удаление и добавления здесь не отслеживаются
         bool update(const QList<Passport>&);
         bool update(const QList<ObjectDev>&);
-        bool update(const QList<Zone>&);
-//        bool update(QList<Polygon>&);
+        bool update(QList<Polygon>&);
         bool update(const QList<Access>&);
         bool update(const QList<Group>&);
 
         // запрос всей таблицы
         QList<Passport> getAllPassports();
         QList<ObjectDev> getAllObjects();
-        QList<Zone> getAllZones();
-//        QList<Polygon> getAllZones();
+        QList<Polygon> getAllZones();
         QList<Access> getAllAccesses();
         QList<Group> getAllGroups();
         QList<User> getAllUsers();
@@ -82,8 +78,7 @@ namespace seye
 
         qint64 insert(const Passport&) const;
         bool insert(const ObjectDev&) const;
-        qint32 insert(const Zone&) const;
-//        bool insert(Polygon&) const;
+        bool insert(Polygon&) const;
         qint64 insert(const Access&) const;
         qint64 insert(const QString& groupName) const;
 
@@ -94,8 +89,7 @@ namespace seye
 
         QList<Passport> selectAllPassports() const;
         QList<ObjectDev> selectAllObjects() const;
-        QList<Zone> selectAllZones() const;
-//        QList<Polygon> selectAllZones() const;
+        QList<Polygon> selectAllZones() const;
         QList<Access> selectAllAccesses() const;
         QList<Group> selectAllGroups() const;
         Group selectAllReferences(Group&) const;
@@ -130,8 +124,7 @@ namespace seye
 
         bool upDate(const Passport&) const;
         bool upDate(const ObjectDev&) const;
-        bool upDate(const Zone&) const;
-//        bool upDate(Polygon&) const;
+        bool upDate(Polygon&) const;
         bool upDate(const Access&) const;
         bool upDate(const Group&) const;
     };
