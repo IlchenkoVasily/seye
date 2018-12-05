@@ -49,7 +49,10 @@ SOURCES += \
     objectproxy.cpp \
     popup.cpp \
     groups.cpp \
-    scenario.cpp
+    scenario.cpp \
+    users.cpp \
+    newuser.cpp \
+    changepassword.cpp
 
 HEADERS += appengine.h \
     device.h \
@@ -73,7 +76,10 @@ HEADERS += appengine.h \
     objectproxy.h \
     popup.h \
     groups.h \
-    scenario.h
+    scenario.h \
+    users.h \
+    newuser.h \
+    changepassword.h
 
 FORMS += \
     mainwindow.ui \
@@ -83,7 +89,12 @@ FORMS += \
     passport.ui \
     zoneinfo.ui \
     groups.ui \
-    scenario.ui
+    scenario.ui \
+    users.ui \
+    newuser.ui \
+    changepassword.ui \
+    zoneinfo.ui \
+    changepassword.ui
 
 RESOURCES += \
     qml.qrc \

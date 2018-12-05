@@ -7,7 +7,6 @@ using namespace seye;
 DBService::DBService(const QString hostAddress, const QString userName, const QString userPassword)
 {
     db = QSqlDatabase::addDatabase("QPSQL", "seyedb");
-//    qDebug() << db.isValid();
     db.setHostName(hostAddress);
     db.setDatabaseName("seye");
     db.setUserName(userName);
@@ -56,8 +55,7 @@ DBService::~DBService()
 qint64 DBService::add(const Passport& passport)
 {
     if (open())
-        if (selectSign(passport.callSign) == 2)
-            if (insert(passport)) return selectPassportId(passport.callSign);
+        if (selectSign(passport.callSign) == 2) return insert(passport);
     return 0;
 }
 
@@ -68,17 +66,15 @@ bool DBService::add(const ObjectDev& object)
     return false;
 }
 
-qint32 DBService::add(const Zone& zone)
+bool DBService::add(Polygon& zone)
 {
-    if (open())
-        if (insert(zone)) return selectZoneId(zone.polygon);
-    return 0;
+    if (open()) return insert(zone);
+    return false;
 }
 
 qint64 DBService::add(const Access& access)
 {
-    if (open())
-        if (insert(access)) return selectAccessId(access);
+    if (open()) return insert(access);
     return 0;
 }
 
@@ -93,8 +89,7 @@ qint64 DBService::add(Group& group)
 qint64 DBService::add(const QString& groupName)
 {
     if (open())
-        if (selectGroup(groupName) == 2)
-            if (insert(groupName)) return selectGroupId(groupName);
+        if (selectGroup(groupName) == 2) return insert(groupName);
     return 0;
 }
 
@@ -103,16 +98,10 @@ qint32 DBService::add(const User& user, const QString& password)
     if (open())
         if (selectUser(user.name) == 2)
             if (create(user.name, password))
-                if (user.role == "operator")
-                    if (grant(user)) return selectUserId(user.name);
-                    else return 0;
-                else
-                    if (user.role != "admin" && user.role != "supervisor")
-                        qDebug() << "Роль " << user.toString(user.role) << " не предусмотрена." << endl
-                                 << "Возможные роли: operator, supervisor, admin.";
+                if (grant(user))
+                    if (user.role == "operator") return selectUserId(user.name);
                     else
-                        if (grant(user))
-                            if (alter(user.name)) return selectUserId(user.name);
+                        if (alter(user.name)) return selectUserId(user.name);
     return 0;
 }
 
@@ -150,9 +139,9 @@ bool DBService::drop(const ObjectDev& object)
     return false;
 }
 
-bool DBService::drop(const Zone& zone)
+bool DBService::drop(Polygon& zone)
 {
-    if (open()) return deleteZone(zone.id);
+    if (open()) return deleteZone(zone.id());
     return false;
 }
 
@@ -198,7 +187,7 @@ bool DBService::update(const QList<ObjectDev>& objects)
     return false;
 }
 
-bool DBService::update(const QList<Zone>& zones)
+bool DBService::update(QList<Polygon>& zones)
 {
     if (open())
     {
@@ -250,10 +239,10 @@ QList<ObjectDev> DBService::getAllObjects()
     return objects;
 }
 
-QList<Zone> DBService::getAllZones()
+QList<Polygon> DBService::getAllZones()
 {
     if (open()) return selectAllZones();
-    QList<Zone> zones;
+    QList<Polygon> zones;
     return zones;
 }
 
@@ -295,7 +284,7 @@ QString DBService::getRole(const QString& userName)
     return nullptr;
 }
 
-bool DBService::chengePassword(const QString& userName, const QString& password)
+bool DBService::changePassword(const QString& userName, const QString& password)
 {
     if (open()) return alter(userName, password);
     return false;
@@ -344,16 +333,18 @@ bool DBService::whatIsError() const
     return false;
 }
 
-bool DBService::insert(const Passport& passport) const
+qint64 DBService::insert(const Passport& passport) const
 {
     QSqlQuery query(db);
     if (passport.device == nullptr) query.prepare("INSERT INTO passports (first_name, last_name, call_sign, birthday) "
-                                                  "VALUES (:first_name, :last_name, :call_sign, :birthday)");
+                                                  "VALUES (:first_name, :last_name, :call_sign, :birthday) "
+                                                  "RETURNING id");
     else
         if (selectObjectId(passport.device) == 1) // здесь проверку оставил т.к. пока что форма добавления недостаточно навороченная
         {
             query.prepare("INSERT INTO passports (first_name, last_name, call_sign, birthday, id_object) "
-                          "VALUES (:first_name, :last_name, :call_sign, :birthday, :id_object)");
+                          "VALUES (:first_name, :last_name, :call_sign, :birthday, :id_object) "
+                          "RETURNING id");
             query.bindValue(":id_object", passport.device);
         }
         else return false;
@@ -364,7 +355,8 @@ bool DBService::insert(const Passport& passport) const
     if (query.exec())
     {
         qDebug() << "Insert passport success";
-        return true;
+        if (query.next()) return query.value(0).toInt();
+        else qDebug() << "Запись не создалась О_о";
     }
     return whatIsError();
 }
@@ -387,30 +379,35 @@ bool DBService::insert(const ObjectDev& object) const
     return whatIsError();
 }
 
-bool DBService::insert(const Zone& zone) const
+bool DBService::insert(Polygon& zone) const
 {
     QSqlQuery query(db);
     query.prepare("INSERT INTO zones (zone_name, polygon, zone_color, line_color) "
-                  // id есть, но с автоинкрементом
-                  "VALUES (:zone_name, :polygon, :zone_color, :line_color)");
-    query.bindValue(":zone_name", zone.name);
-    query.bindValue(":polygon", zone.polygon);
-    query.bindValue(":zone_color", zone.color);
-    query.bindValue(":line_color", zone.lineColor);
+                  "VALUES (:zone_name, :polygon, :zone_color, :line_color) "
+                  "RETURNING id");
+    query.bindValue(":zone_name", zone.name());
+    query.bindValue(":polygon", zone.toString());
+    query.bindValue(":zone_color", zone.color().name(QColor::HexArgb));
+    query.bindValue(":line_color", zone.borderColor().name(QColor::HexRgb));
     if (query.exec())
     {
         qDebug() << "Insert zone success";
-        return true;
+        if (query.next())
+        {
+            zone.setId(query.value(0).toInt());
+            return true;
+        }
+        else qDebug() << "Запись не создалась О_о";
     }
     return whatIsError();
 }
 
-bool DBService::insert(const Access& access) const
+qint64 DBService::insert(const Access& access) const
 {
     QSqlQuery query(db);
     query.prepare("INSERT INTO access_rules (start, \"end\", priority, rule_name, id_group, id_zone) "
-                  // id есть, но с автоинкрементом
-                  "VALUES (:start, :end, :priority, :rule_name, :id_group, :id_zone)");
+                  "VALUES (:start, :end, :priority, :rule_name, :id_group, :id_zone) "
+                  "RETURNING id");
     query.bindValue(":start", access.start);
     query.bindValue(":end", access.end);
     query.bindValue(":priority", access.priority);
@@ -420,22 +417,24 @@ bool DBService::insert(const Access& access) const
     if (query.exec())
     {
         qDebug() << "Insert access success";
-        return true;
+        if (query.next()) return query.value(0).toInt();
+        else qDebug() << "Запись не создалась О_о";
     }
     return whatIsError();
 }
 
-bool DBService::insert(const QString& groupName) const
+qint64 DBService::insert(const QString& groupName) const
 {
     QSqlQuery query(db);
     query.prepare("INSERT INTO task_groups (group_name) "
-                  // id есть, но с автоинкрементом
-                  "VALUES (:group_name)");
+                  "VALUES (:group_name) "
+                  "RETURNING id");
     query.bindValue(":group_name", groupName);
     if (query.exec())
     {
         qDebug() << "Insert group success";
-        return true;
+        if (query.next()) return query.value(0).toInt();
+        else qDebug() << "Запись не создалась О_о";
     }
     return whatIsError();
 }
@@ -466,54 +465,6 @@ bool DBService::create(const QString& userName, const QString& password) const
         return true;
     }
     return whatIsError();
-}
-
-qint64 DBService::selectPassportId(const QString& callSign) const
-{
-    QSqlQuery query(db);
-    query.prepare("SELECT id FROM passports WHERE call_sign = (:call_sign)");
-    query.bindValue(":call_sign", callSign);
-    if (query.exec()) qDebug() << "Select passport id success";
-    else return whatIsError();
-    query.next();
-    return query.value(0).toInt(); // немагия (:
-}
-
-qint32 DBService::selectZoneId(const QString& polygon) const
-{
-    QSqlQuery query(db);
-    query.prepare("SELECT id FROM zones WHERE polygon = (:polygon)");
-    query.bindValue(":polygon", polygon);
-    if (query.exec()) qDebug() << "Select zone id success";
-    else return whatIsError();
-    query.next();
-    return query.value(0).toInt(); // немагия (:
-}
-
-qint64 DBService::selectAccessId(const Access& access) const
-{
-    QSqlQuery query(db);
-    query.prepare("SELECT id FROM access_rules "
-                  "WHERE start = (:start) AND \"end\" = (:end) AND id_group = (:id_group) AND id_zone = (:id_zone)");
-    query.bindValue(":start", access.start);
-    query.bindValue(":end", access.end);
-    query.bindValue(":id_group", access.group);
-    query.bindValue(":id_zone", access.zone);
-    if (query.exec()) qDebug() << "Select access id success";
-    else return whatIsError();
-    query.next();
-    return query.value(0).toInt(); // немагия (:
-}
-
-qint64 DBService::selectGroupId(const QString& groupName) const
-{
-    QSqlQuery query(db);
-    query.prepare("SELECT id FROM task_groups WHERE group_name = (:group_name)");
-    query.bindValue(":group_name", groupName);
-    if (query.exec()) qDebug() << "Select group id success";
-    else return whatIsError();
-    query.next();
-    return query.value(0).toInt(); // немагия (:
 }
 
 qint32 DBService::selectUserId(const QString& userName) const
@@ -565,20 +516,20 @@ QList<ObjectDev> DBService::selectAllObjects() const
     return objects;
 }
 
-QList<Zone> DBService::selectAllZones() const
+QList<Polygon> DBService::selectAllZones() const
 {
-    QList<Zone> zones;
+    QList<Polygon> zones;
     QSqlQuery query(db);
     if (query.exec("SELECT * FROM zones")) qDebug() << "Select all zones success";
     else if (!whatIsError()) return zones;
-    Zone zone;
+    Polygon zone;
     while(query.next())
     {
-        zone.id = query.value(0).toInt();
-        zone.name = query.value(1).toString();
-        zone.polygon  = query.value(2).toString();
-        zone.color = query.value(3).toString();
-        zone.lineColor = query.value(4).toString();
+        zone.setId(query.value(0).toInt());
+        zone.setName(query.value(1).toString());
+        zone.fromString(query.value(2).toString());
+        zone.setColor(query.value(3).toString());
+        zone.setBorderColor(query.value(4).toString());
         zones.push_back(zone);
     }
     return zones;
@@ -657,7 +608,7 @@ QString DBService::selectRole(const qint32& idUser) const
 {
     QSqlQuery query(db);
     QString string = "{" + QString::number(idUser) + "}";
-    query.prepare("SELECT groname FROM pg_group WHERE grolist >= (:grolist)");
+    query.prepare("SELECT groname FROM pg_group WHERE grolist @> (:grolist)");
     query.bindValue(":grolist", string);
     string = nullptr;
     if (query.exec()) qDebug() << "Select role for user success";
@@ -931,17 +882,17 @@ bool DBService::upDate(const ObjectDev& object) const
     return whatIsError();
 }
 
-bool DBService::upDate(const Zone& zone) const
+bool DBService::upDate(Polygon& zone) const
 {
     QSqlQuery query(db);
     query.prepare("UPDATE zones SET zone_name = (:zone_name), polygon = (:polygon), "
                   "zone_color = (:zone_color), line_color = (:line_color) "
                   "WHERE id = (:id)");
-    query.bindValue(":zone_name", zone.name);
-    query.bindValue(":polygon", zone.polygon);
-    query.bindValue(":zone_color", zone.color);
-    query.bindValue(":line_color", zone.lineColor);
-    query.bindValue(":id", zone.id);
+    query.bindValue(":zone_name", zone.name());
+    query.bindValue(":polygon", zone.toString());
+    query.bindValue(":zone_color", zone.color().name(QColor::HexArgb));
+    query.bindValue(":line_color", zone.borderColor().name(QColor::HexRgb));
+    query.bindValue(":id", zone.id());
     if (query.exec())
     {
         qDebug() << "Update zone success";

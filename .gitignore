@@ -1,4 +1,4 @@
-*user*
+*.pro.user*
 [Bb]uild*
 *.stash
 Makefile*

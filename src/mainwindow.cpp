@@ -11,6 +11,7 @@
 #include "objectsmodel.h"
 #include "groups.h"
 #include "scenario.h"
+#include "users.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -360,4 +361,12 @@ void MainWindow::on_pushButton_17_clicked()
     Scenario dia(this);
     dia.setModal(true);
     dia.exec();
+}
+
+// управление пользователями
+void MainWindow::on_pushButton_9_clicked()
+{
+    Users usersForm(this, database(), userRole);
+    usersForm.setModal(true);
+    usersForm.exec();
 }
