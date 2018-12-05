@@ -15,7 +15,7 @@ class NewUser : public QDialog
     Q_OBJECT
 
 public:
-    explicit NewUser(QWidget *parent = nullptr, QObject *other = nullptr, QString = "supervisor", QStandardItemModel *modelTab = nullptr);
+    explicit NewUser(const QString& currentRole, QStandardItemModel *modelTab, seye::DBService *db, QWidget *parent = nullptr);
     ~NewUser();
 
 private slots:

@@ -15,7 +15,7 @@ class Users : public QDialog
     Q_OBJECT
 
 public:
-    explicit Users(QWidget *parent = nullptr, seye::DBService *db = nullptr, QString currentRole = "supervisor");
+    explicit Users(const QString& currentRole, seye::DBService *db, QWidget *parent = nullptr);
     ~Users();
 
 private slots:

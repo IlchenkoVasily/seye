@@ -366,7 +366,7 @@ void MainWindow::on_pushButton_17_clicked()
 // управление пользователями
 void MainWindow::on_pushButton_9_clicked()
 {
-    Users usersForm(this, database(), userRole);
+    Users usersForm(userRole, database(), this);
     usersForm.setModal(true);
     usersForm.exec();
 }
