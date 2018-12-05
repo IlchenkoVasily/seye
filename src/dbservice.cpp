@@ -66,7 +66,7 @@ bool DBService::add(const ObjectDev& object)
     return false;
 }
 
-bool DBService::add(Polygon& zone)
+bool DBService::add(Polygon* zone)
 {
     if (open()) return insert(zone);
     return false;
@@ -139,9 +139,9 @@ bool DBService::drop(const ObjectDev& object)
     return false;
 }
 
-bool DBService::drop(Polygon& zone)
+bool DBService::drop(Polygon* zone)
 {
-    if (open()) return deleteZone(zone.id());
+    if (open()) return deleteZone(zone->id());
     return false;
 }
 
@@ -187,7 +187,7 @@ bool DBService::update(const QList<ObjectDev>& objects)
     return false;
 }
 
-bool DBService::update(QList<Polygon>& zones)
+bool DBService::update(QList<Polygon*>& zones)
 {
     if (open())
     {
@@ -239,10 +239,10 @@ QList<ObjectDev> DBService::getAllObjects()
     return objects;
 }
 
-QList<Polygon> DBService::getAllZones()
+QList<Polygon*> DBService::getAllZones()
 {
     if (open()) return selectAllZones();
-    QList<Polygon> zones;
+    QList<Polygon*> zones;
     return zones;
 }
 
@@ -379,22 +379,22 @@ bool DBService::insert(const ObjectDev& object) const
     return whatIsError();
 }
 
-bool DBService::insert(Polygon& zone) const
+bool DBService::insert(Polygon* zone) const
 {
     QSqlQuery query(db);
     query.prepare("INSERT INTO zones (zone_name, polygon, zone_color, line_color) "
                   "VALUES (:zone_name, :polygon, :zone_color, :line_color) "
                   "RETURNING id");
-    query.bindValue(":zone_name", zone.name());
-    query.bindValue(":polygon", zone.toString());
-    query.bindValue(":zone_color", zone.color().name(QColor::HexArgb));
-    query.bindValue(":line_color", zone.borderColor().name(QColor::HexRgb));
+    query.bindValue(":zone_name", zone->name());
+    query.bindValue(":polygon", zone->toString());
+    query.bindValue(":zone_color", zone->color().name(QColor::HexArgb));
+    query.bindValue(":line_color", zone->borderColor().name(QColor::HexRgb));
     if (query.exec())
     {
         qDebug() << "Insert zone success";
         if (query.next())
         {
-            zone.setId(query.value(0).toInt());
+            zone->setId(query.value(0).toInt());
             return true;
         }
         else qDebug() << "Запись не создалась О_о";
@@ -516,20 +516,21 @@ QList<ObjectDev> DBService::selectAllObjects() const
     return objects;
 }
 
-QList<Polygon> DBService::selectAllZones() const
+QList<Polygon*> DBService::selectAllZones() const
 {
-    QList<Polygon> zones;
+    QList<Polygon*> zones;
     QSqlQuery query(db);
     if (query.exec("SELECT * FROM zones")) qDebug() << "Select all zones success";
     else if (!whatIsError()) return zones;
-    Polygon zone;
+    Polygon* zone;
     while(query.next())
     {
-        zone.setId(query.value(0).toInt());
-        zone.setName(query.value(1).toString());
-        zone.fromString(query.value(2).toString());
-        zone.setColor(query.value(3).toString());
-        zone.setBorderColor(query.value(4).toString());
+        zone = new Polygon;
+        zone->setId(query.value(0).toInt());
+        zone->setName(query.value(1).toString());
+        zone->fromString(query.value(2).toString());
+        zone->setColor(query.value(3).toString());
+        zone->setBorderColor(query.value(4).toString());
         zones.push_back(zone);
     }
     return zones;
@@ -882,17 +883,17 @@ bool DBService::upDate(const ObjectDev& object) const
     return whatIsError();
 }
 
-bool DBService::upDate(Polygon& zone) const
+bool DBService::upDate(Polygon* zone) const
 {
     QSqlQuery query(db);
     query.prepare("UPDATE zones SET zone_name = (:zone_name), polygon = (:polygon), "
                   "zone_color = (:zone_color), line_color = (:line_color) "
                   "WHERE id = (:id)");
-    query.bindValue(":zone_name", zone.name());
-    query.bindValue(":polygon", zone.toString());
-    query.bindValue(":zone_color", zone.color().name(QColor::HexArgb));
-    query.bindValue(":line_color", zone.borderColor().name(QColor::HexRgb));
-    query.bindValue(":id", zone.id());
+    query.bindValue(":zone_name", zone->name());
+    query.bindValue(":polygon", zone->toString());
+    query.bindValue(":zone_color", zone->color().name(QColor::HexArgb));
+    query.bindValue(":line_color", zone->borderColor().name(QColor::HexRgb));
+    query.bindValue(":id", zone->id());
     if (query.exec())
     {
         qDebug() << "Update zone success";

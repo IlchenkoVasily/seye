@@ -87,7 +87,6 @@ FORMS += \
     device.ui \
     login.ui \
     passport.ui \
-    zoneinfo.ui \
     groups.ui \
     scenario.ui \
     users.ui \
