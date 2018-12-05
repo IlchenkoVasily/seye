@@ -10,6 +10,7 @@
 #include "object.h"
 #include "objectsmodel.h"
 #include "groups.h"
+#include "scenario.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -350,6 +351,13 @@ void MainWindow::on_pushButton_11_clicked()
 void MainWindow::on_pushButton_8_clicked()
 {
     Groups dia(this);
+    dia.setModal(true);
+    dia.exec();
+}
+
+void MainWindow::on_pushButton_17_clicked()
+{
+    Scenario dia(this);
     dia.setModal(true);
     dia.exec();
 }
