@@ -15,6 +15,14 @@ class Scenario : public QDialog
 public:
     explicit Scenario(QWidget *parent = nullptr);
     ~Scenario();
+//    QString timeInterval(const QString& from, const QString& to, const QString& format = "hh.mm.ss-dd.MM.yyyy");
+
+private slots:
+    void on_buttonBox_rejected();
+
+    void on_dateTimeEnd_dateTimeChanged(const QDateTime &dateTime);
+
+    void on_dateTimeStart_dateTimeChanged(const QDateTime &dateTime);
 
 private:
     Ui::Scenario *ui;

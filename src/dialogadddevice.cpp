@@ -34,7 +34,7 @@ void DialogAddDevice::on_buttonBox_2_accepted()
     QString lastname = ui->lastname->text();
     QString firstname = ui->firstname->text();
     QString callSign = ui->callSign->text();
-    QDate date = ui->date1->date();//
+    QDate date = ui->date1->date();
 
     auto dblink = ((MainWindow*)parent())->database();
 

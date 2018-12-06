@@ -26,7 +26,7 @@
      w = 30;//button width
      h = 30;//button height
      button.rect = QRect(x,y,w,h);
-     button.text = ">^ω^<";
+     button.text = "...";
      button.state = QStyle::State_Enabled;
 
 
