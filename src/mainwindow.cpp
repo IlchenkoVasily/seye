@@ -93,7 +93,6 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
         ui->pushButton_2->show();
         ui->pushButton_13->show();
         ui->listWidget->show();
-        ui->pushButton_18->hide();
     }
 
     if(userRole == "admin") //для роли Админ
@@ -110,10 +109,9 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
         ui->pushButton_16->show();
         ui->pushButton_17->show();
         ui->pushButton_5->setText("Зоны (ГИС)");
-        ui->pushButton_18->show();
         ui->buttonBox->show();
         ui->pushButton_2->hide();
-        ui->pushButton_13->hide();
+        ui->pushButton_13->show();
         ui->listWidget->hide();
     }
 }
@@ -269,23 +267,22 @@ void MainWindow::on_pushButton_13_clicked()
         от этого увеличивается окно
         с уведомлениями
     */
-    if(ui->smallStackedWidget->isVisible())
-        ui->pushButton_13->setText("↓");
+    if (userRole == "operator")
+    {
+        if(ui->smallStackedWidget->isVisible())
+            ui->pushButton_13->setText("↓");
+        else
+            ui->pushButton_13->setText("↑");
+        ui->smallStackedWidget->setVisible(!ui->smallStackedWidget->isVisible());
+    }
     else
-        ui->pushButton_13->setText("↑");
-    ui->smallStackedWidget->setVisible(!ui->smallStackedWidget->isVisible());
-}
-
-void MainWindow::on_pushButton_18_clicked()
-{
-    /*
-        Сева, это не костыль
-    */
-    if(ui->listWidget->isVisible())
-        ui->pushButton_18->setText("↓");
-    else
-        ui->pushButton_18->setText("↑");
-    ui->listWidget->setVisible(!ui->listWidget->isVisible());
+    {
+        if(ui->listWidget->isVisible())
+            ui->pushButton_13->setText("↑");
+        else
+            ui->pushButton_13->setText("↓");
+        ui->listWidget->setVisible(!ui->listWidget->isVisible());
+    }
 }
 
 void MainWindow::on_pushButton_15_clicked()
@@ -366,7 +363,7 @@ void MainWindow::on_pushButton_17_clicked()
 // управление пользователями
 void MainWindow::on_pushButton_9_clicked()
 {
-    Users usersForm(this, database(), userRole);
+    Users usersForm(userRole, database(), this);
     usersForm.setModal(true);
     usersForm.exec();
 }

@@ -1,10 +1,9 @@
 #include "newuser.h"
 #include "ui_newuser.h"
 
-#include "mainwindow.h"
 #include <QMessageBox>
 
-NewUser::NewUser(QWidget *parent, QObject *object, QString currentRole, QStandardItemModel *modelTab) :
+NewUser::NewUser(const QString& currentRole, QStandardItemModel *modelTab, seye::DBService *db, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::NewUser)
 {
@@ -12,8 +11,8 @@ NewUser::NewUser(QWidget *parent, QObject *object, QString currentRole, QStandar
 
     disconnect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     model = modelTab;
-    dblink = qobject_cast<MainWindow*>(object)->database();
-    if (currentRole == "admin") ui->comboBox->insertItem(3, "admin");
+    dblink = db;
+    if (currentRole == "admin") ui->comboBox->insertItem(2, "admin");
 }
 
 NewUser::~NewUser()
@@ -29,13 +28,13 @@ void NewUser::on_buttonBox_accepted()
     user.role = ui->comboBox->currentText();
     if (password == ui->lineEditCheckPassword->text())
     {
-        QStandardItem *item;
-        int i = model->rowCount();
-
         user.id = dblink->add(user, password);
         if (user.id == 0) QMessageBox::warning(this, "Ошибка", "Не удалось создать пользователя");
         else
         {
+            QStandardItem *item;
+            int i = model->rowCount();
+
             item = new QStandardItem(QString::number(user.id));
             model->setItem(i, 0, item);
             item = new QStandardItem(QString(user.name));

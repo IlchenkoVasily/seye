@@ -14,7 +14,7 @@ class ChangePassword : public QDialog
     Q_OBJECT
 
 public:
-    explicit ChangePassword(QWidget *parent = nullptr, QObject *other = nullptr, QString role = "supervisor", QString userName = nullptr, QString userRole = "operator");
+    explicit ChangePassword(const QString& userName, seye::DBService *db, QWidget *parent = nullptr);
     ~ChangePassword();
 
 private slots:
@@ -23,8 +23,6 @@ private slots:
 private:
     Ui::ChangePassword *ui;
     seye::DBService *dblink;
-    QString currentRole;
-    QString changeUserRole;
 };
 
 #endif // CHANGEPASSWORD_H
