@@ -39,6 +39,12 @@ public:
 
     QItemSelectionModel* getPolygonSelection();
 
+    seye::PolygonModel* getPolygonModel();
+
+    seye::ObjectModel* getObjectModel();
+
+    seye::ObjectProxy* getObjectProxyModel();
+
 private slots:
     void onObjectsUpdated();
 

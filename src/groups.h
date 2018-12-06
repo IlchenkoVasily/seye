@@ -5,6 +5,11 @@
 #include <QDialog>
 #include <QTreeView>
 #include <QTableView>
+#include <QStandardItemModel>
+
+#include "dbservice.h"
+#include "objectproxy.h"
+#include "objectsmodel.h"
 
 namespace Ui {
 class Groups;
@@ -18,9 +23,29 @@ public:
     explicit Groups(QWidget *parent = nullptr);
     ~Groups();
 
+private slots:
+    // create group button
+    void on_pushButton_3_clicked();
+    // delete group button
+    void on_pushButton_clicked();
+    // tree view click
+    void on_treeView_clicked(const QModelIndex &index);
+    // table view click
+    void on_tableView_clicked(const QModelIndex &index);
+    // button save
+    void on_buttonBox_accepted();
+    // whenever search box changed update proxy
+    void on_lineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::Groups *ui;
-    QTreeView* groupsView;
+    seye::DBService* db;
+    seye::ObjectModel* objectModel;
+    seye::ObjectProxy* objectProxy;
+    QStandardItemModel* groupModel;
+    QList<seye::Group> groups;
+
+    void setupGroupModel();
 };
 
 #endif // GROUPS_H

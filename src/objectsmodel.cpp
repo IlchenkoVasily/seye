@@ -21,7 +21,6 @@ void ObjectModel::addObject(Object& newObj)
     int idx = _objects.indexOf(newObj);
     if (idx != -1)
     {
-        beginResetModel();
         // Обновляем координаты у объекта
         Object& editable = _objects[idx];
         editable.setCoordinate(newObj.coordinate());
@@ -55,11 +54,9 @@ void ObjectModel::addObject(Object& newObj)
             emit noticePushed(editable.id(), editable.name(),
                               State::OutOfAttention);
 
-        // Сигнал о том, что данные в модели изменены.
-        // Индексы наших объектов в моделе, изменённый параметр
-//        emit dataChanged(index(idx, 0), index(idx, 0),
-//                         QVector<int>() << CoordinateRole << StateRole);
-        endResetModel();
+        emit dataChanged(index(idx, 0), index(idx, 1), QVector<int>() <<
+                         CoordinateRole << StateRole);
+
         return;
     }
 
@@ -76,6 +73,11 @@ void ObjectModel::addObject(Object& newObj)
 const QList<Object>& ObjectModel::toList() const
 {
     return _objects;
+}
+
+void ObjectModel::setSelectionModel(QItemSelectionModel *selectionModel)
+{
+    _selectionModel = selectionModel;
 }
 
 void ObjectModel::objectSelected(const QModelIndex& index)
@@ -102,7 +104,7 @@ int ObjectModel::columnCount(const QModelIndex &parent) const
 
     // Здесь возвращается число 3
     // Это число столбцов: айди, цвет, информация о объекте
-    return 3;
+    return 4;
 }
 
 QVariant ObjectModel::data(const QModelIndex& index, int role) const
@@ -115,6 +117,7 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case Qt::DisplayRole: {
         if (index.column() == 0) return object.name();
+        if (index.column() == 2) return object.link();
         return QVariant();
     }
 
@@ -156,11 +159,13 @@ QVariant ObjectModel::headerData(int section, Qt::Orientation orientation, int r
         {
             switch (section) {
             case 0:
-                return QString("Name");
+                return QString("Позывной");
             case 1:
-                return QString("Status");
+                return QString("Статус");
             case 2:
-                return QString("Info");
+                return QString("Связь");
+            case 3:
+                return QString("Кнопка");
             default:
                 break;
             }

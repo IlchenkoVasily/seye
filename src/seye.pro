@@ -91,7 +91,6 @@ FORMS += \
     scenario.ui \
     users.ui \
     newuser.ui \
-    changepassword.ui \
     zoneinfo.ui \
     changepassword.ui
 

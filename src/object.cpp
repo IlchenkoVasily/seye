@@ -19,6 +19,7 @@ Object::Object(const ObjectDev& obj, QString name)
       _state(State::Offline), _role(Role(obj.role))
 {
     _name = name;
+    _link = obj.link;
 }
 
 Object::Object(QString id, double alt, double longt, double speed)
@@ -123,6 +124,16 @@ void Object::setName(QString name)
 
     _name = name;
     emit nameChanged(_name);
+}
+
+QString Object::link() const
+{
+    return _link;
+}
+
+void Object::setLink(QString link)
+{
+    _link = link;
 }
 
 double Object::scoreMaxDistance()

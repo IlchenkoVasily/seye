@@ -576,7 +576,7 @@ QList<Group> DBService::selectAllGroups() const
 Group DBService::selectAllReferences(Group& group) const
 {
     QSqlQuery query(db);
-    query.prepare("SELECT id_device FROM group_object WHERE id_group = (:id_group)");
+    query.prepare("SELECT id_object FROM group_object WHERE id_group = (:id_group)");
     query.bindValue(":id_group", group.id);
     if (query.exec()) qDebug() << "Select all devices for group success";
     else if (!whatIsError()) return group;

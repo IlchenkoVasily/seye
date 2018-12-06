@@ -174,8 +174,8 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         // Создаём прокис для объектов
         objectProxy = new seye::ObjectProxy(this);
         objectProxy->setSourceModel(model);
-        connect(this, SIGNAL(resort()),
-                objectProxy, SLOT(invalidate()));
+        objectProxy->setSortingState(true);
+        objectProxy->setFilteringState(true);
 
         // устанавливаем нашу прокси модель вместо модели
         objectView->setModel(objectProxy);
@@ -189,7 +189,10 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 
         // Ставим делегат
         MyDelegate* delegate = new MyDelegate(this);
-        objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
+        objectView->setItemDelegateForColumn(3, delegate);// кнопка открытия паспорта
+
+        // Устанавливаем моделе селекшен модель для сохранения выделения
+        objectModel->setSelectionModel(objectView->selectionModel());
 
         // вьюхи с моделью для перемещения карты на объект
         connect(objectView, SIGNAL(doubleClicked(const QModelIndex&)),
@@ -205,6 +208,21 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 QItemSelectionModel *MainWindow::getPolygonSelection()
 {
     return polygonView->selectionModel();
+}
+
+seye::PolygonModel *MainWindow::getPolygonModel()
+{
+    return polygonModel;
+}
+
+seye::ObjectModel *MainWindow::getObjectModel()
+{
+    return objectModel;
+}
+
+seye::ObjectProxy *MainWindow::getObjectProxyModel()
+{
+    return objectProxy;
 }
 
 void MainWindow::onObjectsUpdated()

@@ -1,4 +1,4 @@
-/************************************************
+﻿/************************************************
 ** ObjectsModel -- класс-модель, для передачи
 ** данных об объекте в представление
 ************************************************/
@@ -9,6 +9,7 @@
 // Qt includes
 #include <QAbstractTableModel>
 #include <QTimer>
+#include <QItemSelectionModel>
 
 // other includes
 #include "object.h"
@@ -46,6 +47,11 @@ namespace seye
 
         const QList<Object>& toList() const;
 
+        /*
+            setSelectionModel
+         */
+        void setSelectionModel(QItemSelectionModel* selectionModel);
+
     signals:
         /*
             Сигнал для уведомлений.
@@ -72,6 +78,7 @@ namespace seye
 
     private:
         QList<Object> _objects;
+        QItemSelectionModel* _selectionModel;
     };
 }
 
