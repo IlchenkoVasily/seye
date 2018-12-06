@@ -75,7 +75,7 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
         кнопки которые не нужны для данной роли
     */
 
-    if(userRole == "operato") //для роли Оператор
+    if(userRole == "operator") //для роли Оператор
     {
         ui->pushButton_6->hide();
         ui->pushButton_7->hide();
@@ -95,7 +95,7 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
         ui->pushButton_18->hide();
     }
 
-    if(userRole == "operator") //для роли Админ
+    if(userRole == "admin") //для роли Админ
     {
         ui->pushButton_6->show();
         ui->pushButton_7->show();
