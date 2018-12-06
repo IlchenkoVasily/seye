@@ -7,7 +7,7 @@
 
 #include "QStandardItemModel"
 
-Users::Users(QWidget *parent, seye::DBService *db, QString role) :
+Users::Users(const QString& role, seye::DBService *db, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Users)
 {
@@ -47,9 +47,9 @@ Users::~Users()
 
 void Users::on_pushButton_clicked()
 {
-    NewUser creat(this, parent(), currentRole, model);
-    creat.setModal(true);
-    creat.exec();
+    NewUser create(currentRole, model, dblink, this);
+    create.setModal(true);
+    create.exec();
 }
 
 void Users::on_pushButton_3_clicked()
@@ -57,22 +57,30 @@ void Users::on_pushButton_3_clicked()
     if (ui->tableView->selectionModel()->hasSelection())
     {
         int row = ui->tableView->currentIndex().row();
-        ChangePassword change(this, parent(), currentRole,
-                              model->item(row, 1)->text(),
-                              model->item(row, 2)->text());
-        change.setModal(true);
-        change.exec();
+        QString userRole = model->item(row, 2)->text();
+        if (userRole != "admin" && currentRole != userRole)
+        {
+            ChangePassword change(model->item(row, 1)->text(), dblink, this);
+            change.setModal(true);
+            change.exec();
+        }
+        else QMessageBox::warning(this, "Ошибка", "Недостаточно прав");
     }
     else QMessageBox::warning(this, "Ошибка", "Выберите пользователя");
 }
 
 void Users::on_pushButtonDelete_clicked()
 {
-    seye::User user;
-    int row = ui->tableView->currentIndex().row();
-    user.name = model->item(row, 1)->text();
-    user.role = model->item(row, 2)->text();
-    if (currentRole == "supervisor" && user.role == "operator" || currentRole == "admin" && user.role != "admin")
-        if (dblink->drop(user)) model->removeRow(row); else;
-    else QMessageBox::warning(this, "Ошибка", "Недостаточно прав");
+    if (ui->tableView->selectionModel()->hasSelection())
+    {
+        seye::User user;
+        int row = ui->tableView->currentIndex().row();
+        user.name = model->item(row, 1)->text();
+        user.role = model->item(row, 2)->text();
+        if (user.role != "admin" && currentRole != user.role)
+            if (dblink->drop(user)) model->removeRow(row);
+            else QMessageBox::warning(this, "Ошибка", "Удаление не состоялось");
+        else QMessageBox::warning(this, "Ошибка", "Недостаточно прав");
+    }
+    else QMessageBox::warning(this, "Ошибка", "Выберите пользователя");
 }

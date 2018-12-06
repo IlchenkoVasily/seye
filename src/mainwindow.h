@@ -66,8 +66,6 @@ private slots:
 
     void on_pushButton_13_clicked();
 
-    void on_pushButton_18_clicked();
-
     void on_pushButton_15_clicked();
 
     void on_pushButton_14_clicked();
@@ -84,6 +82,7 @@ private slots:
 
     void on_pushButton_17_clicked();
 
+    // Управление пользователями
     void on_pushButton_9_clicked();
 
 

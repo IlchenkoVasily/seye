@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>720</height>
+    <width>1019</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>sEye 1.0</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
        <number>6</number>
@@ -77,8 +77,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>188</width>
+          <width>205</width>
           <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>205</width>
+          <height>16777215</height>
          </size>
         </property>
        </widget>
@@ -93,13 +99,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>90</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>90</width>
           <height>16777215</height>
          </size>
         </property>
@@ -110,7 +116,7 @@
       </item>
      </layout>
     </item>
-    <item>
+    <item row="1" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
        <widget class="QPushButton" name="pushButton_9">
@@ -135,9 +141,21 @@
       </item>
       <item>
        <widget class="QDialogButtonBox" name="buttonBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>90</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>60</width>
+          <width>90</width>
           <height>16777215</height>
          </size>
         </property>
@@ -148,16 +166,28 @@
           <kerning>true</kerning>
          </font>
         </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
         <property name="standardButtons">
          <set>QDialogButtonBox::Help</set>
+        </property>
+        <property name="centerButtons">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_11">
+        <property name="minimumSize">
+         <size>
+          <width>205</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>205</width>
           <height>16777215</height>
          </size>
         </property>
@@ -168,9 +198,15 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_12">
+        <property name="minimumSize">
+         <size>
+          <width>90</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>90</width>
           <height>16777215</height>
          </size>
         </property>
@@ -181,161 +217,152 @@
       </item>
      </layout>
     </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item row="2" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QStackedWidget" name="mainStackedWidget"/>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetMinimumSize</enum>
+       <widget class="QTableView" name="tableViewTimeline">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>35</height>
+         </size>
+        </property>
+        <attribute name="horizontalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="1">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QStackedWidget" name="smallStackedWidget">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="lineWidth">
+         <number>1</number>
+        </property>
+        <property name="currentIndex">
+         <number>-1</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QStackedWidget" name="smallStackedWidget">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>300</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="baseSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="lineWidth">
-           <number>1</number>
-          </property>
-          <property name="currentIndex">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <widget class="QPushButton" name="pushButton_14">
-            <property name="text">
-             <string>Добавить паспорт</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_15">
-            <property name="text">
-             <string>Добавить объект</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_16">
-            <property name="text">
-             <string>Создать зону</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_17">
-            <property name="text">
-             <string>Добавить правило</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_18">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>17</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Myanmar Text</family>
-            <pointsize>6</pointsize>
-            <weight>75</weight>
-            <italic>false</italic>
-            <bold>true</bold>
-            <underline>false</underline>
-            <strikeout>false</strikeout>
-            <kerning>true</kerning>
-           </font>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
+         <widget class="QPushButton" name="pushButton_14">
           <property name="text">
-           <string>↑</string>
+           <string>Добавить паспорт</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_13">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>17</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Myanmar Text</family>
-            <pointsize>6</pointsize>
-            <weight>75</weight>
-            <italic>false</italic>
-            <bold>true</bold>
-            <underline>false</underline>
-            <strikeout>false</strikeout>
-            <kerning>true</kerning>
-           </font>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
+         <widget class="QPushButton" name="pushButton_15">
           <property name="text">
-           <string>↑</string>
+           <string>Добавить объект</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="listWidget">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QPushButton" name="pushButton_16">
+          <property name="text">
+           <string>Создать зону</string>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>300</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="flow">
-           <enum>QListView::TopToBottom</enum>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_17">
+          <property name="text">
+           <string>Добавить правило</string>
           </property>
          </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_13">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>10</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Myanmar Text</family>
+          <pointsize>6</pointsize>
+          <weight>75</weight>
+          <italic>false</italic>
+          <bold>true</bold>
+          <underline>false</underline>
+          <strikeout>false</strikeout>
+          <kerning>true</kerning>
+         </font>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>↑</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="listWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="flow">
+         <enum>QListView::TopToBottom</enum>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
