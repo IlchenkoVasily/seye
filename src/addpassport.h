@@ -17,6 +17,8 @@ public:
     explicit AddPassport(seye::DBService *db, QWidget *parent = nullptr);
     ~AddPassport();
 
+    seye::Passport* getPassport();
+
 private slots:
     void on_buttonBox_accepted();
 
@@ -25,6 +27,7 @@ private slots:
 private:
     Ui::AddPassport *ui;
     seye::DBService *dblink;
+    seye::Passport passport;
 };
 
 #endif // ADDPASSPORT_H

@@ -13,6 +13,8 @@ AppEngine::AppEngine(QObject *parent) : QObject(parent)
 
     _polygonModel = new PolygonModel(_window);
     _objectModel = new ObjectModel(_window);
+    _passportModel = new QStandardItemModel(_window);
+    _ruleModel = new QStandardItemModel(_window);
 }
 
 AppEngine::~AppEngine()
@@ -48,9 +50,17 @@ void AppEngine::setUp()
         _objectModel->addObject(object);
     }
 
+    // setup passports model
+    setupPassports();
+
+    // setup rules model
+    setupRules();
+
     // Добавляем модели (уже поднятые из бд) во MainWindow
     _window->addModel("polygonModel", _polygonModel);
     _window->addModel("objectModel", _objectModel);
+    _window->addModel("passportModel", _passportModel);
+    _window->addModel("ruleModel", _ruleModel);
 
     // Коннектим селекшен модели для обновления выделений
     connect(_window->getPolygonSelection(),
@@ -119,5 +129,54 @@ void AppEngine::checkEntriesAll()
         }
         // где-то здесь установка статуса для полигона,
         // чтобы постоянно не драконить методы полигона.
+    }
+}
+
+void AppEngine::setupPassports()
+{
+    auto passports = _database->getAllPassports();
+
+    _passportModel->setHorizontalHeaderLabels(QStringList() << "№" << "Имя"
+                                              << "Фамилия"  << "Дата рождения"
+                                              << "Позывной" << "Устройство");
+
+    int row = 1;
+    foreach (auto pass, passports)
+    {
+        auto number    = new QStandardItem(QString::number(row++));
+        auto lastName  = new QStandardItem(pass.lastName);
+        auto firstName = new QStandardItem(pass.firstName);
+        auto birth     = new QStandardItem(pass.birthday.toString(QString("dd-MM-yyyy")));
+        auto link      = new QStandardItem(pass.callSign);
+        auto device    = new QStandardItem(pass.device);
+
+        _passportModel->appendRow(QList<QStandardItem*>()
+                                  << number << firstName << lastName
+                                  << birth  << link      << device);
+    }
+}
+
+void AppEngine::setupRules()
+{
+    auto rules = _database->getAllAccesses();
+
+    _ruleModel->setHorizontalHeaderLabels(QStringList() << "№"      << "Время начала"
+                                          << "Конца"    << "Статус" << "Название"
+                                          << "Группа"   << "Зона");
+
+    int row = 1;
+    foreach (auto rule, rules)
+    {
+        auto number    = new QStandardItem(QString::number(row++));
+        auto timeStart = new QStandardItem(rule.start.toString("dd-MM-yyyy hh:mm"));
+        auto timeEnd   = new QStandardItem(rule.end.toString("dd-MM-yyyy hh:mm"));
+        auto status    = new QStandardItem(rule.priority);
+        auto name      = new QStandardItem(rule.name);
+        auto group     = new QStandardItem(/*_database->groupNameById(rule.group));*/"repair gr");
+        auto zone      = new QStandardItem(/*_database->zoneNameById(rule.zone));*/"repair zn");
+
+        _ruleModel->appendRow(QList<QStandardItem*>() << number
+                                  << timeStart << timeEnd << status
+                                   << name     << group   << zone);
     }
 }

@@ -23,6 +23,10 @@ void ObjectModel::addObject(Object& newObj)
     {
         // Обновляем координаты у объекта
         Object& editable = _objects[idx];
+
+        if (newObj.state() > editable.state())
+            emit noticePushed(newObj.id(), editable.name(), State::Allowed);
+
         editable.setCoordinate(newObj.coordinate());
         editable.setState(newObj.state());
 
@@ -116,7 +120,13 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case Qt::DisplayRole: {
-        if (index.column() == 0) return object.name();
+        if (index.column() == 0)
+        {
+            QString returnableName = object.name();
+            if (returnableName.isEmpty())
+                returnableName = object.id();
+            return returnableName;
+        }
         if (index.column() == 2) return object.link();
         return QVariant();
     }

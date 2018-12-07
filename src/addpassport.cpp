@@ -22,7 +22,7 @@ AddPassport::~AddPassport()
 
 void AddPassport::on_buttonBox_accepted()
 {
-    seye::Passport passport;
+    passport;
     passport.firstName = ui->lineEditFirstname->text();
     passport.lastName = ui->lineEditLastname->text();
     passport.callSign = ui->lineEditCallSign->text();
@@ -32,7 +32,7 @@ void AddPassport::on_buttonBox_accepted()
     if (passport.callSign.isEmpty()) QMessageBox::warning(this, "Ошибка", "Поле позывного должно быть заполнено");
     else
         if (passport.device.isEmpty() xor passport.device.size() == 16)
-            if (/*passport.id = */dblink->add(passport)) accept(); // Тут надо слать данные в модель таблицы паспортов
+            if ((passport.id = dblink->add(passport))) accept(); // Тут надо слать данные в модель таблицы паспортов
             else QMessageBox::warning(this, "Неудачное добавление", "Возможно позывной повторяется");
         else QMessageBox::warning(this, "Ошибка", "Поле девайса заполнено не полностью");
 }
@@ -49,4 +49,12 @@ void AddPassport::on_checkBox_stateChanged(int arg1)
         ui->lineEditDevice->hide();
         ui->labelNotif->hide();
     }
+}
+
+seye::Passport* AddPassport::getPassport()
+{
+    if (passport.id)
+        return &passport;
+    else
+        return nullptr;
 }
