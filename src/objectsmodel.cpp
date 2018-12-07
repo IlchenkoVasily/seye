@@ -116,7 +116,13 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case Qt::DisplayRole: {
-        if (index.column() == 0) return object.name();
+        if (index.column() == 0)
+        {
+            QString returnableName = object.name();
+            if (returnableName.isEmpty())
+                returnableName = object.id();
+            return returnableName;
+        }
         if (index.column() == 2) return object.link();
         return QVariant();
     }
