@@ -23,6 +23,10 @@ void ObjectModel::addObject(Object& newObj)
     {
         // Обновляем координаты у объекта
         Object& editable = _objects[idx];
+
+        if (newObj.state() > editable.state())
+            emit noticePushed(newObj.id(), editable.name(), State::Allowed);
+
         editable.setCoordinate(newObj.coordinate());
         editable.setState(newObj.state());
 
