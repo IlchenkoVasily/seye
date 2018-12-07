@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTableView>
 #include <QStackedWidget>
+#include <QStandardItemModel>
 
 #include "notice.h"
 #include "objectproxy.h"
@@ -104,6 +105,7 @@ private:
     seye::ObjectModel* objectModel; //
     seye::ObjectProxy* objectProxy; // Прокси для объектов
     seye::DBService* db;            // База данных
+    QStandardItemModel* passportModel;
     // Формы
     PopUp *popUp;                   // попап паспортов
     // Разное

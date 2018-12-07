@@ -13,6 +13,7 @@ AppEngine::AppEngine(QObject *parent) : QObject(parent)
 
     _polygonModel = new PolygonModel(_window);
     _objectModel = new ObjectModel(_window);
+    _passportModel = new QStandardItemModel(_window);
 }
 
 AppEngine::~AppEngine()
@@ -48,9 +49,13 @@ void AppEngine::setUp()
         _objectModel->addObject(object);
     }
 
+    // setup passports model
+    setupPassports();
+
     // Добавляем модели (уже поднятые из бд) во MainWindow
     _window->addModel("polygonModel", _polygonModel);
     _window->addModel("objectModel", _objectModel);
+    _window->addModel("passportModel", _passportModel);
 
     // Коннектим селекшен модели для обновления выделений
     connect(_window->getPolygonSelection(),
@@ -119,5 +124,29 @@ void AppEngine::checkEntriesAll()
         }
         // где-то здесь установка статуса для полигона,
         // чтобы постоянно не драконить методы полигона.
+    }
+}
+
+void AppEngine::setupPassports()
+{
+    auto passports = _database->getAllPassports();
+
+    _passportModel->setHorizontalHeaderLabels(QStringList() << "№" << "Имя"
+                                              << "Фамилия"  << "Дата рождения"
+                                              << "Позывной" << "Устройство");
+
+    int row = 0;
+    foreach (auto pass, passports)
+    {
+        auto number    = new QStandardItem(QString::number(row++));
+        auto lastName  = new QStandardItem(pass.lastName);
+        auto firstName = new QStandardItem(pass.firstName);
+        auto birth     = new QStandardItem(pass.birthday.toString(QString("dd-MM-yyyy")));
+        auto link      = new QStandardItem(pass.callSign);
+        auto device    = new QStandardItem(pass.device);
+
+        _passportModel->appendRow(QList<QStandardItem*>()
+                                  << number << firstName << lastName
+                                  << birth  << link      << device);
     }
 }

@@ -174,8 +174,10 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         // Создаём прокис для объектов
         objectProxy = new seye::ObjectProxy(this);
         objectProxy->setSourceModel(model);
-        objectProxy->setSortingState(true);
-        objectProxy->setFilteringState(true);
+        // set filter for operator
+        bool sortFlag = userRole == "operator" ? true : false;
+        objectProxy->setSortingState(sortFlag);
+        objectProxy->setFilteringState(sortFlag);
 
         // устанавливаем нашу прокси модель вместо модели
         objectView->setModel(objectProxy);
@@ -201,6 +203,24 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         // модели с уведомлениями
         connect(model, SIGNAL(noticePushed(QString, QString, State)),
                 noticeService, SLOT(NoticeAlarm(QString, QString, State)));
+    }
+
+    if (name.contains("passport"))
+    {
+        // save model
+        passportModel = qobject_cast<QStandardItemModel*>(model);
+
+        // set model
+        passportView->setModel(model);
+
+        // disable vertical numbers on every row
+        auto vertHeader = passportView->verticalHeader();
+        vertHeader->setVisible(false);
+
+        // centilize every cell
+        auto horHeader = passportView->horizontalHeader();
+        horHeader->setSectionResizeMode(QHeaderView::Stretch);
+        horHeader->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     }
 }
 
@@ -320,6 +340,22 @@ void MainWindow::on_pushButton_14_clicked()
     AddPassport form(database(), this);
     form.setModal(true);
     form.exec();
+
+    // check for new passport
+    seye::Passport* pass;
+    if ((pass = form.getPassport()))
+    {
+        auto number    = new QStandardItem(QString::number(passportModel->rowCount()));
+        auto lastName  = new QStandardItem(pass->lastName);
+        auto firstName = new QStandardItem(pass->firstName);
+        auto birth     = new QStandardItem(pass->birthday.toString(QString("dd-MM-yyyy")));
+        auto link      = new QStandardItem(pass->callSign);
+        auto device    = new QStandardItem(pass->device);
+
+        passportModel->appendRow(QList<QStandardItem*>()
+                                  << number << firstName << lastName
+                                  << birth  << link      << device);
+    }
 }
 
 void MainWindow::on_pushButton_6_clicked()
