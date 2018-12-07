@@ -22,15 +22,11 @@ public:
 
 private slots:
     void on_pushButton_clicked();
-    void closeEvent(QCloseEvent *event);
-
 
 private:
     seye::DBService* dblink;
     QString* role;
     Ui::login *ui;
-
-    int q=0;// флаг верности входа
 };
 
 #endif // LOGIN_H

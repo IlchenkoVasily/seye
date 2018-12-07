@@ -29,7 +29,7 @@ void NewUser::on_buttonBox_accepted()
     if (password == ui->lineEditCheckPassword->text())
     {
         user.id = dblink->add(user, password);
-        if (user.id == 0) QMessageBox::warning(this, "Ошибка", "Не удалось создать пользователя");
+        if (user.id == 0) QMessageBox::warning(this, "Неудача", "Возможно такой пользователь уже существует или использовались недопустимые символы");
         else
         {
             QStandardItem *item;

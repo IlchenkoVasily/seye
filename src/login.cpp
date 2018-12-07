@@ -8,6 +8,8 @@ login::login(QString* role, QWidget *parent) :
     ui(new Ui::login)
 {
     ui->setupUi(this);
+
+    ui->labelWarning->hide();
 }
 
 login::~login()
@@ -17,24 +19,14 @@ login::~login()
 
 void login::on_pushButton_clicked()
 {
-    QString user = ui->username->text();
-    QString pass = ui->password->text();
-
     QString host = "31.211.74.221";
-    dblink = new seye::DBService(host, user, pass);
+
+    QString user = ui->username->text();
+    dblink = new seye::DBService(host, user, ui->password->text());
 
     *role = dblink->getRole(user);
-    if(role->isEmpty()) {QMessageBox::warning(this,"Ошибка", "Неверный логин или  пароль");}
-    else { q++;// флаг успешно  авторизации
-        //        QMessageBox::information(this,"Успех", "Авторизция прошла успешно");
-                login::close();}
-}
-
-void login::closeEvent(QCloseEvent *event)
-    {
-        if(q==0){
-            event->ignore();
-        }
+    if (role->isEmpty()) ui->labelWarning->show();
+    else login::close();
 }
 
 seye::DBService *login::getDatabase()

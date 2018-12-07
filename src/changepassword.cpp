@@ -24,6 +24,6 @@ void ChangePassword::on_buttonBox_accepted()
     QString password = ui->lineEditPassword->text();
     if (password == ui->lineEditCheckPassword->text())
         if (dblink->changePassword(ui->lineEditUser->text(), password)) accept();
-        else QMessageBox::warning(this, "Ошибка", "Не удалось сменить пароль");
+        else QMessageBox::warning(this, "Неудача", "Возможно в пароле присутствуют недопустимые символы");
     else QMessageBox::warning(this, "Ошибка", "Проверьте пароль еще раз");
 }

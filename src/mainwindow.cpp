@@ -1,17 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "dialogadddevice.h"
-#include "device.h"
 #include "polygonmodel.h"
 #include "delegate.h"
 #include "buttonzone.h"
 #include "login.h"
-#include "dbservice.h"
 #include "object.h"
 #include "objectsmodel.h"
 #include "groups.h"
 #include "scenario.h"
 #include "users.h"
+#include "addpassport.h"
+#include "adddevice.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -30,8 +29,11 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
     userRole(userRole),
     onEditing(false)
 {
-    //
     ui->setupUi(this);
+
+    // super hot fix
+    if (userRole != "admin" && userRole != "supervisor" && userRole != "operator") delete ui;
+    // а сколько костылей-то понавтыкали
 
     // Создаём 'гис'-виджет
     gisWidget = new QQuickWidget(this);
@@ -223,15 +225,15 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
     QMessageBox::StandardButton reply = QMessageBox::question(this,
-        "Смена пользователя", "Вы уверены? Все несохраненые данные будут удалены",
+        "Смена пользователя", "Все несохраненые данные будут потеряны, продолжить?",
         QMessageBox::Yes | QMessageBox::No);
-    // restart:
-    if(reply==QMessageBox::Yes){
+    if (reply == QMessageBox::Yes)
+    {
         delete db;
+        userRole = "";
         qApp->quit();
         QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
     }
-    else {}
 }
 
 void MainWindow::on_pushButton_5_clicked()
@@ -285,18 +287,21 @@ void MainWindow::on_pushButton_13_clicked()
     }
 }
 
+
+// Добавление объекта
 void MainWindow::on_pushButton_15_clicked()
 {
-    Device dia(this);
-    dia.setModal(true);
-    dia.exec();
+    AddDevice form(database(), this);
+    form.setModal(true);
+    form.exec();
 }
 
+// Добавление паспорта
 void MainWindow::on_pushButton_14_clicked()
 {
-    DialogAddDevice dia(this);
-    dia.setModal(true);
-    dia.exec();
+    AddPassport form(database(), this);
+    form.setModal(true);
+    form.exec();
 }
 
 void MainWindow::on_pushButton_6_clicked()
@@ -363,7 +368,7 @@ void MainWindow::on_pushButton_17_clicked()
 // управление пользователями
 void MainWindow::on_pushButton_9_clicked()
 {
-    Users usersForm(userRole, database(), this);
-    usersForm.setModal(true);
-    usersForm.exec();
+    Users form(userRole, database(), this);
+    form.setModal(true);
+    form.exec();
 }
