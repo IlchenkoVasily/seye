@@ -38,6 +38,10 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
     // Создаём 'гис'-виджет
     gisWidget = new QQuickWidget(this);
 
+    // Create table for rules
+    ruleView = new QTableView(this);
+    ruleView->setSelectionBehavior(QAbstractItemView::SelectRows);
+
     // Создаём таблицу для пасспортов
     passportView = new QTableView(this);
     passportView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -59,6 +63,7 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
     // Добавление в стек виджет побочных виджетов
     ui->mainStackedWidget->addWidget(gisWidget);
     ui->mainStackedWidget->addWidget(passportView);
+    ui->mainStackedWidget->addWidget(ruleView);
 
     // ставим корректный виджет на отображение
     ui->mainStackedWidget->setCurrentWidget(gisWidget);
@@ -219,6 +224,24 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 
         // centilize every cell
         auto horHeader = passportView->horizontalHeader();
+        horHeader->setSectionResizeMode(QHeaderView::Stretch);
+        horHeader->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    }
+
+    if (name.contains("rule"))
+    {
+        // save model
+        ruleModel = qobject_cast<QStandardItemModel*>(model);
+
+        // set model
+        ruleView->setModel(model);
+
+        // disable vertical numbers on every row
+        auto vertHeader = ruleView->verticalHeader();
+        vertHeader->setVisible(false);
+
+        // centilize every cell
+        auto horHeader = ruleView->horizontalHeader();
         horHeader->setSectionResizeMode(QHeaderView::Stretch);
         horHeader->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     }
@@ -425,4 +448,9 @@ void MainWindow::on_pushButton_9_clicked()
     Users form(userRole, database(), this);
     form.setModal(true);
     form.exec();
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    ui->mainStackedWidget->setCurrentWidget(ruleView);
 }

@@ -86,6 +86,8 @@ private slots:
     // Управление пользователями
     void on_pushButton_9_clicked();
 
+    // button rules
+    void on_pushButton_7_clicked();
 
 signals:
     // Ресорт
@@ -100,12 +102,14 @@ private:
     QTableView* polygonView;        // Таблица зон
     QTableView* objectView;         // Таблица объектов
     QTableView* passportView;       // Таблица паспортов
+    QTableView* ruleView;
     // Данные
     seye::PolygonModel* polygonModel;
     seye::ObjectModel* objectModel; //
     seye::ObjectProxy* objectProxy; // Прокси для объектов
     seye::DBService* db;            // База данных
     QStandardItemModel* passportModel;
+    QStandardItemModel* ruleModel;
     // Формы
     PopUp *popUp;                   // попап паспортов
     // Разное

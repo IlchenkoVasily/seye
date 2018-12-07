@@ -14,6 +14,7 @@ AppEngine::AppEngine(QObject *parent) : QObject(parent)
     _polygonModel = new PolygonModel(_window);
     _objectModel = new ObjectModel(_window);
     _passportModel = new QStandardItemModel(_window);
+    _ruleModel = new QStandardItemModel(_window);
 }
 
 AppEngine::~AppEngine()
@@ -52,10 +53,14 @@ void AppEngine::setUp()
     // setup passports model
     setupPassports();
 
+    // setup rules model
+    setupRules();
+
     // Добавляем модели (уже поднятые из бд) во MainWindow
     _window->addModel("polygonModel", _polygonModel);
     _window->addModel("objectModel", _objectModel);
     _window->addModel("passportModel", _passportModel);
+    _window->addModel("ruleModel", _ruleModel);
 
     // Коннектим селекшен модели для обновления выделений
     connect(_window->getPolygonSelection(),
@@ -135,7 +140,7 @@ void AppEngine::setupPassports()
                                               << "Фамилия"  << "Дата рождения"
                                               << "Позывной" << "Устройство");
 
-    int row = 0;
+    int row = 1;
     foreach (auto pass, passports)
     {
         auto number    = new QStandardItem(QString::number(row++));
@@ -148,5 +153,30 @@ void AppEngine::setupPassports()
         _passportModel->appendRow(QList<QStandardItem*>()
                                   << number << firstName << lastName
                                   << birth  << link      << device);
+    }
+}
+
+void AppEngine::setupRules()
+{
+    auto rules = _database->getAllAccesses();
+
+    _ruleModel->setHorizontalHeaderLabels(QStringList() << "№"      << "Время начала"
+                                          << "Конца"    << "Статус" << "Название"
+                                          << "Группа"   << "Зона");
+
+    int row = 1;
+    foreach (auto rule, rules)
+    {
+        auto number    = new QStandardItem(QString::number(row++));
+        auto timeStart = new QStandardItem(rule.start.toString("dd-MM-yyyy hh:mm"));
+        auto timeEnd   = new QStandardItem(rule.end.toString("dd-MM-yyyy hh:mm"));
+        auto status    = new QStandardItem(rule.priority);
+        auto name      = new QStandardItem(rule.name);
+        auto group     = new QStandardItem(/*_database->groupNameById(rule.group));*/"repair gr");
+        auto zone      = new QStandardItem(/*_database->zoneNameById(rule.zone));*/"repair zn");
+
+        _ruleModel->appendRow(QList<QStandardItem*>() << number
+                                  << timeStart << timeEnd << status
+                                   << name     << group   << zone);
     }
 }

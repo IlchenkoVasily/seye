@@ -53,6 +53,7 @@ namespace seye
         PolygonModel* _polygonModel;
         ObjectModel* _objectModel;
         QStandardItemModel* _passportModel;
+        QStandardItemModel* _ruleModel;
         IConnector* _connector;
         DBService* _database;
         QString _userRole;
@@ -82,6 +83,12 @@ namespace seye
             пасспортов.
         */
         void setupPassports();
+
+        /*
+            Даннный метод поднимает из бд модель
+            правил.
+        */
+        void setupRules();
     };
 }
 
