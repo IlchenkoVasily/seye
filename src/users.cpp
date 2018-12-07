@@ -78,8 +78,10 @@ void Users::on_pushButtonDelete_clicked()
         user.name = model->item(row, 1)->text();
         user.role = model->item(row, 2)->text();
         if (user.role != "admin" && currentRole != user.role)
-            if (dblink->drop(user)) model->removeRow(row);
-            else QMessageBox::warning(this, "Ошибка", "Удаление не состоялось");
+            if (QMessageBox::warning(this, "Предупреждение", user.name + " потеряет доступ, продолжить?", QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+                if (dblink->drop(user)) model->removeRow(row);
+                else QMessageBox::warning(this, "Ошибка", "Удаление не состоялось");
+            else QMessageBox::information(this, "Досада", "Ну и ладно..."); // ПАСХАЛОЧКА
         else QMessageBox::warning(this, "Ошибка", "Недостаточно прав");
     }
     else QMessageBox::warning(this, "Ошибка", "Выберите пользователя");
