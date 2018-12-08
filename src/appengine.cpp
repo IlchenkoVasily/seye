@@ -7,12 +7,17 @@ AppEngine::AppEngine(QObject *parent) : QObject(parent)
     login user(&_userRole);
     user.setModal(true);
     user.exec();
-    _database = user.getDatabase();
 
-    _window = new MainWindow(_database, _userRole);
+    if (_userRole.isEmpty()) qApp->quit();
+    else
+    {
+        _database = user.getDatabase();
 
-    _polygonModel = new PolygonModel(_window);
-    _objectModel = new ObjectModel(_window);
+        _window = new MainWindow(_database, _userRole);
+
+        _polygonModel = new PolygonModel(_window);
+        _objectModel = new ObjectModel(_window);
+    }
 }
 
 AppEngine::~AppEngine()

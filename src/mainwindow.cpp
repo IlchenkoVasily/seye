@@ -31,10 +31,6 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // super hot fix
-    if (userRole != "admin" && userRole != "supervisor" && userRole != "operator") delete ui;
-    // а сколько костылей-то понавтыкали
-
     // Создаём 'гис'-виджет
     gisWidget = new QQuickWidget(this);
 
@@ -240,6 +236,7 @@ void MainWindow::on_pushButton_2_clicked()
     ui->smallStackedWidget->setCurrentWidget(objectView);
 }
 
+// Смена пользователя
 void MainWindow::on_pushButton_3_clicked()
 {
     QMessageBox::StandardButton reply = QMessageBox::question(this,
