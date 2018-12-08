@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQuickView>
 #include <QQmlContext>
+#include <QStandardItemModel>
 
 #include "object.h"
 #include "objectsmodel.h"
@@ -48,6 +49,19 @@ namespace seye
         void onObjectsUpdate(ObjectsPakPtr&);
 
     private:
+        MainWindow* _window;
+        PolygonModel* _polygonModel;
+        ObjectModel* _objectModel;
+        QStandardItemModel* _passportModel;
+        QStandardItemModel* _ruleModel;
+        IConnector* _connector;
+        DBService* _database;
+        QString _userRole;
+
+          /*----------------*/
+         /*---- Методы ----*/
+        /*----------------*/
+
         /*
             Данный метод проверяет каждый полигон
             на наличие в нём объекта object.
@@ -64,13 +78,17 @@ namespace seye
         */
         void checkEntriesAll();
 
-        MainWindow* _window;
-        PolygonModel* _polygonModel;
-        ObjectModel* _objectModel;
-        IConnector* _connector;
-        DBService* _database;
-        QString _userRole;
-        // here DatabaseDriver
+        /*
+            Даннный метод поднимает из бд модель
+            пасспортов.
+        */
+        void setupPassports();
+
+        /*
+            Даннный метод поднимает из бд модель
+            правил.
+        */
+        void setupRules();
     };
 }
 
