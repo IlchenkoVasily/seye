@@ -1,17 +1,17 @@
 #include "adddevice.h"
 #include "ui_adddevice.h"
-#include "mainwindow.h"
 
 #include <QMessageBox>
+#include "mainwindow.h"
 
-AddDevice::AddDevice(seye::DBService *db, QWidget *parent) :
+AddDevice::AddDevice(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddDevice)
 {
     ui->setupUi(this);
 
     disconnect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    dblink = db;
+    dblink = qobject_cast<MainWindow*>(parent)->database();
     ui->radioButtonCar->setIcon(QIcon(":/icons/car.svg"));
     ui->radioButtonFuel->setIcon(QIcon(":/icons/fuel.svg"));
     ui->radioButtonPilot->setIcon(QIcon(":/icons/pilot.svg"));
@@ -49,7 +49,7 @@ void AddDevice::on_comboBox_activated(int index)
         ui->radioButtonSecurity->show();
         ui->radioButtonWorker->show();
     }
-        else
+    else
     {
         speedLimit = 0;
         ui->radioButtonCar->hide();
@@ -75,11 +75,10 @@ void AddDevice::on_buttonBox_accepted()
             if (speedLimit)
                 if (dblink->add(object))
                 {
-                    // sorry for parent->parent
-                    auto model = qobject_cast<MainWindow*>(parent()->parent())->getObjectModel();
+                    auto model = qobject_cast<MainWindow*>(parent())->getObjectModel();
                     seye::Object obj(object, QString(""));
                     model->addObject(obj);
-                    accept(); // Тут надо слать данные в модель списка объектов
+                    accept();
                 }
                 else QMessageBox::warning(this, "Неудачное добавление", "Возможно id повторяется");
             else QMessageBox::warning(this, "Ошибка", "Выберите тип объекта");

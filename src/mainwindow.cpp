@@ -349,7 +349,7 @@ void MainWindow::on_pushButton_13_clicked()
 // Добавление объекта
 void MainWindow::on_pushButton_15_clicked()
 {
-    AddDevice form(database(), this);
+    AddDevice form(this);
     form.setModal(true);
     form.exec();
 }

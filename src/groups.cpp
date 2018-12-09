@@ -268,7 +268,7 @@ void Groups::on_lineEdit_textChanged(const QString &arg1)
 
 void Groups::on_pushButton_2_clicked()
 {
-    AddDevice temp(db, this);
+    AddDevice temp(this->parentWidget());
     temp.setModal(true);
     temp.exec();
 }

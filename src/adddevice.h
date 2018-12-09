@@ -14,7 +14,7 @@ class AddDevice : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddDevice(seye::DBService *db, QWidget *parent = nullptr);
+    explicit AddDevice(QWidget *parent = nullptr);
     ~AddDevice();
 
 private slots:

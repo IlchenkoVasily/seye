@@ -310,17 +310,31 @@ Passport DBService::getPassportFor(const QString& idDevice)
     return passport;
 }
 
+QString DBService::getZoneName(const qint32& idZone)
+{
+    if(open()) return selectZoneName(idZone);
+    return nullptr;
+}
+
+QString DBService::getGroupName(const qint64& idGroup)
+{
+    if(open()) return selectGroupName(idGroup);
+    return nullptr;
+}
+
+QList<qint64> DBService::getGroupsIdForObject(const QString& idDevice)
+{
+    if(open()) return selectGroupsIdForObject(idDevice);
+    QList<qint64> fail;
+    return fail;
+}
+
 //----------------------------------------------------------------------
 //------------------------ private функции -----------------------------
 //----------------------------------------------------------------------
 
 bool DBService::open()
 {
-    try {
-        db.isOpen();
-    } catch (std::exception& ex) {
-        qDebug() << ex.what();
-    }
     if (db.isOpen()) return true;
     if (db.open()) return true;
     return whatIsError();
@@ -487,7 +501,7 @@ QList<Passport> DBService::selectAllPassports() const
     Passport passport;
     while(query.next())
     {
-        passport.id = query.value(0).toInt(); // тут лонг же, но не предупреждает
+        passport.id = query.value(0).toInt(); // тут лонг же, но не предупреждает ?
         passport.firstName = query.value(1).toString();
         passport.lastName  = query.value(2).toString();
         passport.callSign = query.value(3).toString();
@@ -545,7 +559,7 @@ QList<Access> DBService::selectAllAccesses() const
     Access access;
     while(query.next())
     {
-        access.id = query.value(0).toInt();
+        access.id = query.value(0).toInt(); // лонг ?
         access.start = query.value(1).toDateTime();
         access.end = query.value(2).toDateTime();
         access.priority = query.value(3).toString();
@@ -566,7 +580,7 @@ QList<Group> DBService::selectAllGroups() const
     Group group;
     while(query.next())
     {
-        group.id = query.value(0).toInt();
+        group.id = query.value(0).toInt(); // лонг ?
         group.name = query.value(1).toString();
         groups.push_back(group);
     }
@@ -580,12 +594,7 @@ Group DBService::selectAllReferences(Group& group) const
     query.bindValue(":id_group", group.id);
     if (query.exec()) qDebug() << "Select all devices for group success";
     else if (!whatIsError()) return group;
-    QString device;
-    while(query.next())
-    {
-        device = query.value(0).toString(); // немагия (:
-        group.devices.push_back(device);
-    }
+    while(query.next()) group.devices.push_back(query.value(0).toString()); // немагия (:
     return group;
 }
 
@@ -640,7 +649,7 @@ Passport DBService::selectPassportFor(const QString& idDevice) const
     else if (!whatIsError()) return passport;
     if (query.next())
     {
-        passport.id = query.value(0).toInt();
+        passport.id = query.value(0).toInt(); // лонг ?
         passport.firstName = query.value(1).toString();
         passport.lastName  = query.value(2).toString();
         passport.callSign = query.value(3).toString();
@@ -648,6 +657,42 @@ Passport DBService::selectPassportFor(const QString& idDevice) const
         passport.device = idDevice;
     }
     return passport;
+}
+
+QString DBService::selectZoneName(const qint32 idZone) const
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT zone_name FROM zones WHERE id = (:id)");
+    query.bindValue(":id", idZone);
+    QString name = nullptr;
+    if (query.exec()) qDebug() << "Select zone_name success";
+    else if (!whatIsError()) return name;
+    if (query.next()) name = query.value(0).toString(); // немагия (:
+    return name;
+}
+
+QString DBService::selectGroupName(const qint64 idGroup) const
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT group_name FROM task_groups WHERE id = (:id)");
+    query.bindValue(":id", idGroup);
+    QString name = nullptr;
+    if (query.exec()) qDebug() << "Select group_name success";
+    else if (!whatIsError()) return name;
+    if (query.next()) name = query.value(0).toString(); // немагия (:
+    return name;
+}
+
+QList<qint64> DBService::selectGroupsIdForObject(const QString& idDevice) const
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT * FROM group_object WHERE id_object = (:id_object)");
+    query.bindValue(":id_object", idDevice);
+    QList<qint64> idGroups;
+    if (query.exec()) qDebug() << "Select id groups for " << idDevice << " success";
+    else if (!whatIsError()) return idGroups;
+    while(query.next()) idGroups.push_back(query.value(0).toInt()); // лонг ? немагия (:
+    return idGroups;
 }
 
 qint16 DBService::select(const qint64& idGroup, const QString& idDevice) const

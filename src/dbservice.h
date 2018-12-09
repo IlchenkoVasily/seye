@@ -66,6 +66,9 @@ namespace seye
         QString getCallSignFor(const QString& idDevice);
         Passport getPassportFor(const ObjectDev&);
         Passport getPassportFor(const QString& idDevice);
+        QString getZoneName(const qint32& idZone);
+        QString getGroupName(const qint64& idGroup);
+        QList<qint64> getGroupsIdForObject(const QString& idDevice);
         QList<AccessLine> getAllAccessesForTimeline();
 
         ~DBService();
@@ -98,6 +101,9 @@ namespace seye
         // но хрен редьки не слаще
         QString selectSignFor(const QString& idDevice) const;
         Passport selectPassportFor(const QString& idDevice) const;
+        QString selectZoneName(const qint32 idZone) const;
+        QString selectGroupName(const qint64 idGroup) const;
+        QList<qint64> selectGroupsIdForObject(const QString& idDevice) const;
 
         // неочевидное поведение, возвращает 0 при ошибке, 1 если удалось найти и 2 если нет
         qint16 select(const qint64& idGroup, const QString& idDevice) const;
