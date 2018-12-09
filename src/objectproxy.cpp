@@ -9,6 +9,11 @@ ObjectProxy::ObjectProxy(QObject *parent)
     : QSortFilterProxyModel(parent)
 {}
 
+QModelIndex ObjectProxy::mapIndex(const QModelIndex& index)
+{
+    return mapToSource(index);
+}
+
 void ObjectProxy::objectSelected(const QModelIndex& index)
 {
     auto correctIdx = mapToSource(index);

@@ -24,6 +24,8 @@ public:
     ~Groups();
 
 private slots:
+    // data changed in model
+    void groupNameChanged(QStandardItem*);
     // create group button
     void on_pushButton_3_clicked();
     // delete group button
@@ -36,6 +38,8 @@ private slots:
     void on_buttonBox_accepted();
     // whenever search box changed update proxy
     void on_lineEdit_textChanged(const QString &arg1);
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::Groups *ui;

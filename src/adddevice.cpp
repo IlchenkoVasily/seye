@@ -1,5 +1,6 @@
 #include "adddevice.h"
 #include "ui_adddevice.h"
+#include "mainwindow.h"
 
 #include <QMessageBox>
 
@@ -72,7 +73,14 @@ void AddDevice::on_buttonBox_accepted()
         if (object.id.size() < 16) QMessageBox::warning(this, "Ошибка", "Неверный ID, " + QString::number(object.id.size()) + " < 16");
         else
             if (speedLimit)
-                if (dblink->add(object)) accept(); // Тут надо слать данные в модель списка объектов
+                if (dblink->add(object))
+                {
+                    // sorry for parent->parent
+                    auto model = qobject_cast<MainWindow*>(parent()->parent())->getObjectModel();
+                    seye::Object obj(object, QString(""));
+                    model->addObject(obj);
+                    accept(); // Тут надо слать данные в модель списка объектов
+                }
                 else QMessageBox::warning(this, "Неудачное добавление", "Возможно id повторяется");
             else QMessageBox::warning(this, "Ошибка", "Выберите тип объекта");
 }
