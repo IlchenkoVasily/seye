@@ -1,6 +1,8 @@
 #include "groups.h"
 #include "ui_groups.h"
 #include "mainwindow.h"
+#include "adddevice.h"
+
 #include <QMessageBox>
 
 Groups::Groups(QWidget *parent) :
@@ -31,11 +33,37 @@ Groups::Groups(QWidget *parent) :
     ui->tableView->setModel(objectProxy);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setSelectionMode(QAbstractItemView::MultiSelection);
+    ui->tableView->hideColumn(3);
+    // change resize mode
+    auto header = ui->tableView->horizontalHeader();
+    header->setSectionsClickable(false);
+    header->setSectionResizeMode(QHeaderView::ResizeToContents);
+    header->setSectionResizeMode(0, QHeaderView::Stretch);
+
+    connect(groupModel, SIGNAL(itemChanged(QStandardItem*)),
+            this, SLOT(groupNameChanged(QStandardItem*)));
 }
 
 Groups::~Groups()
 {
     delete ui;
+}
+
+void Groups::groupNameChanged(QStandardItem* group)
+{
+    seye::Group gr;
+    gr.id = group->accessibleDescription().toInt();
+    gr.name = group->text();
+
+    if (db->update(QList<seye::Group>() << gr))
+        return;
+
+    // if cant change group name
+    int idx = group->index().row();
+    group->setText(groups[idx].name);
+
+    QMessageBox::critical(this, "Изменение имени группы", "Не удалось сохранить изменения\n"
+                          "Попробуйте позже.");
 }
 
 void Groups::on_pushButton_3_clicked()
@@ -51,6 +79,7 @@ void Groups::on_pushButton_3_clicked()
     auto newGroup = new QStandardItem(group.name);
     newGroup->setAccessibleDescription(QString::number(group.id));
     groupModel->setItem(groupModel->rowCount(), 0, newGroup);
+    groups.append(group);
 }
 
 void Groups::on_pushButton_clicked()
@@ -67,7 +96,7 @@ void Groups::on_pushButton_clicked()
     auto name = groupModel->data(idx[0]).toString();
 
     QString message;
-    message += "Вы уверены, что хотите удалить " + name + " группу";
+    message += "Вы уверены, что хотите удалить " + name + " группу?";
 
     QMessageBox::StandardButton reply = QMessageBox::warning(this,
         "Удаление группы", message, QMessageBox::Yes | QMessageBox::No);
@@ -75,8 +104,8 @@ void Groups::on_pushButton_clicked()
     if (reply == QMessageBox::Yes)
     {
         int i = 0;
-        seye::Group drop;
 
+        //
         for (i = 0; i < groups.length(); i++)
         {
             if (groups[i].name == name)
@@ -87,8 +116,16 @@ void Groups::on_pushButton_clicked()
 
         if (db->drop(groups[i]))
         {
+            // drop from list
             groups.removeAt(i);
+            // drop from model
             groupModel->removeRows(idx[0].row(), 1);
+        }
+        else
+        {
+            QMessageBox::critical(this, "Удаление группы",
+                                  "Не удалось удалить группу.\n"
+                                  "Попробуйте в другой раз.");
         }
     }
 }
@@ -140,6 +177,7 @@ void Groups::on_treeView_clicked(const QModelIndex &index)
     auto objList = objectModel->toList();
 
     // Если тыкнули по конкретному объекту в ДЕРЕВЕ
+    // то перемещаем его выделение на группу
     if (index.parent().isValid())
     {
         auto selection = ui->treeView->selectionModel();
@@ -167,6 +205,12 @@ void Groups::on_treeView_clicked(const QModelIndex &index)
 
 void Groups::on_tableView_clicked(const QModelIndex &index)
 {
+    // if group not selected
+    if (!ui->treeView->selectionModel()->hasSelection()) return;
+
+    ui->treeView->setEnabled(false);
+    ui->tableView->setEnabled(false);
+
     // get index which was clicked
     auto current = ui->tableView->currentIndex();
     // get name object from model
@@ -185,7 +229,12 @@ void Groups::on_tableView_clicked(const QModelIndex &index)
 
         if (object_in_group->text() == object_name)
         {
-            group_item->removeRow(i);
+            if (db->dropReference(group_item->accessibleDescription().toInt(), object_id))
+                group_item->removeRow(i);
+
+            ui->treeView->setEnabled(true);
+            ui->tableView->setEnabled(true);
+
             return;
         }
     }
@@ -194,57 +243,32 @@ void Groups::on_tableView_clicked(const QModelIndex &index)
     auto new_object = new QStandardItem(object_name);
     new_object->setAccessibleDescription(object_id);
 
-    group_item->appendRow(new_object);
+    seye::Group gr;
+    gr.id = group_item->accessibleDescription().toInt();
+    gr.devices.append(object_id);
+
+    if (db->reference(gr))
+        group_item->appendRow(new_object);
+
+    ui->treeView->setEnabled(true);
+    ui->tableView->setEnabled(true);
 }
 
 void Groups::on_buttonBox_accepted()
 {
-    /* Обновление объектов в бд.
-     * 1. Получить с модели групп полноценные структуры групп.
-     * 2. Получить с модели на каждую группу по девайсу.
-     * 3. Наполнить структуры.
-     * 4. Вызвать апдейт у бд для каждой группы.
-     */
-
-    // create groups list
-    QList<seye::Group> groups_list;
-
-    for (int i = 0; i < groupModel->rowCount(); i++)
-    {
-        // get item from model
-        auto group_item = groupModel->item(i);
-
-        // create group variable
-        seye::Group group;
-        // get name from model item
-        group.name = group_item->text();
-        // get id
-        group.id = group_item->accessibleDescription().toInt();
-
-        // get devices list from item group
-        for (int j = 0; j < group_item->rowCount(); j++)
-        {
-            // get object item
-            auto object_item = group_item->child(j);
-            // add device id to devices list of the group
-            group.devices.append(object_item->accessibleDescription());
-        }
-
-        // add group
-        groups_list.append(group);
-    }
-
-    bool ok = db->update(groups_list);
-
-    if (ok)
-        return;
-    else
-        QMessageBox::warning(this, "Сохранение", "Не удалось произвести сохранение.\n"
-                             "Повторите попытку позже.");
+    this->close();
 }
 
 void Groups::on_lineEdit_textChanged(const QString &arg1)
 {
+    objectProxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     objectProxy->setFilterRegExp(arg1);
 //    on_treeView_clicked(ui->treeView->currentIndex());
+}
+
+void Groups::on_pushButton_2_clicked()
+{
+    AddDevice temp(db, this);
+    temp.setModal(true);
+    temp.exec();
 }

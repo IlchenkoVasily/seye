@@ -27,6 +27,12 @@ public:
      */
     void setFilteringState(bool state) { _filteringState = state; }
 
+    /*
+        Получает индекс и возвращает корректный
+        индекс для модели.
+     */
+    QModelIndex mapIndex(const QModelIndex& index);
+
 public slots:
     /*
         Метод принимает индекс клика во вью.
