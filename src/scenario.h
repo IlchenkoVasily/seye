@@ -24,6 +24,8 @@ private slots:
 
     void on_dateTimeStart_dateTimeChanged(const QDateTime &dateTime);
 
+    void on_buttonBox_accepted();
+
 private:
     Ui::Scenario *ui;
 };

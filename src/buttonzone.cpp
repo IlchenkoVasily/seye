@@ -65,8 +65,8 @@
                      QString q="qeq \n"
                                "Имя:\n"
                                "Фамилия \n";
-                     popUp->setPopupText(q);
-//                     clickX=mainwindow-> QWidget::frameGeometry().width();
+                     clickX=mainwindow-> QWidget::frameGeometry().width();
+//                     clickY=mainwindow-> QWidget::frameGeometry().height();
                      popUp->show(clickX, clickY);
                  }
 
@@ -122,12 +122,7 @@
 
  void ComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
  {
-//     QStringList list;
-//     list << " qqq" << "(64, 255, 64, 128)" << "Times" << "Courier";
-//     QComboBox *comboBox = static_cast<QComboBox*>(editor);
-//     comboBox->addItems(list);
-//     comboBox->setItemData(0, QBrush(Qt::red), Qt::TextColorRole);
-//     QComboBox *comboBox = new QComboBox(editor);
+
  }
 
  void ComboBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
