@@ -282,26 +282,12 @@ void PolygonModel::addPolygon(Polygon* polygon)
 
 void PolygonModel::updateStarted()
 {
-    QList<Zone> zones;
-    foreach (auto poly, _polygons)
-    {
-        // Наполняем структуру для работы с бд
-        Zone zone;
-        zone.id = poly->id();
-        zone.color = poly->color().name(QColor::HexArgb);
-        zone.lineColor = poly->borderColor().name(QColor::HexRgb);
-        zone.name = poly->name();
-        zone.polygon = poly->toString();
-
-        zones.append(zone);
-    }
-
-    db->update(zones);
+    db->update(_polygons);
 }
 
 void PolygonModel::beginCreatePolygon()
 {
-    auto btn = (QPushButton*)sender();
+    auto btn = (QPushButton*)sender(); // auto btn = qobject_cast<QPushButton*>(sender());
 
     // Заставляем игнорировать нажатие при создании полигона
     if (onCreate())
@@ -332,15 +318,8 @@ void PolygonModel::endCreatePolygon()
     _tempPolygon->setColor(QColor(64, 255, 64, 128));
     _tempPolygon->setBorderColor(QColor(0, 100, 0));
 
-    // Наполняем структуру для работы с бд
-    Zone zone;
-    zone.color = _tempPolygon->color().name(QColor::HexArgb);
-    zone.lineColor = _tempPolygon->borderColor().name(QColor::HexRgb);
-    zone.name = _tempPolygon->name();
-    zone.polygon = _tempPolygon->toString();
-
     // получаем айди после создания в бд
-    int id = db->add(zone);
+    int id = db->add(_tempPolygon);
     _tempPolygon->setId(id);
 
     // Вставляем в бд
@@ -382,10 +361,7 @@ void PolygonModel::deleteSelected()
     {
         if (poly->isSelected())
         {
-            Zone zone;
-            zone.id = poly->id();
-
-            if (db->drop(zone))
+            if (db->drop(poly))
                 _polygons.removeOne(poly);
         }
     }

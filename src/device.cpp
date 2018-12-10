@@ -35,8 +35,8 @@ void Device::on_buttonBox_accepted()
     else{
         qint16 role = ui->role->text().toInt();
 
-        auto dblink = ((MainWindow*)parent())->database();
-//        qDebug() << speed;
+        auto window = qobject_cast<MainWindow*>(parent());
+        auto dblink = window->database();
 
             ui->id->clear();   // очищение строк
             ui->role->clear();
@@ -58,6 +58,10 @@ void Device::on_buttonBox_accepted()
                 QMessageBox::information(this, "Успех", "Вы успешно добавили объект");
             else
                 QMessageBox::critical(this, "Ошибка", "Не удалось добавить объект");
+
+            // NOTE test adding new object to the model later
+            seye::Object okObject(object, QString(""));
+            window->getObjectModel()->addObject(okObject);
         }
 }
 

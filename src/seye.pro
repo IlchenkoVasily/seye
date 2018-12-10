@@ -28,8 +28,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    device.cpp \
-    dialogadddevice.cpp \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -49,11 +47,14 @@ SOURCES += \
     objectproxy.cpp \
     popup.cpp \
     groups.cpp \
-    scenario.cpp
+    scenario.cpp \
+    users.cpp \
+    newuser.cpp \
+    changepassword.cpp \
+    addpassport.cpp \
+    adddevice.cpp
 
 HEADERS += appengine.h \
-    device.h \
-    dialogadddevice.h \
     enums.h \
     fakeconnector.h \
     iconnector.h \
@@ -73,17 +74,25 @@ HEADERS += appengine.h \
     objectproxy.h \
     popup.h \
     groups.h \
-    scenario.h
+    scenario.h \
+    users.h \
+    newuser.h \
+    changepassword.h \
+    addpassport.h \
+    adddevice.h
 
 FORMS += \
     mainwindow.ui \
-    dialogadddevice.ui \
-    device.ui \
     login.ui \
     passport.ui \
-    zoneinfo.ui \
     groups.ui \
-    scenario.ui
+    scenario.ui \
+    users.ui \
+    newuser.ui \
+    zoneinfo.ui \
+    changepassword.ui \
+    addpassport.ui \
+    adddevice.ui
 
 RESOURCES += \
     qml.qrc \

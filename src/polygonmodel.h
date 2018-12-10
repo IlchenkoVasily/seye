@@ -93,7 +93,8 @@ namespace seye
         Q_INVOKABLE void cancelCreatePolygon();
 
         /*
-            TODO write a commnet
+            Метод возвращает значение, соответствующее
+            состоянию создания полигона.
         */
         bool onCreate() { return _onCreatePolygon; }
 
@@ -120,7 +121,7 @@ namespace seye
 
     signals:
         /*
-            TODO write a comment
+            Сигнал об изменении статуса создания полигона
          */
         void onCreateChanged(bool);
 

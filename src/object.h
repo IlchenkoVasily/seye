@@ -37,6 +37,15 @@ namespace seye
         State state() const;
         void setState(State stat);
 
+        Role role() const;
+        void setRole(Role newRole);
+
+        QString name() const;
+        void setName(QString name);
+
+        QString link() const;
+        void setLink(QString link);
+
         /*
             Возвращает время между последней проверкой
             координаты и последней удачной проверкой.
@@ -46,12 +55,6 @@ namespace seye
         //
         bool operator==(Object);
         Object &operator=(const Object&);
-
-        Role role() const;
-        void setRole(Role newRole);
-
-        QString name() const;
-        void setName(QString name);
 
     signals:
         void idChanged();

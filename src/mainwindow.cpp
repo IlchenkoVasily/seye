@@ -1,16 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "dialogadddevice.h"
-#include "device.h"
 #include "polygonmodel.h"
 #include "delegate.h"
 #include "buttonzone.h"
 #include "login.h"
-#include "dbservice.h"
 #include "object.h"
 #include "objectsmodel.h"
 #include "groups.h"
 #include "scenario.h"
+#include "users.h"
+#include "addpassport.h"
+#include "adddevice.h"
 
 #include <QQmlContext>
 #include <QAbstractItemModel>
@@ -29,8 +29,11 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
     userRole(userRole),
     onEditing(false)
 {
-    //
     ui->setupUi(this);
+
+    // super hot fix
+    if (userRole != "admin" && userRole != "supervisor" && userRole != "operator") delete ui;
+    // а сколько костылей-то понавтыкали
 
     // Создаём 'гис'-виджет
     gisWidget = new QQuickWidget(this);
@@ -92,7 +95,6 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
         ui->pushButton_2->show();
         ui->pushButton_13->show();
         ui->listWidget->show();
-        ui->pushButton_18->hide();
     }
 
     if(userRole == "admin") //для роли Админ
@@ -109,10 +111,9 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
         ui->pushButton_16->show();
         ui->pushButton_17->show();
         ui->pushButton_5->setText("Зоны (ГИС)");
-        ui->pushButton_18->show();
         ui->buttonBox->show();
         ui->pushButton_2->hide();
-        ui->pushButton_13->hide();
+        ui->pushButton_13->show();
         ui->listWidget->hide();
     }
 }
@@ -173,8 +174,8 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         // Создаём прокис для объектов
         objectProxy = new seye::ObjectProxy(this);
         objectProxy->setSourceModel(model);
-        connect(this, SIGNAL(resort()),
-                objectProxy, SLOT(invalidate()));
+        objectProxy->setSortingState(true);
+        objectProxy->setFilteringState(true);
 
         // устанавливаем нашу прокси модель вместо модели
         objectView->setModel(objectProxy);
@@ -188,7 +189,10 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 
         // Ставим делегат
         MyDelegate* delegate = new MyDelegate(this);
-        objectView->setItemDelegateForColumn(2, delegate);// кнопка открытия паспорта
+        objectView->setItemDelegateForColumn(3, delegate);// кнопка открытия паспорта
+
+        // Устанавливаем моделе селекшен модель для сохранения выделения
+        objectModel->setSelectionModel(objectView->selectionModel());
 
         // вьюхи с моделью для перемещения карты на объект
         connect(objectView, SIGNAL(doubleClicked(const QModelIndex&)),
@@ -204,6 +208,21 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
 QItemSelectionModel *MainWindow::getPolygonSelection()
 {
     return polygonView->selectionModel();
+}
+
+seye::PolygonModel *MainWindow::getPolygonModel()
+{
+    return polygonModel;
+}
+
+seye::ObjectModel *MainWindow::getObjectModel()
+{
+    return objectModel;
+}
+
+seye::ObjectProxy *MainWindow::getObjectProxyModel()
+{
+    return objectProxy;
 }
 
 void MainWindow::onObjectsUpdated()
@@ -224,15 +243,15 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
     QMessageBox::StandardButton reply = QMessageBox::question(this,
-        "Смена пользователя", "Вы уверены? Все несохраненые данные будут удалены",
+        "Смена пользователя", "Все несохраненые данные будут потеряны, продолжить?",
         QMessageBox::Yes | QMessageBox::No);
-    // restart:
-    if(reply==QMessageBox::Yes){
+    if (reply == QMessageBox::Yes)
+    {
         delete db;
+        userRole = "";
         qApp->quit();
         QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
     }
-    else {}
 }
 
 void MainWindow::on_pushButton_5_clicked()
@@ -268,37 +287,39 @@ void MainWindow::on_pushButton_13_clicked()
         от этого увеличивается окно
         с уведомлениями
     */
-    if(ui->smallStackedWidget->isVisible())
-        ui->pushButton_13->setText("↓");
+    if (userRole == "operator")
+    {
+        if(ui->smallStackedWidget->isVisible())
+            ui->pushButton_13->setText("↓");
+        else
+            ui->pushButton_13->setText("↑");
+        ui->smallStackedWidget->setVisible(!ui->smallStackedWidget->isVisible());
+    }
     else
-        ui->pushButton_13->setText("↑");
-    ui->smallStackedWidget->setVisible(!ui->smallStackedWidget->isVisible());
+    {
+        if(ui->listWidget->isVisible())
+            ui->pushButton_13->setText("↑");
+        else
+            ui->pushButton_13->setText("↓");
+        ui->listWidget->setVisible(!ui->listWidget->isVisible());
+    }
 }
 
-void MainWindow::on_pushButton_18_clicked()
-{
-    /*
-        Сева, это не костыль
-    */
-    if(ui->listWidget->isVisible())
-        ui->pushButton_18->setText("↓");
-    else
-        ui->pushButton_18->setText("↑");
-    ui->listWidget->setVisible(!ui->listWidget->isVisible());
-}
 
+// Добавление объекта
 void MainWindow::on_pushButton_15_clicked()
 {
-    Device dia(this);
-    dia.setModal(true);
-    dia.exec();
+    AddDevice form(database(), this);
+    form.setModal(true);
+    form.exec();
 }
 
+// Добавление паспорта
 void MainWindow::on_pushButton_14_clicked()
 {
-    DialogAddDevice dia(this);
-    dia.setModal(true);
-    dia.exec();
+    AddPassport form(database(), this);
+    form.setModal(true);
+    form.exec();
 }
 
 void MainWindow::on_pushButton_6_clicked()
@@ -360,4 +381,12 @@ void MainWindow::on_pushButton_17_clicked()
     Scenario dia(this);
     dia.setModal(true);
     dia.exec();
+}
+
+// управление пользователями
+void MainWindow::on_pushButton_9_clicked()
+{
+    Users form(userRole, database(), this);
+    form.setModal(true);
+    form.exec();
 }

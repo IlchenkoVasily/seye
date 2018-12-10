@@ -13,7 +13,7 @@ void ObjectProxy::objectSelected(const QModelIndex& index)
 {
     auto correctIdx = mapToSource(index);
 
-    auto objModel = (ObjectModel*)sourceModel();
+    auto objModel = qobject_cast<ObjectModel*>(sourceModel());
     objModel->objectSelected(correctIdx);
 }
 
@@ -28,9 +28,14 @@ bool ObjectProxy::filterAcceptsRow(int sourceRow, const QModelIndex &parent) con
 
     // Проверка на оффлайн
     if (state.toInt() < State::OutOfAttention)
-        flag |= true;
+        flag |= false;
     else
         flag |= true;
+
+    // Если фильтр отключен, то вывод по всем устройствам
+    // (за исключением поиска)
+    if (!_filteringState)
+        flag = true;
 
     // получаем текст
     auto reg = filterRegExp();
@@ -50,6 +55,9 @@ bool ObjectProxy::filterAcceptsRow(int sourceRow, const QModelIndex &parent) con
 
 bool ObjectProxy::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
+    if (!_sortingState)
+        return false;
+
     // Получаем из модели статусы
     QVariant leftStatus = sourceModel()->data(left, ObjectModel::StateRole);
     QVariant rightStatus = sourceModel()->data(right, ObjectModel::StateRole);

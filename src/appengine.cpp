@@ -37,14 +37,7 @@ void AppEngine::setUp()
     // Полигоны
     foreach (auto poly, _database->getAllZones())
     {
-        auto polygon = new seye::Polygon;
-        polygon->setId(poly.id);
-        polygon->fromString(poly.polygon);
-        polygon->setName(poly.name);
-        polygon->setColor(poly.color);
-        polygon->setBorderColor(poly.lineColor);
-
-        _polygonModel->addPolygon(polygon);
+        _polygonModel->addPolygon(poly);
     }
 
     // Объекты

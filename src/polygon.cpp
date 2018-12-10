@@ -93,8 +93,8 @@ QString Polygon::toString() const
 
     foreach (auto coord, path())
     {
-        QString lat = QString::number(coord.latitude()),
-                lon = QString::number(coord.longitude());
+        QString lat = QString::number(coord.latitude(), 'f', 10),
+                lon = QString::number(coord.longitude(), 'f', 10);
 
 
         full << lat + " " + lon;

@@ -24,13 +24,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="text">
-        <string>Добавить объект</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="pushButton">
        <property name="text">
         <string>Удалить</string>
@@ -38,12 +31,19 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Добавить объект</string>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QLineEdit" name="lineEdit">
        <property name="text">
-        <string>Найти</string>
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>Поиск объектов...</string>
        </property>
       </widget>
      </item>
@@ -59,6 +59,12 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+       </property>
+       <property name="animated">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -73,9 +79,12 @@
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
+       </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>30</width>
          <height>20</height>
         </size>
        </property>
@@ -88,6 +97,12 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
        </property>
        <property name="maximumSize">
         <size>
