@@ -33,7 +33,7 @@ void AddPassport::on_buttonBox_accepted()
     else
         if (passport.device.isEmpty() xor passport.device.size() == 16)
             if (/*passport.id = */dblink->add(passport)) accept(); // Тут надо слать данные в модель таблицы паспортов
-            else QMessageBox::warning(this, "Неудачное добавление", "Возможно позывной повторяется");
+            else QMessageBox::warning(this, "Неудачное добавление", "Проверьте введеные данные");
         else QMessageBox::warning(this, "Ошибка", "Поле девайса заполнено не полностью");
 }
 

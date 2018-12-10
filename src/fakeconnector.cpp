@@ -39,7 +39,7 @@ void FakeConnector::disconnect()
 
 void FakeConnector::askDevice()
 {
-    int deviceCount = 3; // число девайсов
+    int deviceCount = 4; // число девайсов
 
     if (currentIndex >= 180)
         currentIndex = 0;

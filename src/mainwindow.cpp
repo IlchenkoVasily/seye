@@ -192,7 +192,7 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         objectView->setItemDelegateForColumn(3, delegate);// кнопка открытия паспорта
 
         // Устанавливаем моделе селекшен модель для сохранения выделения
-        objectModel->setSelectionModel(objectView->selectionModel());
+//        objectModel->setSelectionModel(objectView->selectionModel());
 
         // вьюхи с моделью для перемещения карты на объект
         connect(objectView, SIGNAL(doubleClicked(const QModelIndex&)),
@@ -342,7 +342,7 @@ void MainWindow::on_pushButton_12_clicked()
         QString message;
         message += "Вы уверены, что хотите удалить ";
         message += QString::number(count);
-        message += " зон?";
+        message += " зон(ы)?";
 
         QMessageBox::StandardButton reply = QMessageBox::warning(this,
             "Удаление зон", message, QMessageBox::Yes | QMessageBox::No);
@@ -378,7 +378,7 @@ void MainWindow::on_pushButton_8_clicked()
 
 void MainWindow::on_pushButton_17_clicked()
 {
-    Scenario dia(this);
+    Scenario dia(database(),this);
     dia.setModal(true);
     dia.exec();
 }

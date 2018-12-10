@@ -173,12 +173,12 @@
          </item>
          <item>
           <property name="text">
-           <string>Новый элемент</string>
+           <string>Приорететное</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Новый элемент</string>
+           <string>Неизменяемое</string>
           </property>
          </item>
         </widget>

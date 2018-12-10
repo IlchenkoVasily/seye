@@ -3,13 +3,14 @@
 #include <QDebug>
 #include <QMessageBox>
 
-Scenario::Scenario(QWidget *parent) :
+Scenario::Scenario(seye::DBService *db, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Scenario)
 {
     ui->setupUi(this);
 //    ui->dateTimeStart->QDateTimeEdit::currentDate();
-
+    disconnect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    dblink = db;
 }
 
 
@@ -60,15 +61,22 @@ void Scenario::on_dateTimeStart_dateTimeChanged(const QDateTime &dateTime)
     qDebug() << hours;
     qDebug() << mins;
 //    ui->timer->setTime(time);
-    ui->timer->setText(/*time.toString("hh:mm")*/q);
+    ui->timer->setText(q);
 
 }
 
 void Scenario::on_buttonBox_accepted()
 {
-    QString scenario = ui->scenarioname->text();
-    QDateTime start = ui->dateTimeStart->dateTime();
-    QDateTime finish = ui->dateTimeEnd->dateTime();
+    seye::Access access;
+    access.name = ui->scenarioname->text();
+    access.start = ui->dateTimeStart->dateTime();
+    access.end = ui->dateTimeEnd->dateTime();
     int k = ui->status->currentIndex();
-
+    QString statuc;
+    if (k==0) {statuc = "Обычное";}
+    else if (k==1) {statuc = "Приорететное";}
+        else if (k==2) {statuc = "Неизменяемое";}
+    access.priority = statuc;
+    if (/*passport.id = */dblink->add(access)) accept(); // Тут надо слать данные в модель таблицы паспортов
+    else QMessageBox::warning(this, "Неудачное добавление", "Проверьте введеные данные");
 }
