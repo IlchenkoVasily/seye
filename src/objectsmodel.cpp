@@ -154,7 +154,7 @@ QVariant ObjectModel::data(const QModelIndex& index, int role) const
         return QVariant(object.role());
 
     case NameRole:
-        return QVariant(object.name());
+        return object.name().isEmpty() ? QVariant(object.id()) : QVariant(object.name());
 
     default:
         return QVariant();

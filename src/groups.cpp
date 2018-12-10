@@ -150,10 +150,14 @@ void Groups::setupGroupModel()
         // Наполняем группы объектами (их позывными)
         foreach (auto device, gr.devices)
         {
-            auto objIdx = objList.indexOf(seye::Object(device, 0, 0));
+            seye::Object object(device, 0, 0);
+            auto objIdx = objList.indexOf(object);
 
-            // Получаем с бд позывной по айди устройства
-            auto callSign = db->getCallSignFor(device);
+            // Получаем позывной устройства
+            QString callSign = object.name();
+            // Чекаем, если паспорт не связан
+            if (callSign.isEmpty())
+                callSign = device;
             // Создаём
             auto obj = new QStandardItem(callSign);
             // Прячем айди
@@ -227,7 +231,7 @@ void Groups::on_tableView_clicked(const QModelIndex &index)
     {
         auto object_in_group = group_item->child(i);
 
-        if (object_in_group->text() == object_name)
+        if (object_in_group->accessibleDescription() == object_id)
         {
             if (db->dropReference(group_item->accessibleDescription().toInt(), object_id))
                 group_item->removeRow(i);

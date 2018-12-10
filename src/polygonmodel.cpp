@@ -319,13 +319,15 @@ void PolygonModel::endCreatePolygon()
     _tempPolygon->setBorderColor(QColor(0, 100, 0));
 
     // получаем айди после создания в бд
-    int id = db->add(_tempPolygon);
-    _tempPolygon->setId(id);
+    bool ok = db->add(_tempPolygon);
 
-    // Вставляем в бд
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    _polygons.append(_tempPolygon);
-    endInsertRows();
+    if (ok)
+    {
+        // Вставляем в модель
+        beginInsertRows(QModelIndex(), rowCount(), rowCount());
+        _polygons.append(_tempPolygon);
+        endInsertRows();
+    }
 
     // сбрасываем
     _tempPolygon = nullptr;
