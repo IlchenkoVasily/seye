@@ -196,13 +196,13 @@ QVariant PolygonModel::headerData(int section, Qt::Orientation orientation, int 
         {
             switch (section) {
             case 0:
-                return QString("Name");
+                return QString("Зона");
             case 1:
-                return QString("Color");
+                return QString("Цвет");
             case 2:
-                return QString("Border");
+                return QString("Края");
             case 3:
-                return QString("Info");
+                return QString("Информация");
             default:
                 break;
             }

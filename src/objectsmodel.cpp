@@ -156,11 +156,11 @@ QVariant ObjectModel::headerData(int section, Qt::Orientation orientation, int r
         {
             switch (section) {
             case 0:
-                return QString("Name");
+                return QString("Имя");
             case 1:
-                return QString("Status");
+                return QString("Статус");
             case 2:
-                return QString("Info");
+                return QString("Информация");
             default:
                 break;
             }
