@@ -310,9 +310,6 @@ void PolygonModel::beginCreatePolygon()
 void PolygonModel::addCoordinate(const QGeoCoordinate &coord)
 {
     _tempPolygon->addCoordinate(coord);
-
-    qDebug()<< QString::number(coord.latitude(), 'f')<< ","<< QString::number(coord.longitude(), 'f');
-
 }
 
 void PolygonModel::endCreatePolygon()
