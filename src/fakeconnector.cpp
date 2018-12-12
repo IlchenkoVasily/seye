@@ -39,9 +39,9 @@ void FakeConnector::disconnect()
 
 void FakeConnector::askDevice()
 {
-    int deviceCount = 4; // число девайсов
+    int deviceCount = 19; // число девайсов
 
-    if (currentIndex >= 180)
+    if (currentIndex >= 1995)
         currentIndex = 0;
 
     ObjectsPakPtr listPak(new QList<Pak>);
