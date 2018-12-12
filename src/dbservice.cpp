@@ -1,7 +1,5 @@
 #include "dbservice.h"
 
-#include <exception>
-
 using namespace seye;
 
 DBService::DBService(const QString hostAddress, const QString userName, const QString userPassword)
@@ -42,7 +40,6 @@ DBService::~DBService()
  *
  * Контракт:
  * - После добавления записи возвращается её id, который необходимо присвоить соответствующему значению;
- * Ориентирование на соблюдение этого условия помогает сократить количество проверок и делает код читаемей.
  * - Т.к. правило добавляется для зоны и группы, они обязаны существовать;
  * - Т.к. группа формируется из объектов, они обязаны существовать;
  * - Т.к. объект присоеденяется к паспорту, он обязан существовать;
@@ -279,7 +276,7 @@ QList<User> DBService::getAllUsers()
 
 QString DBService::getRole(const QString& userName)
 {
-    if(open())
+    if (open())
         if (qint32 id = selectUserId(userName)) return selectRole(id);
     return nullptr;
 }
@@ -292,41 +289,82 @@ bool DBService::changePassword(const QString& userName, const QString& password)
 
 QString DBService::getCallSignFor(const QString& idDevice)
 {
-    if(open()) return selectSignFor(idDevice);
+    if (open()) return selectSignFor(idDevice);
     return nullptr;
 }
 
 Passport DBService::getPassportFor(const ObjectDev& object)
 {
-    if(open()) return selectPassportFor(object.id);
+    if (open()) return selectPassportFor(object.id);
     Passport passport;
     return passport;
 }
 
 Passport DBService::getPassportFor(const QString& idDevice)
 {
-    if(open()) return selectPassportFor(idDevice);
+    if (open()) return selectPassportFor(idDevice);
     Passport passport;
     return passport;
 }
 
 QString DBService::getZoneName(const qint32& idZone)
 {
-    if(open()) return selectZoneName(idZone);
+    if (open()) return selectZoneName(idZone);
     return nullptr;
 }
 
 QString DBService::getGroupName(const qint64& idGroup)
 {
-    if(open()) return selectGroupName(idGroup);
+    if (open()) return selectGroupName(idGroup);
     return nullptr;
 }
 
 QList<qint64> DBService::getGroupsIdForObject(const QString& idDevice)
 {
-    if(open()) return selectGroupsIdForObject(idDevice);
+    if (open()) return selectGroupsIdForObject(idDevice);
     QList<qint64> fail;
     return fail;
+}
+
+QList<AccessLine> DBService::getAllAccessesForTimeline()
+{
+    QList<AccessLine> line;
+    if (open())
+    {
+        QList<Access> accesses = selectAllAccesses();
+        AccessLine rule;
+        qint16 timeNow = QTime::currentTime().hour();
+        if (!timeNow) timeNow = 24;
+        qint16 timeInc = timeNow + 1;
+        for(int i = 0; i < accesses.size(); ++i)
+            if (accesses[i].priority != "Неизменяемое")
+            {
+                qint16 accessEnd = accesses[i].end.time().hour();
+                if (!accessEnd) accessEnd = 24;
+                if (accessEnd < timeNow)
+                    if (deleteAccess(accesses[i].id)) qDebug() << "Уже закончилось " << accessEnd << timeInc << timeNow; else return line;
+                else
+                {
+                    if (accesses[i].start.time().hour() < timeInc) // ? повторяшки и проработать стыки
+                    {
+                        rule.change = accesses[i].start;
+                        rule.name = "Начало \"" + accesses[i].name + "\"";
+                        if (!select(rule, accesses[i].zone)) return line;
+                        rule.groupName = selectGroupName(accesses[i].group);
+                        line.push_back(rule); // ? в хрен пойми каком порядке и с повторами времени, но в пределах часа
+                    }
+                    if (accessEnd <= timeInc)
+                    {
+                        rule.change = accesses[i].end;
+                        rule.name = "\"" + accesses[i].name + "\" подходит к концу";
+                        if (!select(rule, accesses[i].zone)) return line;
+                        rule.groupName = selectGroupName(accesses[i].group);
+                        line.push_back(rule); // ? в хрен пойми каком порядке и с повторами времени, но в пределах часа
+                    }
+                }
+            }
+    }
+    return line;
 }
 
 //----------------------------------------------------------------------
@@ -693,6 +731,21 @@ QList<qint64> DBService::selectGroupsIdForObject(const QString& idDevice) const
     else if (!whatIsError()) return idGroups;
     while(query.next()) idGroups.push_back(query.value(0).toInt()); // лонг ? немагия (:
     return idGroups;
+}
+
+bool DBService::select(AccessLine& rule, const qint32& idZone) const
+{
+    QSqlQuery query(db);
+    query.prepare("SELECT zone_name, zone_color FROM zones WHERE id = (:id)");
+    query.bindValue(":id", idZone);
+    if (query.exec()) qDebug() << "Select zone name and color success";
+    else return whatIsError();
+    if (query.next())
+    { // всё еще немагия (:
+        rule.zoneName = query.value(0).toString();
+        rule.color = query.value(1).toString();
+    }
+    return true;
 }
 
 qint16 DBService::select(const qint64& idGroup, const QString& idDevice) const

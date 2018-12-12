@@ -2,6 +2,7 @@
 #define SEYESTRUCT_H
 
 #include <QDate>
+#include <QColor>
 
 namespace seye
 {
@@ -39,7 +40,7 @@ namespace seye
     {
         QString id; // 16 обязательных символов, уникально
         qint16 role; // по сути номер иконки, может быть пустым
-        qint16 speedLimit = 25; // для проверки валидности координат, обязательное
+        qint16 speedLimit; // для проверки валидности координат, обязательное
         // велечина, на которую за секунду может измениться расстояние в метрах
         QString link; // способ связи, максимум 32 символа, обязательное
         QString toString() const
@@ -109,22 +110,27 @@ namespace seye
 
     struct AccessLine
     {
-        qint64 id = 0;
-        QDateTime start = QDateTime::fromString("2018-11-30 03:09:02", "yyyy-MM-dd hh:mm:ss");
-        QDateTime end = QDateTime::fromString("2018-11-30 03:09:02", "yyyy-MM-dd hh:mm:ss");
-        QString priority = "Обычное"; // возможные значения: Обычное, Приоритетное, Неизменяемое
-        QString name;
-        qint64 group = 0; // id группы
-        qint32 zone = 0; // id зоны
+        QDateTime change; // время смены правила
+        QString name; // имя правила
+        // если спрервало старое, то содержит и его имя
+        QString groupName;
+        QString zoneName;
+        QColor color;
         QString toString() const
         {
-            QString string = QString::number(id) + ", "
-                    + start.toString() + ", "
-                    + end.toString() + ", "
-                    + priority + ", "
+            QString string = change.toString() + ", "
                     + name + ", "
-                    + QString::number(group) + ", "
-                    + QString::number(zone);
+                    + groupName + ", "
+                    + zoneName + ", "
+                    + color.name();
+            return string;
+        }
+        QString toStringForPopUp() const
+        {
+            QString string = change.time().toString() + " "
+                    + name + ", "
+                    + "для группы \"" + groupName + "\""
+                    + " в зоне \"" + zoneName + "\"";
             return string;
         }
     };

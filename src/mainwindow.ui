@@ -233,8 +233,11 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>35</height>
+          <height>30</height>
          </size>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
         </property>
         <attribute name="horizontalHeaderVisible">
          <bool>false</bool>

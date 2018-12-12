@@ -104,6 +104,7 @@ namespace seye
         QString selectZoneName(const qint32 idZone) const;
         QString selectGroupName(const qint64 idGroup) const;
         QList<qint64> selectGroupsIdForObject(const QString& idDevice) const;
+        bool select(AccessLine& rule, const qint32& idZone) const;
 
         // неочевидное поведение, возвращает 0 при ошибке, 1 если удалось найти и 2 если нет
         qint16 select(const qint64& idGroup, const QString& idDevice) const;

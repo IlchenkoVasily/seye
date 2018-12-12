@@ -111,6 +111,7 @@ private:
     QStandardItemModel* passportModel;
     QStandardItemModel* ruleModel;
     // Формы
+    QStandardItemModel *timelineModel;
     PopUp *popUp;                   // попап паспортов
     // Разное
     seye::Notice* noticeService;    // Сервис уведомлений

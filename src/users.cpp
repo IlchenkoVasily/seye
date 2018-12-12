@@ -37,6 +37,7 @@ Users::Users(const QString& role, seye::DBService *db, QWidget *parent) :
     }
     ui->tableView->setModel(model);
     ui->tableView->horizontalHeader()->hideSection(0);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->resizeRowsToContents();
 }
 

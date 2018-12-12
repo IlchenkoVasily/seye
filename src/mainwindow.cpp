@@ -117,6 +117,21 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
         ui->pushButton_13->show();
         ui->listWidget->hide();
     }
+
+    // Timeline
+    timelineModel = new QStandardItemModel;
+    QList<seye::AccessLine> timeline = db->getAllAccessesForTimeline();
+
+    QStandardItem *item;
+    for(int i = 0; i < timeline.size(); ++i)
+    {
+        item = new QStandardItem(QString(timeline[i].name));
+        item->setBackground(QBrush(timeline[i].color));
+        timelineModel->setItem(0, i, item);
+    }
+    ui->tableViewTimeline->setModel(timelineModel);
+    ui->tableViewTimeline->resizeColumnsToContents();
+    ui->tableViewTimeline->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 MainWindow::~MainWindow()
