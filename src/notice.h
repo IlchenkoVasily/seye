@@ -66,6 +66,20 @@ namespace seye
         QListWidget *noticeList;
 
         /*
+            Структура айди объектов и их последний статус
+            Структура накрылась
+        */
+        struct allowId
+        {
+            QString id;
+            QString lastStatus;
+        };
+
+        //Вместо массива со структурой
+        QList<QString> toAllowStat;
+        QList<QString> toAllowId;
+
+        /*
             Массив с цветами для уведомлений
             тут, думаю, понятны
         */
@@ -85,6 +99,10 @@ namespace seye
             оставляет последние
         */
         void NoticeListChecker();
+
+        //последняя информация
+        QString lastId;
+        State lastNotice;
 
     public slots:
         /*

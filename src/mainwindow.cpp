@@ -292,6 +292,7 @@ void MainWindow::on_pushButton_released()
 void MainWindow::on_pushButton_2_clicked()
 {
     ui->smallStackedWidget->setCurrentWidget(objectView);
+    ui->listWidget->setVisible(false);
 }
 
 // Смена пользователя
@@ -397,6 +398,8 @@ void MainWindow::on_pushButton_6_clicked()
 {
     ui->mainStackedWidget->setCurrentWidget(passportView);
     ui->smallStackedWidget->setCurrentWidget(objectView);
+    ui->listWidget->setVisible(!ui->listWidget->isVisible());
+
 }
 
 void MainWindow::on_pushButton_12_clicked()
