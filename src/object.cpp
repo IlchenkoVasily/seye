@@ -137,6 +137,16 @@ void Object::setLink(QString link)
     _link = link;
 }
 
+double Object::speedLimit() const
+{
+    return _speedLimit;
+}
+
+void Object::setSpeedLibit(double speed)
+{
+    _speedLimit = speed;
+}
+
 double Object::scoreMaxDistance()
 {
     return _speedLimit * (_lastCheck.secsTo(QTime::currentTime()));
