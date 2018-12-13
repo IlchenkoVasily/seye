@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QDialog>
+#include "dbservice.h"
+
 
 namespace Ui {
 class Scenario;
@@ -13,7 +15,7 @@ class Scenario : public QDialog
     Q_OBJECT
 
 public:
-    explicit Scenario(QWidget *parent = nullptr);
+    explicit Scenario(seye::DBService *db, QWidget *parent = nullptr);
     ~Scenario();
 //    QString timeInterval(const QString& from, const QString& to, const QString& format = "hh.mm.ss-dd.MM.yyyy");
 
@@ -24,8 +26,11 @@ private slots:
 
     void on_dateTimeStart_dateTimeChanged(const QDateTime &dateTime);
 
+    void on_buttonBox_accepted();
+
 private:
     Ui::Scenario *ui;
+    seye::DBService *dblink;
 };
 
 #endif // SCENARIO_H

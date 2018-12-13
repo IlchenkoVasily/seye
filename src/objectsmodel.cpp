@@ -58,9 +58,10 @@ void ObjectModel::addObject(Object& newObj)
             emit noticePushed(editable.id(), editable.name(),
                               State::OutOfAttention);
 
-        emit dataChanged(index(idx, 0), index(idx, 1), QVector<int>() <<
-                         CoordinateRole << StateRole);
-
+        // Сигнал о том, что данные в модели изменены.
+        // Индексы наших объектов в моделе, изменённый параметр
+        emit dataChanged(index(idx, 0), index(idx, 1),
+                         QVector<int>() << CoordinateRole << StateRole);
         return;
     }
 
@@ -77,11 +78,6 @@ void ObjectModel::addObject(Object& newObj)
 const QList<Object>& ObjectModel::toList() const
 {
     return _objects;
-}
-
-void ObjectModel::setSelectionModel(QItemSelectionModel *selectionModel)
-{
-    _selectionModel = selectionModel;
 }
 
 void ObjectModel::objectSelected(const QModelIndex& index)
@@ -108,7 +104,7 @@ int ObjectModel::columnCount(const QModelIndex &parent) const
 
     // Здесь возвращается число 3
     // Это число столбцов: айди, цвет, информация о объекте
-    return 4;
+    return 3;
 }
 
 QVariant ObjectModel::data(const QModelIndex& index, int role) const
@@ -169,13 +165,11 @@ QVariant ObjectModel::headerData(int section, Qt::Orientation orientation, int r
         {
             switch (section) {
             case 0:
-                return QString("Позывной");
+                return QString("Имя");
             case 1:
                 return QString("Статус");
             case 2:
-                return QString("Связь");
-            case 3:
-                return QString("Кнопка");
+                return QString("Информация");
             default:
                 break;
             }

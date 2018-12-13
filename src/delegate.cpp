@@ -14,12 +14,6 @@
  void MyDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
  {
 
-//     if (index.column() <= 2)
-//     {
-//         painter->drawText(QPointF(option.rect.topLeft()),
-//                           index.data().toString());
-//     }
-
      if (index.column() == 2) {
 
      QStyleOptionButton button;
