@@ -63,10 +63,17 @@ void Notice::NoticeAlarm(QString idObject, QString nameObject, State idNotice)
         который только пришёл
         и проверка ещё
     */
-    noticeListId.append(idObject);
-    noticeList->insertItem(0, NoticeListToOut);
-    noticeList->item(0)->setForeground(noticeColor[idNotice]);
-    NoticeListChecker();
+    if(!(idObject == lastId && idNotice == lastNotice) && !NoticeListToOut.isEmpty())
+    {
+        //Кидаем в листы айди и его нарушение
+        //toAllowId.append(idObject);
+        //toAllowStat.append(toAllowStat);
+
+        noticeListId.append(idObject);
+        noticeList->insertItem(0, NoticeListToOut);
+        noticeList->item(0)->setForeground(noticeColor[idNotice]);
+        NoticeListChecker();
+    }
 }
 
 void Notice::outNotice(QListWidgetItem*)
