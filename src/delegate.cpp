@@ -14,14 +14,14 @@
  void MyDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
  {
 
-     if (index.column() == 2) {
+     if (index.column() == 3) {
 
      QStyleOptionButton button;
      QRect r = option.rect;//getting the rect of the cell
      int x,y,w,h;
-     x = r.left() + r.width() - 30;//the X coordinate
+     x = r.left()/* + r.width() - 30*/;//the X coordinate
      y = r.top();//the Y coordinate
-     w = 30;//button width
+     w = 40;//button width
      h = 30;//button height
      button.rect = QRect(x,y,w,h);
      button.text = "...";
@@ -36,7 +36,7 @@
 
      if( event->type() == QEvent::MouseButtonRelease  )
      {
-         if (index.column() == 2) {
+         if (index.column() == 3) {
          QMouseEvent * e = (QMouseEvent *)event;
          int clickX = e->x();
          int clickY = e->y();

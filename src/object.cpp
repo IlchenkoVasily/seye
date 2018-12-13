@@ -9,8 +9,8 @@ Object::Object(QString id, QGeoCoordinate coord, double speed)
 
 Object::Object(const Object & obj)
     : _id(obj._id), _speedLimit(obj._speedLimit), _lastCheck(obj._lastCheck)
-    , _currentCoordinate(obj._currentCoordinate), _state(obj._state)
-    , _role(obj._role), _name(obj._name)
+    , _currentCoordinate(obj._currentCoordinate), _previousCoordinate(obj._previousCoordinate)
+    ,  _state(obj._state), _role(obj._role), _name(obj._name), _link(obj._link)
 
 {}
 
@@ -53,7 +53,8 @@ void Object::setCoordinate(QGeoCoordinate coord)
     // Сразу проверяем насколько далеко отдалены
     // координаты друг от друга.
     auto distance = _currentCoordinate.distanceTo(_previousCoordinate);
-    if (distance <= scoreMaxDistance())
+    auto maxDistance = scoreMaxDistance();
+    if (distance <= maxDistance)
     {
         _lastGoodCheck = QTime::currentTime();
     }
@@ -114,7 +115,7 @@ void Object::setRole(Role newRole)
 
 QString Object::name() const
 {
-    return _name;
+    return _name.isEmpty() ? _id : _name;
 }
 
 void Object::setName(QString name)

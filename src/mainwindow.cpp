@@ -37,6 +37,7 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
     // Create table for rules
     ruleView = new QTableView(this);
     ruleView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ruleView->setEditTriggers(QTableView::EditTrigger::NoEditTriggers);
 
     // Создаём таблицу для пасспортов
     passportView = new QTableView(this);
@@ -202,8 +203,16 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         objectView->setSortingEnabled(true);
         objectView->sortByColumn(1, Qt::DescendingOrder);
         // Отключаем клик у хедера таблицы
+        // и настраиваем размеры столбцов
         auto header = objectView->horizontalHeader();
         header->setSectionsClickable(false);
+        header->setMinimumSectionSize(40);
+        header->resizeSection(1, 50);
+        header->resizeSection(3, 40);
+        header->setSectionResizeMode(QHeaderView::Fixed);
+        header->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+        header->setSectionResizeMode(0, QHeaderView::Stretch);
+        header->setSortIndicatorShown(false);
 
         // Ставим делегат
         MyDelegate* delegate = new MyDelegate(this);
@@ -434,12 +443,18 @@ void MainWindow::on_pushButton_11_clicked()
     {
         onEditing = false;
         ui->pushButton_11->setText("Редактирование");
+
+        // signal for not standard model
         emit startUpdateData();
+
+        ruleView->setEditTriggers(QTableView::EditTrigger::NoEditTriggers);
     }
     else
     {
         onEditing = true;
         ui->pushButton_11->setText("Сохранить");
+
+        ruleView->setEditTriggers(QTableView::EditTrigger::DoubleClicked);
     }
 }
 

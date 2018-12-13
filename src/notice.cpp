@@ -39,9 +39,11 @@ void Notice::NoticeListChecker()
             если их больше чем можно
             (NoticeSize)
         */
-        noticeListId.removeFirst();
-        noticeListId.removeFirst();
-        noticeList->takeItem(0);
+//        noticeListId.removeFirst();
+//        noticeListId.removeFirst();
+        noticeListId.removeLast();
+        noticeListId.removeLast();
+//        noticeList->takeItem(0);
     }
 }
 

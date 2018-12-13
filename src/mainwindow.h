@@ -76,7 +76,7 @@ private slots:
 
     // Кнопка "Удалить"
     void on_pushButton_12_clicked();
-
+    // Button "Editing"
     void on_pushButton_11_clicked();
 
     void on_pushButton_8_clicked();

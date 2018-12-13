@@ -177,11 +177,13 @@ void AppEngine::setupRules()
         auto timeEnd   = new QStandardItem(rule.end.toString("dd-MM-yyyy hh:mm"));
         auto status    = new QStandardItem(rule.priority);
         auto name      = new QStandardItem(rule.name);
-        auto group     = new QStandardItem(/*_database->groupNameById(rule.group));*/"repair gr");
-        auto zone      = new QStandardItem(/*_database->zoneNameById(rule.zone));*/"repair zn");
+        auto group     = new QStandardItem(_database->getGroupName(rule.group));
+        auto zone      = new QStandardItem(_database->getZoneName(rule.zone));
 
         _ruleModel->appendRow(QList<QStandardItem*>() << number
                                   << timeStart << timeEnd << status
                                    << name     << group   << zone);
     }
+
+//    _ruleModel->
 }
