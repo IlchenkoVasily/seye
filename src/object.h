@@ -46,6 +46,9 @@ namespace seye
         QString link() const;
         void setLink(QString link);
 
+        double speedLimit() const;
+        void setSpeedLibit(double speed);
+
         /*
             Возвращает время между последней проверкой
             координаты и последней удачной проверкой.

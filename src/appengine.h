@@ -84,6 +84,10 @@ namespace seye
         */
         void setupPassports();
 
+        QList<int>* groupsForZoneFromAccesses(int zoneId);
+
+
+
         /*
             Даннный метод поднимает из бд модель
             правил.

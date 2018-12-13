@@ -14,6 +14,7 @@
 // other includes
 #include "object.h"
 #include "enums.h"
+#include "dbservice.h"
 
 namespace seye
 {
@@ -79,6 +80,7 @@ namespace seye
     private:
         QList<Object> _objects;
         QItemSelectionModel* _selectionModel;
+        DBService* _database;
     };
 }
 

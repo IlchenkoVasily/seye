@@ -111,7 +111,26 @@ void AppEngine::checkEntries(Object& object)
 
         if (poly->contains(object.coordinate()))
         {
-            object.setState(State::Intruder);
+            auto groupsForZone = groupsForZoneFromAccesses(poly->id());
+
+            auto groupsForObject = _database->getGroupsIdForObject(object.id());
+
+            bool stillAllowed = false;
+            foreach (int objectGr, groupsForObject)
+            {
+                for (int i = 0; i < groupsForZone->count(); i++)
+                {
+                    int zoneGr = groupsForZone->at(i);
+                    if (objectGr == zoneGr)
+                    {
+                        stillAllowed = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!stillAllowed)
+                object.setState(State::Intruder);
         }
     }
 }
@@ -159,6 +178,19 @@ void AppEngine::setupPassports()
                                   << number << firstName << lastName
                                   << birth  << link      << device);
     }
+}
+//                     groupsForZoneFromAccesses
+QList<int>* AppEngine::groupsForZoneFromAccesses(int zoneId)
+{
+    QList<int>* list = new QList<int>;
+    for (int i = 0; i < _ruleModel->rowCount(); i++)
+    {
+        auto zoneForCheck = _ruleModel->data(_ruleModel->index(i, 6)).toInt();
+        if (zoneForCheck == zoneId)
+            list->append(_ruleModel->data(_ruleModel->index(i, 5)).toInt());
+    }
+
+    return list;
 }
 
 void AppEngine::setupRules()
