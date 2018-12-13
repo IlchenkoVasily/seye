@@ -333,19 +333,16 @@ QList<AccessLine> DBService::getAllAccessesForTimeline()
     {
         QList<Access> accesses = selectAllAccesses();
         AccessLine rule;
-        qint16 timeNow = QTime::currentTime().hour();
-        if (!timeNow) timeNow = 24;
-        qint16 timeInc = timeNow + 1;
+        QDateTime timeNow = QDateTime::currentDateTime();
+        QDateTime timeInc = QDateTime::currentDateTime().addSecs(3600);
         for(int i = 0; i < accesses.size(); ++i)
             if (accesses[i].priority != "Неизменяемое")
             {
-                qint16 accessEnd = accesses[i].end.time().hour();
-                if (!accessEnd) accessEnd = 24;
-                if (accessEnd < timeNow)
-                    if (deleteAccess(accesses[i].id)) qDebug() << "Уже закончилось " << accessEnd << timeInc << timeNow; else return line;
+                if (accesses[i].end < QDateTime::currentDateTime())
+                    if (deleteAccess(accesses[i].id)) qDebug() << "Уже закончилось"; else return line;
                 else
                 {
-                    if (accesses[i].start.time().hour() < timeInc) // ? повторяшки и проработать стыки
+                    if (accesses[i].start < timeInc) // ? повторяшки и проработать стыки
                     {
                         rule.change = accesses[i].start;
                         rule.name = "Начало \"" + accesses[i].name + "\"";
@@ -353,7 +350,7 @@ QList<AccessLine> DBService::getAllAccessesForTimeline()
                         rule.groupName = selectGroupName(accesses[i].group);
                         line.push_back(rule); // ? в хрен пойми каком порядке и с повторами времени, но в пределах часа
                     }
-                    if (accessEnd <= timeInc)
+                    if (accesses[i].end < timeInc)
                     {
                         rule.change = accesses[i].end;
                         rule.name = "\"" + accesses[i].name + "\" подходит к концу";

@@ -9,7 +9,9 @@ using namespace seye;
 
 ObjectModel::ObjectModel(QObject* parent)
     : QAbstractTableModel(parent)
-{}
+{
+    _database = qobject_cast<MainWindow*>(parent)->database();
+}
 
 ObjectModel::~ObjectModel()
 {
@@ -187,12 +189,22 @@ bool ObjectModel::setData(const QModelIndex &index, const QVariant &value, int r
         if (value.toString().isEmpty())
             return  false;
 
-        object.setLink(value.toString());
-        return true;
-
-    default:
-        return false;
+        ObjectDev obj;
+        obj.id = object.id();
+        obj.link = value.toString();
+        obj.role = object.role();
+        obj.speedLimit = object.speedLimit();
+        bool answer = _database->update(QList<ObjectDev>() << obj);
+        if (answer)
+        {
+            object.setLink(value.toString());
+            return true;
+        }
+        else
+            return false;
     }
+
+    return false;
 }
 
 Qt::ItemFlags ObjectModel::flags(const QModelIndex &index) const
