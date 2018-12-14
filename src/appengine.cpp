@@ -177,6 +177,8 @@ void AppEngine::setupPassports()
         auto link      = new QStandardItem(pass.callSign);
         auto device    = new QStandardItem(pass.device);
 
+        number->setAccessibleDescription(QString::number(pass.id));
+
         _passportModel->appendRow(QList<QStandardItem*>()
                                   << number << firstName << lastName
                                   << birth  << link      << device);
@@ -217,6 +219,7 @@ void AppEngine::setupRules()
         auto group     = new QStandardItem(_database->getGroupName(rule.group));
         auto zone      = new QStandardItem(_database->getZoneName(rule.zone));
 
+        number->setAccessibleDescription(QString::number(rule.id));
         group->setAccessibleDescription(QString::number(rule.group));
         zone->setAccessibleDescription(QString::number(rule.zone));
 
@@ -224,6 +227,4 @@ void AppEngine::setupRules()
                                   << timeStart << timeEnd << status
                                   << name      << group   << zone);
     }
-
-//    _ruleModel->
 }

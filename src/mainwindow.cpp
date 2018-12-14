@@ -75,6 +75,9 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
     connect(ui->searchBox, SIGNAL(returnPressed()),
             this, SLOT(on_searchButton_clicked()));
 
+    connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)),
+            this, SLOT(setPreviousWidget(QWidget*, QWidget*)));
+
     /*
         Здесь проверяется роль и убирает/добавляет
         кнопки которые не нужны для данной роли
@@ -288,6 +291,21 @@ seye::ObjectProxy *MainWindow::getObjectProxyModel()
     return objectProxy;
 }
 
+void MainWindow::setPreviousWidget(QWidget *old, QWidget *now)
+{
+    /* Сохраняем не каждый последний виджет, а только одну из таблиц.
+     */
+
+    Q_UNUSED(old)
+
+    if (polygonView  == now || objectView == now ||
+        passportView == now || ruleView == now)
+    {
+        lastFocusedTable = now;
+    }
+
+}
+
 void MainWindow::onObjectsUpdated()
 {
     emit resort();
@@ -407,34 +425,23 @@ void MainWindow::on_pushButton_6_clicked()
 {
     ui->mainStackedWidget->setCurrentWidget(passportView);
     ui->smallStackedWidget->setCurrentWidget(objectView);
-    ui->listWidget->setVisible(!ui->listWidget->isVisible());
+    ui->listWidget->setVisible(false);
 
 }
 
 void MainWindow::on_pushButton_12_clicked()
 {
-    auto table = qobject_cast<QTableView*>(ui->smallStackedWidget->currentWidget());
-    auto model = table->model();
+    if (lastFocusedTable == polygonView)
+        onDeletePolygons();
 
-    if (model == polygonView->model())
-    {
-        auto poly = qobject_cast<seye::PolygonModel*>(model);
+    if (lastFocusedTable == objectView)
+        onDeleteObjects();
 
-        int count = table->selectionModel()->selectedRows().count();
+    if (lastFocusedTable == ruleView)
+        onDeleteRules();
 
-        QString message;
-        message += "Вы уверены, что хотите удалить ";
-        message += QString::number(count);
-        message += " зон(ы)?";
-
-        QMessageBox::StandardButton reply = QMessageBox::warning(this,
-            "Удаление зон", message, QMessageBox::Yes | QMessageBox::No);
-
-        if (reply == QMessageBox::Yes)
-        {
-            poly->deleteSelected();
-        }
-    }
+    if (lastFocusedTable == passportView)
+        onDeletePassports();
 }
 
 void MainWindow::on_pushButton_11_clicked()
@@ -483,4 +490,105 @@ void MainWindow::on_pushButton_9_clicked()
 void MainWindow::on_pushButton_7_clicked()
 {
     ui->mainStackedWidget->setCurrentWidget(ruleView);
+}
+
+void MainWindow::onDeleteObjects()
+{
+    int count = objectView->selectionModel()->selectedRows().count();
+
+    QString message;
+    message += "Вы уверены, что хотите удалить ";
+    message += QString::number(count);
+    message += " девайс(а/ов)?";
+
+    QMessageBox::StandardButton reply = QMessageBox::warning(this,
+        "Удаление девайсов", message, QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes)
+    {
+        auto selected = objectView->selectionModel()->selectedRows();
+
+        foreach (auto index, selected)
+        {
+            seye::ObjectDev droped;
+            droped.id = objectModel->data(index, seye::ObjectModel::IdRole).toString();
+
+            if (db->drop(droped))
+            {
+                objectModel->removeRows(index.row(), 1);
+            }
+        }
+    }
+}
+
+void MainWindow::onDeletePassports()
+{
+    int count = passportView->selectionModel()->selectedRows().count();
+
+    QString message;
+    message += "Вы уверены, что хотите удалить ";
+    message += QString::number(count);
+    message += " паспорт(а/ов)?";
+
+    QMessageBox::StandardButton reply = QMessageBox::warning(this,
+        "Удаление паспортов", message, QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes)
+    {
+        auto selected = passportView->selectionModel()->selectedRows();
+
+        foreach (auto index, selected)
+        {
+            seye::Passport droped;
+            droped.id = passportModel->itemFromIndex(index)->accessibleDescription().toInt();
+
+            if (db->drop(droped))
+                passportModel->removeRow(index.row());
+        }
+    }
+}
+
+void MainWindow::onDeletePolygons()
+{
+    int count = polygonView->selectionModel()->selectedRows().count();
+
+    QString message;
+    message += "Вы уверены, что хотите удалить ";
+    message += QString::number(count);
+    message += " зон(у/ы)?";
+
+    QMessageBox::StandardButton reply = QMessageBox::warning(this,
+        "Удаление зон", message, QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes)
+    {
+        polygonModel->deleteSelected();
+    }
+}
+
+void MainWindow::onDeleteRules()
+{
+    int count = ruleView->selectionModel()->selectedRows().count();
+
+    QString message;
+    message += "Вы уверены, что хотите удалить ";
+    message += QString::number(count);
+    message += " правил(о)?";
+
+    QMessageBox::StandardButton reply = QMessageBox::warning(this,
+        "Удаление правил", message, QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes)
+    {
+        auto selected = ruleView->selectionModel()->selectedRows();
+
+        foreach (auto index, selected)
+        {
+            seye::Access droped;
+            droped.id = ruleModel->itemFromIndex(index)->accessibleDescription().toInt();
+
+            if (db->drop(droped))
+                ruleModel->removeRow(index.row());
+        }
+    }
 }
