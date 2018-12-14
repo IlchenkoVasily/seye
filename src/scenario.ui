@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>297</height>
+    <width>484</width>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Добавление правила</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_8">
    <item>
@@ -131,7 +131,7 @@
        <item>
         <widget class="QPushButton" name="pushButton">
          <property name="text">
-          <string>PushButton</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -149,7 +149,7 @@
        <item>
         <widget class="QPushButton" name="pushButton_2">
          <property name="text">
-          <string>PushButton</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -168,7 +168,7 @@
         <widget class="QComboBox" name="status">
          <item>
           <property name="text">
-           <string>Обычный</string>
+           <string>Обычное</string>
           </property>
          </item>
          <item>

@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QMessageBox>
 
+#include "groups.h"
+
 Scenario::Scenario(seye::DBService *db, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Scenario)
@@ -67,7 +69,6 @@ void Scenario::on_dateTimeStart_dateTimeChanged(const QDateTime &dateTime)
 
 void Scenario::on_buttonBox_accepted()
 {
-    seye::Access access;
     access.name = ui->scenarioname->text();
     access.start = ui->dateTimeStart->dateTime();
     access.end = ui->dateTimeEnd->dateTime();
@@ -77,6 +78,16 @@ void Scenario::on_buttonBox_accepted()
     else if (k==1) {statuc = "Приорететное";}
         else if (k==2) {statuc = "Неизменяемое";}
     access.priority = statuc;
-    if (/*passport.id = */dblink->add(access)) accept(); // Тут надо слать данные в модель таблицы паспортов
+    if (dblink->add(access)) accept();
     else QMessageBox::warning(this, "Неудачное добавление", "Проверьте введеные данные");
+}
+
+void Scenario::on_pushButton_2_clicked()
+{
+    Groups temp(this->parentWidget());
+    temp.setModal(true);
+    temp.exec();
+    seye::Group *group = temp.selectedGroup();
+    access.group = group->id;
+    ui->pushButton_2->setText(group->name);
 }

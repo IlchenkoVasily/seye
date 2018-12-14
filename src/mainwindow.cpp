@@ -42,7 +42,6 @@ MainWindow::MainWindow(seye::DBService* db, QString userRole, QWidget *parent) :
     // Создаём таблицу для пасспортов
     passportView = new QTableView(this);
     passportView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    passportView->setEditTriggers(QTableView::EditTrigger::NoEditTriggers);
 
     // Создаём боковые представления
     polygonView = new QTableView(this);
@@ -185,7 +184,7 @@ void MainWindow::addModel(QString name, QAbstractItemModel *model)
         connect(this, SIGNAL(startUpdateData()),
                 model, SLOT(updateStarted()));
 
-        (qobject_cast<seye::PolygonModel*>(model))->setDatabase(db);
+        polygonModel->setDatabase(db);
     }
     // модель объекта
     if (name.contains("obj"))
@@ -511,14 +510,15 @@ void MainWindow::onDeleteObjects()
     {
         auto selected = objectView->selectionModel()->selectedRows();
 
-        std::sort(selected.rbegin(), selected.rend());
-
         foreach (auto index, selected)
         {
             seye::ObjectDev droped;
             droped.id = objectModel->data(index, seye::ObjectModel::IdRole).toString();
 
-            objectModel->removeRows(index.row(), 1);
+            if (db->drop(droped))
+            {
+                objectModel->removeRows(index.row(), 1);
+            }
         }
     }
 }

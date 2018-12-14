@@ -61,13 +61,15 @@
 //                    ui->setupUi(this);
                  if (e->button() == Qt::LeftButton)
                  {
-                     popUp = new PopUp();
-                     QString q="qeq \n"
-                               "Имя:\n"
-                               "Фамилия \n";
-                     clickX=mainwindow-> QWidget::frameGeometry().width();
+                     mainwindow = qobject_cast<MainWindow*>(parent());
+//                     seye::DBService *db = qobject_cast<MainWindow*>(parent())->database();
+                     popUp = new PopUp(mainwindow);
+                     QString string = "!!! Здесь !!!\nмогла быть ваша реклама";
+                     popUp->setPopupText(string);
+//                     clickX=mainwindow-> QWidget::frameGeometry().width();
 //                     clickY=mainwindow-> QWidget::frameGeometry().height();
-                     popUp->show(clickX, clickY);
+//                     popUp->show(clickX, clickY);
+                     popUp->show(0, 0);
                  }
 
 

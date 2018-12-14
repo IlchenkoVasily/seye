@@ -51,24 +51,24 @@
 //         int q=0; //флаг открытия окна
          if( clickX > x && clickX < x + w )
              if( clickY > y && clickY < y + h  )
-             {
-//                 Passport *pass = new Passport();
-//                 pass->show();
-
                  if (e->button() == Qt::LeftButton)
                  {
                      mainwindow = qobject_cast<MainWindow*>(parent());
+                     seye::DBService *db = qobject_cast<MainWindow*>(parent())->database();
+                     seye::Passport doc = db->getPassportFor(model->data(index, seye::ObjectModel::IdRole).toString());
+                     if (doc.device == nullptr)
+                     {
+                         doc.firstName = "Девайс";
+                         doc.lastName = "не прикреплён";
+                         doc.birthday = QDate::currentDate();
+                     }
                      popUp = new PopUp(mainwindow);
-                     QString q="qeq \n"
-                               "Имя:\n"
-                               "Фамилия \n";
-                     popUp->setPopupText(q);
-                     clickX=mainwindow-> QWidget::frameGeometry().width();
+                     popUp->setPopupText(doc.toStringForPopUp());
+//                     clickX=mainwindow-> QWidget::frameGeometry().width();
 //                     clickY=mainwindow-> QWidget::frameGeometry().height();
-                     popUp->show(clickX, clickY);
+//                     popUp->show(clickX, clickY);
+                     popUp->show(0, 0);
                  }
-
-             }
      }
 }
 
