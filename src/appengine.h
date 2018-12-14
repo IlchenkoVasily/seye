@@ -48,6 +48,16 @@ namespace seye
          */
         void onObjectsUpdate(ObjectsPakPtr&);
 
+        /*
+            Метод обновляет пасспорт (по одной ячейке).
+        */
+        void onPassportUpdate(QStandardItem*);
+
+        /*
+            Метод обновляет правило (по одной ячейке).
+         */
+        void onAccessUpdate(QStandardItem*);
+
     private:
         MainWindow* _window;
         PolygonModel* _polygonModel;
@@ -90,9 +100,12 @@ namespace seye
         */
         void setupPassports();
 
+        /*
+            Данный метод возвращает список айди групп,
+            полученных из правила, где участвует зона
+            с айди zoneId.
+         */
         QList<int>* groupsForZoneFromAccesses(int zoneId);
-
-
 
         /*
             Даннный метод поднимает из бд модель

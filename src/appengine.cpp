@@ -19,6 +19,12 @@ AppEngine::AppEngine(QObject *parent) : QObject(parent)
         _objectModel = new ObjectModel(_window);
         _passportModel = new QStandardItemModel(_window);
         _ruleModel = new QStandardItemModel(_window);
+
+        connect(_passportModel, SIGNAL(itemChanged(QStandardItem*)),
+                this, SLOT(onPassportUpdate(QStandardItem*)));
+
+        connect(_ruleModel, SIGNAL(itemChanged(QStandrdItem*)),
+                this, SLOT(onAccessUpdate(QStandardItem*)));
     }
 }
 
@@ -36,7 +42,8 @@ void AppEngine::setConnector(IConnector *connector)
 void AppEngine::setUp()
 {
     //--- setup connnector ----//
-    connect(_connector, SIGNAL(complete(ObjectsPakPtr&)), this, SLOT(onObjectsUpdate(ObjectsPakPtr&)));
+    connect(_connector, SIGNAL(complete(ObjectsPakPtr&)),
+            this, SLOT(onObjectsUpdate(ObjectsPakPtr&)));
     _connector->connectTo(228);
     _connector->start();
 
@@ -88,6 +95,41 @@ void AppEngine::onObjectsUpdate(ObjectsPakPtr& objPaks)
         _objectModel->addObject(obj);
     }
     emit objectsUpdated();
+}
+
+void AppEngine::onPassportUpdate(QStandardItem* item)
+{
+    auto index = item->index();
+    int row = index.row();
+    QString data = item->text();
+
+    Passport pass;
+    pass.id = _passportModel->item(row, 0)->accessibleDescription().toInt();
+    pass.firstName = _passportModel->item(row, 1)->text();
+    pass.lastName = _passportModel->item(row, 2)->text();
+    pass.birthday = QDate::fromString(_passportModel->item(row, 3)->text(), Qt::ISODate);
+    pass.callSign = _passportModel->item(row, 4)->text();
+    pass.device = _passportModel->item(row, 5)->text();
+
+    _database->update(QList<Passport>() << pass);
+}
+
+void AppEngine::onAccessUpdate(QStandardItem* item)
+{
+    auto index = item->index();
+    int row = index.row();
+    QString data = item->text();
+
+    Access rule;
+    rule.id = _ruleModel->item(row, 0)->accessibleDescription().toInt();
+    rule.start = QDateTime::fromString(_ruleModel->item(row, 1)->text(), Qt::ISODate);
+    rule.end = QDateTime::fromString(_ruleModel->item(row, 2)->text(), Qt::ISODate);
+    rule.priority = _passportModel->item(row, 3)->text();
+    rule.name = _passportModel->item(row, 4)->text();
+    rule.group = _passportModel->item(row, 5)->accessibleDescription().toInt();
+    rule.zone = _passportModel->item(row, 6)->accessibleDescription().toInt();
+
+    _database->update(QList<Access>() << rule);
 }
 
 void AppEngine::checkEntries(Object& object)

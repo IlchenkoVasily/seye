@@ -455,14 +455,16 @@ void MainWindow::on_pushButton_11_clicked()
         // signal for not standard model
         emit startUpdateData();
 
-        ruleView->setEditTriggers(QTableView::EditTrigger::NoEditTriggers);
+        ruleView->setEditTriggers(QTableView::NoEditTriggers);
+        passportView->setEditTriggers(QTableView::NoEditTriggers);
     }
     else
     {
         onEditing = true;
         ui->pushButton_11->setText("Сохранить");
 
-        ruleView->setEditTriggers(QTableView::EditTrigger::DoubleClicked);
+        ruleView->setEditTriggers(QTableView::DoubleClicked | QTableView::AnyKeyPressed);
+        passportView->setEditTriggers(QTableView::DoubleClicked | QTableView::AnyKeyPressed);
     }
 }
 
@@ -515,7 +517,8 @@ void MainWindow::onDeleteObjects()
         {
             seye::ObjectDev droped;
             droped.id = objectModel->data(index, seye::ObjectModel::IdRole).toString();
-            qDebug() << index.row();
+
+            objectModel->removeRows(index.row(), 1);
         }
     }
 }
