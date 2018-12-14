@@ -2,8 +2,11 @@
 #include "ui_scenario.h"
 #include <QDebug>
 #include <QMessageBox>
+#include <QHeaderView>
+//#include <QAbstractItemModel>
 
 #include "groups.h"
+#include "mainwindow.h"
 
 Scenario::Scenario(seye::DBService *db, QWidget *parent) :
     QDialog(parent),
@@ -90,4 +93,59 @@ void Scenario::on_pushButton_2_clicked()
     seye::Group *group = temp.selectedGroup();
     access.group = group->id;
     ui->pushButton_2->setText(group->name);
+}
+
+void Scenario::on_pushButton_clicked()
+{
+    auto model = qobject_cast<MainWindow*>(parent())->getPolygonModel();
+
+    auto widg = new QDialog(this);
+    auto layout = new QVBoxLayout(widg);
+
+    auto button = new QPushButton;
+    button->setText("Сохранить");
+
+    auto zones = new QTableView(widg);
+    zones->setModel(model);
+    zones->setSelectionBehavior(QAbstractItemView::SelectRows);
+    zones->setSelectionMode(QAbstractItemView::SingleSelection);
+    zones->hideColumn(1);
+    zones->hideColumn(2);
+    zones->hideColumn(3);
+    zones->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    auto label = new QLabel("Выберите зону", this);
+    QFont font(label->font());
+    font.setWeight(100);
+    label->setFont(font);
+    label->setAlignment(Qt::AlignCenter);
+
+    layout->addWidget(label);
+    layout->addWidget(zones);
+    layout->addWidget(button);
+
+    layout->setAlignment(button, Qt::AlignRight);
+
+    widg->setLayout(layout);
+    widg->setWindowTitle("Выбор зон");
+
+    connect(button, SIGNAL(clicked()),
+            widg, SLOT(close()));
+
+    widg->setModal(true);
+    widg->exec();
+
+    //---- after close ----//
+    auto selection = zones->selectionModel()->selectedRows();
+
+    if (!selection.isEmpty())
+    {
+        auto id = model->data(selection[0], seye::PolygonModel::IdRole).toInt();
+        auto name = model->data(selection[0], seye::PolygonModel::NameRole).toString();
+
+        access.zone = id;
+        ui->pushButton->setText(name);
+    }
+
+    delete widg;
 }

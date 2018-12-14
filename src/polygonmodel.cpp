@@ -183,6 +183,10 @@ QVariant PolygonModel::data(const QModelIndex &index, int role) const
         return QVariant::fromValue(poly->mapBorderColor());
     }
 
+    case NameRole: {
+        return poly->name();
+    }
+
     default:
         return QVariant();
     }
