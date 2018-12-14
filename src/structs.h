@@ -29,8 +29,8 @@ namespace seye
         }
         QString toStringForPopUp() const
         {
-            QString string = firstName + " "
-                    + lastName + ", "
+            QString string = firstName + "\n"
+                    + lastName + "\n"
                     + birthday.toString();
             return string;
         }
@@ -112,7 +112,6 @@ namespace seye
     {
         QDateTime change; // время смены правила
         QString name; // имя правила
-        // если спрервало старое, то содержит и его имя
         QString groupName;
         QString zoneName;
         QColor color;
@@ -128,8 +127,8 @@ namespace seye
         QString toStringForPopUp() const
         {
             QString string = change.time().toString() + " "
-                    + name + ", "
-                    + "для группы \"" + groupName + "\""
+                    + name + ",\n"
+                    + "для группы \"" + groupName + "\"\n"
                     + " в зоне \"" + zoneName + "\"";
             return string;
         }

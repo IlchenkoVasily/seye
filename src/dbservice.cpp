@@ -337,7 +337,6 @@ QList<AccessLine> DBService::getAllAccessesForTimeline()
         QDateTime timeInc = QDateTime::currentDateTime().addSecs(3600);
         for(int i = 0; i < accesses.size(); ++i)
             if (accesses[i].priority != "Неизменяемое")
-            {
                 if (accesses[i].end < QDateTime::currentDateTime())
                     if (deleteAccess(accesses[i].id)) qDebug() << "Уже закончилось"; else return line;
                 else
@@ -359,7 +358,6 @@ QList<AccessLine> DBService::getAllAccessesForTimeline()
                         line.push_back(rule); // ? в хрен пойми каком порядке и с повторами времени, но в пределах часа
                     }
                 }
-            }
     }
     return line;
 }

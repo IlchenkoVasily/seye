@@ -75,8 +75,8 @@ void PopUp::show(int x,int y)
     animation.setStartValue(0.0);   // Стартовое значение будет 0 (полностью прозрачный виджет)
     animation.setEndValue(1.0);     // Конечное - полностью непрозрачный виджет
 
-    setGeometry(parentWidget()->rect().bottomRight().x() - width(),
-                parentWidget()->rect().bottomRight().y() - 30,
+    setGeometry(parentWidget()->rect().bottomRight().x() - 480,
+                parentWidget()->rect().bottomRight().y() - 80,
                 width(),
                 height());
     QWidget::show();                // Отображаем виджет, который полностью прозрачен
