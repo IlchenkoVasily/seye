@@ -18,6 +18,15 @@ ObjectModel::~ObjectModel()
 
 }
 
+bool ObjectModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    beginRemoveRows(parent, row, row + count - 1);
+    _objects.removeAt(row);
+    endRemoveRows();
+
+    return true;
+}
+
 void ObjectModel::addObject(Object& newObj)
 {
     int idx = _objects.indexOf(newObj);

@@ -103,6 +103,11 @@ void AppEngine::checkEntries(Object& object)
         return;
     }
 
+    // Проверяем, закеширован ли список групп для данного объекта
+    // Если нет, то кешируем.
+    if (!groupsForObject.contains(object.id()))
+        groupsForObject.insert(object.id(), _database->getGroupsIdForObject(object.id()));
+
     for (auto poly: polygons)
     {
         // не чекаем зону внимания.
@@ -113,24 +118,22 @@ void AppEngine::checkEntries(Object& object)
         {
             auto groupsForZone = groupsForZoneFromAccesses(poly->id());
 
-            auto groupsForObject = _database->getGroupsIdForObject(object.id());
+            auto groupsObject = groupsForObject[object.id()];
 
             bool stillAllowed = false;
-            foreach (int objectGr, groupsForObject)
+            foreach (qint64 objectGr, groupsObject)
             {
-                for (int i = 0; i < groupsForZone->count(); i++)
+                if (groupsForZone->contains(objectGr))
                 {
-                    int zoneGr = groupsForZone->at(i);
-                    if (objectGr == zoneGr)
-                    {
-                        stillAllowed = true;
-                        break;
-                    }
+                    stillAllowed = true;
+                    break;
                 }
             }
 
             if (!stillAllowed)
                 object.setState(State::Intruder);
+
+            delete groupsForZone;
         }
     }
 }
@@ -174,6 +177,8 @@ void AppEngine::setupPassports()
         auto link      = new QStandardItem(pass.callSign);
         auto device    = new QStandardItem(pass.device);
 
+        number->setAccessibleDescription(QString::number(pass.id));
+
         _passportModel->appendRow(QList<QStandardItem*>()
                                   << number << firstName << lastName
                                   << birth  << link      << device);
@@ -183,11 +188,13 @@ void AppEngine::setupPassports()
 QList<int>* AppEngine::groupsForZoneFromAccesses(int zoneId)
 {
     QList<int>* list = new QList<int>;
+
     for (int i = 0; i < _ruleModel->rowCount(); i++)
     {
-        auto zoneForCheck = _ruleModel->data(_ruleModel->index(i, 6)).toInt();
+        auto zone_item = _ruleModel->item(i, 6);
+        int zoneForCheck = zone_item->accessibleDescription().toInt();
         if (zoneForCheck == zoneId)
-            list->append(_ruleModel->data(_ruleModel->index(i, 5)).toInt());
+            list->append(_ruleModel->item(i, 5)->accessibleDescription().toInt());
     }
 
     return list;
@@ -212,10 +219,12 @@ void AppEngine::setupRules()
         auto group     = new QStandardItem(_database->getGroupName(rule.group));
         auto zone      = new QStandardItem(_database->getZoneName(rule.zone));
 
+        number->setAccessibleDescription(QString::number(rule.id));
+        group->setAccessibleDescription(QString::number(rule.group));
+        zone->setAccessibleDescription(QString::number(rule.zone));
+
         _ruleModel->appendRow(QList<QStandardItem*>() << number
                                   << timeStart << timeEnd << status
-                                   << name     << group   << zone);
+                                  << name      << group   << zone);
     }
-
-//    _ruleModel->
 }

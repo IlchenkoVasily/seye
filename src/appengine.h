@@ -58,6 +58,12 @@ namespace seye
         DBService* _database;
         QString _userRole;
 
+        /*
+            Мап для девайсов и списка групп, в которые
+            он входит.
+         */
+        QMap<QString, QList<qint64>> groupsForObject;
+
           /*----------------*/
          /*---- Методы ----*/
         /*----------------*/

@@ -46,7 +46,11 @@ public:
 
     seye::ObjectProxy* getObjectProxyModel();
 
+public slots:
+    void setPreviousWidget(QWidget*, QWidget*);
+
 private slots:
+
     void onObjectsUpdated();
 
     void on_pushButton_released();
@@ -97,12 +101,13 @@ signals:
 
 private:
     Ui::MainWindow *ui;             // юи
+    QWidget* lastFocusedTable;
     // Виджеты
     QQuickWidget* gisWidget;        // Гис виджет
     QTableView* polygonView;        // Таблица зон
     QTableView* objectView;         // Таблица объектов
     QTableView* passportView;       // Таблица паспортов
-    QTableView* ruleView;
+    QTableView* ruleView;           // Таблица правил
     // Данные
     seye::PolygonModel* polygonModel;
     seye::ObjectModel* objectModel; //
@@ -117,6 +122,14 @@ private:
     seye::Notice* noticeService;    // Сервис уведомлений
     QString userRole;               // Роль пользователя
     bool onEditing;                 // Включено редактирование
+
+      //------------//
+     //-- Методы --//
+    //------------//
+    void onDeletePolygons();
+    void onDeleteObjects();
+    void onDeletePassports();
+    void onDeleteRules();
 };
 
 
