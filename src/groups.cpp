@@ -49,6 +49,21 @@ Groups::~Groups()
     delete ui;
 }
 
+seye::Group *Groups::selectedGroup()
+{
+    if (!ui->treeView->currentIndex().isValid())
+        return nullptr;
+
+    auto idx = ui->treeView->currentIndex();
+    auto item = groupModel->item(idx.row());
+
+    auto group = new seye::Group;
+    group->id = item->accessibleDescription().toInt();
+    group->name = item->text();
+
+    return group;
+}
+
 void Groups::groupNameChanged(QStandardItem* group)
 {
     seye::Group gr;

@@ -23,6 +23,8 @@ public:
     explicit Groups(QWidget *parent = nullptr);
     ~Groups();
 
+    seye::Group* selectedGroup();
+
 private slots:
     // data changed in model
     void groupNameChanged(QStandardItem*);
